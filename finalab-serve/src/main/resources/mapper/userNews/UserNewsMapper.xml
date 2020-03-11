@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bytetcp.finalab.serve.userNews.mapper.UserNewsMapper">
+    
+    <resultMap type="UserNews" id="UserNewsResult">
+        <result property="id"    column="id"    />
+        <result property="groupNum" column="group_num" />
+        <result property="targetName"    column="target_name"    />
+        <result property="phaseNum"    column="phase_num"    />
+        <result property="timeNum"    column="time_num"    />
+        <result property="number"    column="number"    />
+        <result property="price"    column="price"    />
+        <result property="tradeType"    column="trade_type"    />
+<!--        <result property="aimType"    column="aim_type"    />-->
+        <result property="aim"    column="aim"    />
+        <result property="continueTime"    column="continue_time"    />
+        <result property="caseId"    column="case_id"    />
+    </resultMap>
+	
+	<sql id="selectUserNewsVo">
+        select id, group_num, target_name, phase_num, time_num, number, price, trade_type,  aim, continue_time, case_id from user_news
+    </sql>
+	
+    <select id="selectUserNewsList" parameterType="UserNews" resultMap="UserNewsResult">
+        <include refid="selectUserNewsVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="groupNum != null  and groupNum != '' "> and group_num = #{groupNum}</if>
+             <if test="targetName != null  and targetName != '' "> and target_name = #{targetName}</if>
+             <if test="phaseNum != null "> and phase_num = #{phaseNum}</if>
+             <if test="timeNum != null "> and time_num = #{timeNum}</if>
+             <if test="number != null "> and number = #{number}</if>
+             <if test="price != null "> and price = #{price}</if>
+             <if test="tradeType != null  and tradeType != '' "> and trade_type = #{tradeType}</if>
+             <if test="aim != null  and aim != '' "> and aim = #{aim}</if>
+             <if test="continueTime != null "> and continue_time = #{continueTime}</if>
+             <if test="caseId != null "> and case_id = #{caseId}</if>
+         </where>
+    </select>
+    
+    <select id="selectUserNewsById" parameterType="Long" resultMap="UserNewsResult">
+        <include refid="selectUserNewsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserNews" parameterType="UserNews" useGeneratedKeys="true" keyProperty="id">
+        insert into user_news
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="groupNum != null  and groupNum != '' ">group_num,</if>
+			<if test="targetName != null  and targetName != ''  ">target_name,</if>
+			<if test="phaseNum != null  ">phase_num,</if>
+			<if test="timeNum != null  ">time_num,</if>
+			<if test="number != null  ">number,</if>
+			<if test="price != null  ">price,</if>
+			<if test="tradeType != null  and tradeType != ''  ">trade_type,</if>
+
+			<if test="aim != null  and aim != ''  ">aim,</if>
+			<if test="continueTime != null  ">continue_time,</if>
+			<if test="caseId != null  ">case_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="groupNum != null  and groupNum != '' ">#{groupNum},</if>
+			<if test="targetName != null  and targetName != ''  ">#{targetName},</if>
+			<if test="phaseNum != null  ">#{phaseNum},</if>
+			<if test="timeNum != null  ">#{timeNum},</if>
+			<if test="number != null  ">#{number},</if>
+			<if test="price != null  ">#{price},</if>
+			<if test="tradeType != null  and tradeType != ''  ">#{tradeType},</if>
+
+			<if test="aim != null  and aim != ''  ">#{aim},</if>
+			<if test="continueTime != null  ">#{continueTime},</if>
+			<if test="caseId != null  ">#{caseId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateUserNews" parameterType="UserNews">
+        update user_news
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="groupNum != null  and groupNum != '' ">group_num = #{groupNum},</if>
+            <if test="targetName != null  and targetName != ''  ">target_name = #{targetName},</if>
+            <if test="phaseNum != null  ">phase_num = #{phaseNum},</if>
+            <if test="timeNum != null  ">time_num = #{timeNum},</if>
+            <if test="number != null  ">number = #{number},</if>
+            <if test="price != null  ">price = #{price},</if>
+            <if test="tradeType != null  and tradeType != ''  ">trade_type = #{tradeType},</if>
+
+            <if test="aim != null  and aim != ''  ">aim = #{aim},</if>
+            <if test="continueTime != null  ">continue_time = #{continueTime},</if>
+            <if test="caseId != null  ">case_id = #{caseId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteUserNewsById" parameterType="Long">
+        delete from user_news where id = #{id}
+    </delete>
+	
+    <delete id="deleteUserNewsByIds" parameterType="String">
+        delete from user_news where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="insertUserNewsList" useGeneratedKeys="true" keyProperty="id">
+        insert into user_news
+        (group_num,target_name, phase_num, time_num, number, price, trade_type,  aim, continue_time, case_id)
+        VALUES
+        <foreach collection="userNews" item="userNews"  separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{userNews.groupNum},
+                #{userNews.targetName},
+                #{userNews.phaseNum},
+                #{userNews.timeNum},
+                #{userNews.number},
+                #{userNews.price},
+                #{userNews.tradeType},
+                #{userNews.aim},
+                #{userNews.continueTime},
+                #{userNews.caseId}
+            </trim>
+        </foreach>
+    </insert>
+</mapper>

@@ -1,0 +1,130 @@
+<div id="instanceTrading_Constraint_div" th:fragment="instanceTrading_Constraint_div">
+    <table id="bootstrap-table-instanceTrading" class="table" style="font-size: 8px;"></table>
+</div>
+
+<script th:inline="javascript" th:fragment="instanceTrading_Constraint_js">
+    var tcprefix = ctx + "serve/instanceTrading";
+    var instanceId = [[${instanceId}]];
+
+   $(function () {
+        var options = {
+            url: "/serve/course/instanceTrading/" + instanceId,
+            createUrl: tcprefix + "/add",
+            updateUrl: tcprefix + "/edit/{id}",
+            removeUrl: tcprefix + "/remove",
+            exportUrl: tcprefix + "/export",
+            modalName: "交易明细表",
+            search: false,
+            showExport: false,
+            showRefresh: false,
+            showColumns: false,
+            showToggle: false,
+            showSearch: false,
+            pagination: true,
+            pageSize:10,
+            tableObj: $('#bootstrap-table-instanceTrading'),
+            columns: [
+                {
+                    field : 'id',
+                    title : '',
+                    visible: false
+                },
+                {
+                    field : 'courseId',
+                    title : '课程id',
+                    visible: false
+                },
+                {
+                    field : 'instanceId',
+                    title : '实例id',
+                    visible: false
+                },
+                {
+                    field : 'userId',
+                    title : '用户ID',
+                    visible: false
+                },
+                {
+                    field : 'userName',
+                    title : '用户昵称',
+                    visible: false
+                },
+                {
+                    field : 'stockId',
+                    title : '股票代码',
+                    visible: false
+                },
+                {
+                    field : 'stockName',
+                    title : '交易标的',
+                    sortable: false
+                },
+                {
+                    field : 'tradeType',
+                    title : '交易类型',
+                    sortable: false
+                },
+                {
+                    field : 'timeTine',
+                    title : '成交时间（秒）',
+                    sortable: true
+                },
+                {
+                    field : 'createTime',
+                    title : '创建时间',
+                    visible: false
+                },
+                {
+                    field : 'orderType',
+                    title : 'Market_Order("市场单"), Limit_Order("限价单");',
+                    visible: false
+                },
+                {
+                    field : 'timeTine',
+                    title : '时间段',
+                    visible: false
+                },
+                {
+                    field : 'dealQuantity',
+                    title : '成交数量',
+                    sortable: true
+                },
+                {
+                    field : 'dealPrice',
+                    title : '成交价格',
+                    sortable: true
+                },
+                {
+                    field : 'dealPriceTotal',
+                    title : '单笔成交总额',
+                    sortable: true
+                },
+                {
+                    field : 'priceTotal',
+                    title : '累计成交总额',
+                    sortable: true
+                },
+                {
+                    field : 'modifyTime',
+                    title : '修改时间',
+                    visible: false
+                }]
+        };
+        if (tdCommon.notEmpty(instanceId)) {
+            $.table.init(options);
+            var sss  =  window.setInterval(function () {
+                $.table.refresh($('#bootstrap-table-instanceTrading'));
+            }, 1000);
+        }
+
+       //window.clearInterval(sss);
+    })
+
+//    var sss  =  window.setInterval(function () {
+//        $.table.refresh();
+//    }, 1000);
+
+
+    //
+
+</script>

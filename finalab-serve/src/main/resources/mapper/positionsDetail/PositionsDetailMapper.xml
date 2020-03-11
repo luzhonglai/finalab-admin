@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bytetcp.finalab.serve.positionsDetail.mapper.PositionsDetailMapper">
+    
+    <resultMap type="PositionsDetail" id="PositionsDetailResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="modifyTime"    column="modify_time"    />
+        <result property="thePeriod"    column="the_period"    />
+        <result property="loopNum"    column="loop_num"    />
+        <result property="timeLine"    column="time_line"    />
+        <result property="instanceId"    column="instance_id"    />
+        <result property="stockId"    column="stock_id"    />
+        <result property="stockName"    column="stock_name"    />
+        <result property="dealPrice"    column="deal_price"    />
+        <result property="dealQuantity"    column="deal_quantity"    />
+        <result property="positionQuantity"    column="position_quantity"    />
+        <result property="traderId"    column="trader_id"    />
+        <result property="traderName"    column="trader_name"    />
+        <result property="tradeType"    column="trade_type"    />
+        <result property="financialType"    column="financial_type"    />
+        <result property="orderAction"    column="order_action"    />
+        <result property="userName"    column="user_name"    />
+    </resultMap>
+	
+	<sql id="selectPositionsDetailVo">
+        select id, create_time, modify_time, the_period, loop_num, time_line, instance_id, stock_id, stock_name, deal_price, deal_quantity, position_quantity, trader_id, trader_name, trade_type, financial_type, order_action from positions_detail
+    </sql>
+	
+    <select id="selectPositionsDetailList" parameterType="PositionsDetail" resultMap="PositionsDetailResult">
+        <include refid="selectPositionsDetailVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="modifyTime != null "> and modify_time = #{modifyTime}</if>
+             <if test="thePeriod != null "> and the_period = #{thePeriod}</if>
+             <if test="loopNum != null "> and loop_num = #{loopNum}</if>
+             <if test="timeLine != null "> and time_line = #{timeLine}</if>
+             <if test="instanceId != null  and instanceId != '' "> and instance_id = #{instanceId}</if>
+             <if test="stockId != null  and stockId != '' "> and stock_id = #{stockId}</if>
+             <if test="stockName != null  and stockName != '' "> and stock_name = #{stockName}</if>
+             <if test="dealPrice != null "> and deal_price = #{dealPrice}</if>
+             <if test="dealQuantity != null "> and deal_quantity = #{dealQuantity}</if>
+             <if test="positionQuantity != null "> and position_quantity = #{positionQuantity}</if>
+             <if test="traderId != null "> and trader_id = #{traderId}</if>
+             <if test="traderName != null  and traderName != '' "> and trader_name = #{traderName}</if>
+             <if test="tradeType != null  and tradeType != '' "> and trade_type = #{tradeType}</if>
+             <if test="financialType != null  and financialType != '' "> and financial_type = #{financialType}</if>
+             <if test="orderAction != null  and orderAction != '' "> and order_action = #{orderAction}</if>
+         </where>
+    </select>
+
+    <select id="selectPositionsDetailListForCourse" parameterType="PositionsDetail" resultMap="PositionsDetailResult">
+        SELECT
+            pd.id,
+            pd.create_time,
+            pd.modify_time,
+            pd.the_period,
+            pd.loop_num,
+            pd.time_line,
+            pd.instance_id,
+            pd.stock_id,
+            pd.stock_name,
+            pd.deal_price,
+            pd.deal_quantity,
+            pd.position_quantity,
+            pd.trader_id,
+            pd.trader_name,
+            pd.trade_type,
+            pd.financial_type,
+            pd.order_action,
+            su.user_name
+        FROM
+            positions_detail pd
+        left join sys_user su on su.user_id = pd.trader_id
+        <where>
+             <if test="timeLine != null "> and time_line = #{timeLine}</if>
+             <if test="instanceId != null  and instanceId != '' "> and instance_id = #{instanceId}</if>
+             <if test="traderName != null  and traderName != '' "> and trader_name like concat('%',#{traderName},'%')</if>
+             and loop_num = (select MAX(loop_num) from positions_detail p where p.instance_id = #{instanceId})
+         </where>
+    </select>
+    
+    <select id="selectPositionsDetailById" parameterType="Long" resultMap="PositionsDetailResult">
+        <include refid="selectPositionsDetailVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPositionsDetail" parameterType="PositionsDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into positions_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="createTime != null  ">create_time,</if>
+			<if test="modifyTime != null  ">modify_time,</if>
+			<if test="thePeriod != null  ">the_period,</if>
+			<if test="loopNum != null  ">loop_num,</if>
+			<if test="timeLine != null  ">time_line,</if>
+			<if test="instanceId != null  and instanceId != ''  ">instance_id,</if>
+			<if test="stockId != null  and stockId != ''  ">stock_id,</if>
+			<if test="stockName != null  and stockName != ''  ">stock_name,</if>
+			<if test="dealPrice != null  ">deal_price,</if>
+			<if test="dealQuantity != null  ">deal_quantity,</if>
+			<if test="positionQuantity != null  ">position_quantity,</if>
+			<if test="traderId != null  ">trader_id,</if>
+			<if test="traderName != null  and traderName != ''  ">trader_name,</if>
+			<if test="tradeType != null  and tradeType != ''  ">trade_type,</if>
+			<if test="financialType != null  and financialType != ''  ">financial_type,</if>
+			<if test="orderAction != null  and orderAction != ''  ">order_action,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="modifyTime != null  ">#{modifyTime},</if>
+			<if test="thePeriod != null  ">#{thePeriod},</if>
+			<if test="loopNum != null  ">#{loopNum},</if>
+			<if test="timeLine != null  ">#{timeLine},</if>
+			<if test="instanceId != null  and instanceId != ''  ">#{instanceId},</if>
+			<if test="stockId != null  and stockId != ''  ">#{stockId},</if>
+			<if test="stockName != null  and stockName != ''  ">#{stockName},</if>
+			<if test="dealPrice != null  ">#{dealPrice},</if>
+			<if test="dealQuantity != null  ">#{dealQuantity},</if>
+			<if test="positionQuantity != null  ">#{positionQuantity},</if>
+			<if test="traderId != null  ">#{traderId},</if>
+			<if test="traderName != null  and traderName != ''  ">#{traderName},</if>
+			<if test="tradeType != null  and tradeType != ''  ">#{tradeType},</if>
+			<if test="financialType != null  and financialType != ''  ">#{financialType},</if>
+			<if test="orderAction != null  and orderAction != ''  ">#{orderAction},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updatePositionsDetail" parameterType="PositionsDetail">
+        update positions_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="modifyTime != null  ">modify_time = #{modifyTime},</if>
+            <if test="thePeriod != null  ">the_period = #{thePeriod},</if>
+            <if test="loopNum != null  ">loop_num = #{loopNum},</if>
+            <if test="timeLine != null  ">time_line = #{timeLine},</if>
+            <if test="instanceId != null  and instanceId != ''  ">instance_id = #{instanceId},</if>
+            <if test="stockId != null  and stockId != ''  ">stock_id = #{stockId},</if>
+            <if test="stockName != null  and stockName != ''  ">stock_name = #{stockName},</if>
+            <if test="dealPrice != null  ">deal_price = #{dealPrice},</if>
+            <if test="dealQuantity != null  ">deal_quantity = #{dealQuantity},</if>
+            <if test="positionQuantity != null  ">position_quantity = #{positionQuantity},</if>
+            <if test="traderId != null  ">trader_id = #{traderId},</if>
+            <if test="traderName != null  and traderName != ''  ">trader_name = #{traderName},</if>
+            <if test="tradeType != null  and tradeType != ''  ">trade_type = #{tradeType},</if>
+            <if test="financialType != null  and financialType != ''  ">financial_type = #{financialType},</if>
+            <if test="orderAction != null  and orderAction != ''  ">order_action = #{orderAction},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deletePositionsDetailById" parameterType="Long">
+        delete from positions_detail where id = #{id}
+    </delete>
+	
+    <delete id="deletePositionsDetailByIds" parameterType="String">
+        delete from positions_detail where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

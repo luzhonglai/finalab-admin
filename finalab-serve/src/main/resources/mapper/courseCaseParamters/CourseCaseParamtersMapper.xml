@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bytetcp.finalab.serve.courseCaseParamters.mapper.CourseCaseParamtersMapper">
+
+    <resultMap type="CourseCaseParamters" id="CourseCaseParamtersResult">
+        <result property="id" column="id"/>
+        <result property="caseParamId" column="case_param_id"/>
+        <result property="caseId" column="case_id"/>
+        <result property="courseId" column="course_id"/>
+        <result property="paraName" column="para_name"/>
+        <result property="paraValue" column="para_value"/>
+        <result property="paraDesc" column="para_desc"/>
+        <result property="paraTypeId" column="para_type_id"/>
+    </resultMap>
+
+    <sql id="selectCourseCaseParamtersVo">
+        select id, case_param_id, case_id, course_id, para_name, para_value, para_desc, para_type_id from course_case_paramters
+    </sql>
+
+    <select id="selectCourseCaseParamtersList" parameterType="CourseCaseParamters"
+            resultMap="CourseCaseParamtersResult">
+        <include refid="selectCourseCaseParamtersVo"/>
+        <where>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="caseParamId != null ">and case_param_id = #{caseParamId}</if>
+            <if test="caseId != null ">and case_id = #{caseId}</if>
+            <if test="courseId != null ">and course_id = #{courseId}</if>
+            <if test="paraName != null  and paraName != '' ">and para_name = #{paraName}</if>
+            <if test="paraValue != null  and paraValue != '' ">and para_value = #{paraValue}</if>
+            <if test="paraDesc != null  and paraDesc != '' ">and para_desc = #{paraDesc}</if>
+            <if test="paraTypeId != null  and paraTypeId != '' ">and para_type_id = #{paraTypeId}</if>
+        </where>
+    </select>
+
+    <select id="selectCourseCaseParamtersById" parameterType="Long" resultMap="CourseCaseParamtersResult">
+        <include refid="selectCourseCaseParamtersVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectCourseCaseParamtersByCourseId" parameterType="Long" resultMap="CourseCaseParamtersResult">
+        <include refid="selectCourseCaseParamtersVo"/>
+        where course_id = #{courseId}
+    </select>
+
+    <insert id="insertCourseCaseParamters" parameterType="CourseCaseParamters" useGeneratedKeys="true" keyProperty="id">
+        insert into course_case_paramters
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="caseParamId != null  ">case_param_id,</if>
+            <if test="caseId != null  ">case_id,</if>
+            <if test="courseId != null  ">course_id,</if>
+            <if test="paraName != null  and paraName != ''  ">para_name,</if>
+            <if test="paraValue != null  and paraValue != ''  ">para_value,</if>
+            <if test="paraDesc != null  and paraDesc != ''  ">para_desc,</if>
+            <if test="paraTypeId != null  and paraTypeId != ''  ">para_type_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="caseParamId != null  ">#{caseParamId},</if>
+            <if test="caseId != null  ">#{caseId},</if>
+            <if test="courseId != null  ">#{courseId},</if>
+            <if test="paraName != null  and paraName != ''  ">#{paraName},</if>
+            <if test="paraValue != null  and paraValue != ''  ">#{paraValue},</if>
+            <if test="paraDesc != null  and paraDesc != ''  ">#{paraDesc},</if>
+            <if test="paraTypeId != null  and paraTypeId != ''  ">#{paraTypeId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCourseCaseParamters" parameterType="CourseCaseParamters">
+        update course_case_paramters
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="caseParamId != null  ">case_param_id = #{caseParamId},</if>
+            <if test="caseId != null  ">case_id = #{caseId},</if>
+            <if test="courseId != null  ">course_id = #{courseId},</if>
+            <if test="paraName != null  and paraName != ''  ">para_name = #{paraName},</if>
+            <if test="paraValue != null  and paraValue != ''  ">para_value = #{paraValue},</if>
+            <if test="paraDesc != null  and paraDesc != ''  ">para_desc = #{paraDesc},</if>
+            <if test="paraTypeId != null  and paraTypeId != ''  ">para_type_id = #{paraTypeId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="EditCourseCaseParamters" parameterType="CourseCaseParamters">
+        update course_case_paramters
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="caseParamId != null  ">case_param_id = #{caseParamId},</if>
+            <if test="caseId != null  ">case_id = #{caseId},</if>
+            <if test="courseId != null  ">course_id = #{courseId},</if>
+            <if test="paraName != null  and paraName != ''  ">para_name = #{paraName},</if>
+            <if test="paraValue != null  and paraValue != ''  ">para_value = #{paraValue},</if>
+            <if test="paraDesc != null  and paraDesc != ''  ">para_desc = #{paraDesc},</if>
+            <if test="paraTypeId != null  and paraTypeId != ''  ">para_type_id = #{paraTypeId},</if>
+        </trim>
+        where case_id = #{caseId} and course_id = #{courseId} and case_param_id = #{caseParamId}
+    </update>
+
+    <delete id="deleteCourseCaseParamtersById" parameterType="Long">
+        delete from course_case_paramters where id = #{id}
+    </delete>
+
+    <delete id="deleteCourseCaseParamtersByCaseId" parameterType="Long">
+        delete from course_case_paramters where case_id = #{caseId}
+    </delete>
+
+    <delete id="deleteCourseCaseParamtersByIds" parameterType="String">
+        delete from course_case_paramters where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="copyCaseParamsByCaseId">
+        insert into course_case_paramters(case_param_id,case_id,course_id,para_name,para_value,para_desc,para_type_id)
+        select case_param_id,case_id,${courseId},para_name,para_value,para_desc,para_type_id
+        from case_parameters where case_id = #{caseId}
+    </insert>
+
+    <insert id="copyTradingTargetByCaseId">
+        insert into course_trading_target(case_id,target_num,target_type,target_name,course_id)
+        select case_id,target_num,target_type,target_name,${courseId}
+        from trading_target where case_id = #{caseId}
+    </insert>
+
+    <insert id="copyTargetParamByCaseId">
+        insert into course_target_param(case_id,group_num,param_name,target_name, target_type,target_value,description,course_id)
+        select case_id,group_num,param_name,target_name,target_type,target_value,description,${courseId}
+        from target_param where case_id = #{caseId}
+    </insert>
+
+    <insert id="copyUserNewsByCaseId">
+        insert into course_user_news(group_num, target_name, phase_num, time_num, number, price, trade_type, aim, continue_time , case_id, course_id)
+        select group_num, target_name, phase_num, time_num, number, price, trade_type,  aim, continue_time , case_id, #{courseId}
+        from user_news where case_id = #{caseId}
+    </insert>
+
+    <insert id="copyMarketNewsByCaseId">
+        insert into course_market_news(case_id, phase_num, time_num, send_aim, news_title, content, course_id, isCompel, compelStockId, targetString, groupNum, action)
+        select case_id, phase_num, time_num, send_aim, news_title, content, #{courseId}, isCompel, compelStockId, targetString, groupNum, action
+        from market_news where case_id = #{caseId}
+    </insert>
+
+
+    <insert id="copyTargetParamByCaseIdAndGroupNum">
+        insert into course_target_param(case_id,param_name,target_name,target_type,target_value,description,course_id)
+        select case_id,param_name,target_name,target_type,target_value,description,${courseId}
+        from target_param where case_id = #{caseId} and group_num = #{group_num}
+    </insert>
+
+    <insert id="copyMarketNewsByCaseIdAndGroupNum">
+        insert into course_market_news
+        (case_id, phase_num, time_num, send_aim, news_title, content, isCompel, compelStockId, targetString,groupNum, course_id)
+        select case_id, phase_num, time_num, send_aim, news_title, content, isCompel, compelStockId, targetString,groupNum, ${courseId}
+        from market_news where case_id = #{caseId} and groupNum = #{group_num}
+    </insert>
+
+    <select id="selectLiquidationByGroupNumRandom" resultType="int">
+        select max(group_num) from liquidation where case_id = #{caseId}
+    </select>
+
+    <select id="selectTargetParamByGroupNumRandom" resultType="int">
+        select max(group_num) from target_param where case_id = #{caseId}
+    </select>
+
+    <select id="selectMaxGroupNumInPriceMove" resultType="int">
+        select max(group_num) from price_move where case_id = #{caseId}
+    </select>
+
+    <select id="selectMarketNewsByGroupNumRandom" resultType="int">
+        select max(groupNum) from market_news where case_id = #{caseId}
+    </select>
+
+    <insert id="copyTradingConstraintByCaseId">
+        insert into course_trading_constraint(case_id,constraint_name,gross_quantity,gross_unit_fines,net_position,net_unit_fines,trading_target,course_id)
+        select case_id,constraint_name,gross_quantity,gross_unit_fines,net_position,net_unit_fines,trading_target,${courseId}
+        from trading_constraint where case_id = #{caseId}
+    </insert>
+
+    <insert id="copyLiquidationByCaseId">
+        insert into course_liquidation(case_id,target_name,phase_num,liquidation_type,liquidation_value,course_id,group_num)
+        select case_id,target_name,phase_num,liquidation_type,liquidation_value,${courseId},group_num
+        from liquidation where case_id = #{caseId}
+    </insert>
+
+    <insert id="copyLiquidationByCaseIdAndGroupNum">
+        insert into course_liquidation(case_id,target_name,phase_num,liquidation_type,liquidation_value,course_id,group_num)
+        select case_id,target_name,phase_num,liquidation_type,liquidation_value,${courseId},group_num
+        from liquidation where case_id = #{caseId} and group_num = #{group_num}
+    </insert>
+
+    <insert id="copyPriceMoveByCaseId">
+        insert into course_price_move(case_id,combination_name,target_name,date_num,price,course_id,group_num, stage)
+        select case_id,combination_name,target_name,date_num,price,#{courseId},group_num, stage
+        from price_move where case_id = #{caseId}
+    </insert>
+
+    <insert id="copyPriceMoveByCaseIdAndGroupNum">
+        insert into course_price_move(case_id,combination_name,target_name,date_num,price,course_id,group_num, stage)
+        select case_id,combination_name,target_name,date_num,price,#{courseId},group_num, stage
+        from price_move where case_id = #{caseId} and group_num = #{group_num}
+    </insert>
+
+    <insert id="copyUpdateVarByCaseId">
+        insert into course_update_var
+        (period, tick, type, sub_type, variable, value, case_id, course_id)
+        select period, tick, type, sub_type, variable, value, case_id, #{courseId}
+        from update_var where case_id = #{caseId}
+    </insert>
+
+    <delete id="deleteCoursePriceMoveByCaseId" parameterType="Long">
+        delete from course_price_move where case_id = #{caseId}
+    </delete>
+
+    <delete id="deleteCourseLiquidationByCaseId" parameterType="Long">
+        DELETE from course_liquidation where case_id = #{caseId}
+    </delete>
+
+    <delete id="deleteCourseMarketNewsByCaseId" parameterType="Long">
+      DELETE from course_market_news where case_id = #{caseId}
+    </delete>
+
+    <delete id="deleteCourseTargetParamByCaseId" parameterType="Long">
+        DELETE from course_target_param where case_id = #{caseId}
+    </delete>
+    <delete id="deleteCourseTradingConstraintByCaseId" parameterType="Long">
+        DELETE from course_trading_constraint where case_id = #{caseId}
+    </delete>
+
+    <delete id="deleteCourseUserNewsByCaseId" parameterType="Long">
+        DELETE from course_user_news where case_id = #{caseId}
+    </delete>
+
+</mapper>

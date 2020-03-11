@@ -1,0 +1,492 @@
+<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="css/main.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="container quotat">
+    <div class="row">
+        <div class="left-cont">
+            <div class="row info-cont">
+                <div class="left-cont">
+                    <ul id="targetList" class="list" style="font-size: 6px;">
+                        <li class="tit" style="font-size: 8px;">
+                            <span class="nowrap">标的名称</span>
+                            <span>最新价</span>
+                            <span>涨幅</span>
+                        </li>
+                        <!--<li>-->
+                        <!--<a href="javascript:;">-->
+                        <!--<span>平安健康</span>-->
+                        <!--<span>58.8</span>-->
+                        <!--<span class="green">+1.68%</span>-->
+                        <!--</a>-->
+                        <!--</li>-->
+                    </ul>
+                </div>
+                <div class="right-cont">
+                    <div class="tab-tit">
+                        <h3 id="stockName-1">平安健康</h3>
+                        <ul class="tab-sp">
+                            <li class="active">分时图</li>
+                            <li>K线图</li>
+                        </ul>
+                    </div>
+                    <div class="chart" id="m-line">
+                        <div class="ch_div" style="display: block;">
+                            此处是图表1
+                        </div>
+                        <div class="ch_div" style="display: none;">
+                            此处是图表2
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row news">
+                <div class="tit">
+                    <h3>新闻</h3>
+                </div>
+                <ul id="market-news" class="one" hidden="hidden">
+                    <li><a href="javascript:;">股票大宗交易：欢迎来到大宗交易模拟市场，案例开始</a></li>
+                </ul>
+                <ul id="user-news" hidden="hidden">
+                    <li>
+                        <a class="active" href="javascript:;">
+                            平安健康准备以¥
+                            <span id="news-price">123.32</span>
+                            <span id="trade-flag">买入</span>
+                            <span id="news-quantity">60000</span>支
+                            <span id="news-stockid">SHJZ0012</span>股票，请问你是否接受订单？
+                            （<span id="news-timer">30</span>S）
+                        </a>
+                        <a class="btn" href="javascript:transaction.news.submit();">是</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="row tabslist">
+                <ul id="myTab" class="nav nav-tabs">
+                    <li id="trade-order-tab" class="active" hidden="hidden">
+                        <a href="#trade" data-toggle="tab">交易下单</a>
+                    </li>
+                    <li id="program-order-tab" class="active">
+                        <a href="#order" data-toggle="tab">程序下单</a>
+                    </li>
+                    <li>
+                        <a href="#registered" data-toggle="tab">已挂单</a>
+                    </li>
+                </ul>
+                <div id="myTabContent" class="tab-content" style="font-size: 8px;">
+                    <div class="tab-pane fade in active" id="trade">
+                        <div class="tab-row">
+                            <h4>交易标的</h4>
+                            <p id="trade-title">平安健康</p>
+                        </div>
+                        <div class="tab-row">
+                            <h4>交易类型</h4>
+                            <div id="order-option" class="radiolist">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="ordertype" id="type1" value="Market_Order" checked>市场价
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="ordertype" id="type2" value="Limit_Order">委托单
+                                    </label>
+                                </div>
+                            </div>
+                            <h4>数量</h4>
+                            <input id="tradeQuantity" type="text" class="form-control input-sm text" placeholder="单行输入">
+                            <i>（Shares）</i>
+                            <h4>金额</h4>
+                            <input id="tradePrice" type="text" class="form-control input-sm text" placeholder="单行输入">
+                        </div>
+                        <div class="clearfix">
+                            <button type="button" class="btn btn-danger"
+                                    onclick="transaction.tradeOption.submitOrder('ASK')">卖出
+                            </button>
+                            <button type="button" class="btn btn-success"
+                                    onclick="transaction.tradeOption.submitOrder('BID')">买入
+                            </button>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="order" style="font-size: 8px;">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>交易标的</th>
+                                <th>买卖标记</th>
+                                <th>成交时间</th>
+                                <th>成交数量</th>
+                                <th>成交价格</th>
+                                <th>单笔资金流向</th>
+                                <th>累计资金流向</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>交易费-平安健康</td>
+                                <td>NA</td>
+                                <td>2s</td>
+                                <td>100</td>
+                                <td>2</td>
+                                <td>-200</td>
+                                <td>-500</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="registered">
+                        <p>3333</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="right-cont" style="font-size: 8px;">
+            <div class="details">
+                <div class="tit"><h3 id="stockName-2">平安健康</h3></div>
+                <ul id="storeHouse" class="opt">
+                    <li class="header">
+                        <span>最新成交价</span>
+                        <span>仓位</span>
+                        <span>购买价</span>
+                    </li>
+                    <li>
+                        <span class="green">28.8</span>
+                        <span>2000</span>
+                        <span class="red">58.5</span>
+                    </li>
+                </ul>
+
+                <div class="j-opt">
+                    <h4>O:</h4>
+                    <input id="qk-order-O" type="text" readonly="readonly" class="form-control input-sm text" onkeyup="value=value.replace(/[^\d.]/g,'')">
+                    <h4>V:</h4>
+                    <input id="qk-order-V" type="text" readonly="readonly" class="form-control input-sm text no_r" onkeyup="value=value.replace(/[^\d.]/g,'')">
+                    <a class="downbtn" href="javascript:transaction.quickOrder.switchs()" alt="开启闪电下单">
+                        <img id="qk-order" src="/trend/imgs/sd.png" class="gray" alt="开启闪电下单">
+                    </a>
+                    </span>
+                </div>
+                <ul id="sell-list" class="list">
+                    <!--<li ondblclick="transaction.quickOrder.submit()"><span>卖九</span><span class="gray">ANON</span><span class="green">51.8</span><span>2000</span></li>-->
+                </ul>
+                <ul id="buy-list" class="list">
+                    <!--<li><span>买一</span><span class="gray">ANON</span><span class="red">51.8</span><span>2000</span></li>-->
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 .col-md-12 .col-sm-12 .col-xs-12">
+            <div class="datalist">
+                <div class="tit"><h3>持仓盈亏明细</h3>
+                    <p>（总盈亏：300）</p></div>
+                <table class="table" style="font-size: 8px">
+                    <thead>
+                    <tr>
+                        <th>交易标的</th>
+                        <th>持仓数量</th>
+                        <th>成本金额</th>
+                        <th>最新价格</th>
+                        <th>最新市值</th>
+                        <th>未实现盈利</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>平安健康</td>
+                        <td>100</td>
+                        <td>12</td>
+                        <td>15</td>
+                        <td>1500</td>
+                        <td>300</td>
+                        <td><a href="javascript:;">一键平仓</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 .col-md-12 .col-sm-12 .col-xs-12">
+            <div class="datalist">
+                <div class="tit"><h3>平仓盈亏明细</h3>
+                    <p>（总盈亏：300）</p></div>
+                <table class="table" style="font-size: 8px;">
+                    <thead>
+                    <tr>
+                        <th>交易标的</th>
+                        <th>持仓数量</th>
+                        <th>成本金额</th>
+                        <th>最新价格</th>
+                        <th>最新市值</th>
+                        <th>已实现盈利</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>平安健康</td>
+                        <td>100</td>
+                        <td>12</td>
+                        <td>15</td>
+                        <td>1500</td>
+                        <td>300</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 .col-md-12 .col-sm-12 .col-xs-12">
+            <div class="datalist">
+                <div class="tit"><h3>交易明细</h3>
+                    <p><a href="javascript:;">（全部详情>>）</a></p></div>
+                <table class="table" style="font-size: 8px;">
+                    <thead>
+                    <tr>
+                        <th>交易标的</th>
+                        <th>买卖标记</th>
+                        <th>成交时间</th>
+                        <th>成交数量</th>
+                        <th>成交价格</th>
+                        <th>单笔资金流向</th>
+                        <th>累计资金流向</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>交易费-平安健康</td>
+                        <td>NA</td>
+                        <td>2s</td>
+                        <td>100</td>
+                        <td>2</td>
+                        <td>-200</td>
+                        <td>-500</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="navigation">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            <li>
+                                <a href="#" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li><a href="#">1</a></li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li><a href="#">4</a></li>
+                            <li><a href="#">5</a></li>
+                            <li>
+                                <a href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/kline.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/demo.js" type="text/javascript" charset="utf-8"></script>
+<script >
+    $(function () {
+        alert(4545454);
+        $('#trade-order-tab').remove();
+    })
+
+    /*<![CDATA[*/
+    var stockList = [[${stockList}]];
+    var stockMap = [[${stockMap}]];
+    /*]]>*/
+    var instanceId = [[${instanceId}]];
+    var courseId = [[${courseId}]];
+    var wsUrl = [[${webSocketUrl}]];
+    var wsUrl = "ws://127.0.0.1:8888/trend";
+    var userStoreUrl = [[${userStoreUrl}]];// 获取用户仓位信息url
+
+
+    var websocket;
+    $(function () {
+        //websocket
+        websocket = new WebSocket(wsUrl);
+        websocket.onopen = function (evt) {
+            onOpen(evt)
+        };
+        websocket.onclose = function (evt) {
+            onClose(evt)
+        };
+        websocket.onmessage = function (evt) {
+            onMessage(evt)
+        };
+        websocket.onerror = function (evt) {
+            onError(evt)
+        };
+
+        //定时器
+        window.setInterval(function () {
+            var stockId = transaction.priceMove.stockId;
+            if (tdCommon.notEmpty(stockId)) {
+                var param = {instanceId: instanceId, stockId: stockId, courseId: courseId};
+                //TODO 解析数据比刷新仓位
+//                    transaction.submit(userStoreUrl, JSON.stringify(param), function (msg) {
+//                        var storeHouseData = {newestPrice: '36.7',storeHouse: '300',avgBuyPrice: '46.9'};
+//                        transaction.storeHouse.refresh();
+//                    });
+//                    console.log('刷新仓位。。。。')
+            } else {
+//                    console.log('等待股票走势数据初始化，本次不获取用户仓位信息')
+            }
+        }, 1000);
+
+    });
+
+
+    function onOpen(evt) {
+        writeToScreen("websocket 已连接");
+        var initParam = {
+            instanceId: instanceId,
+            stockId: 'SHJZ001',
+            type: 'mline'
+        };
+        doSend(JSON.stringify(initParam));
+    }
+
+    function onClose(evt) {
+        writeToScreen("DISCONNECTED");
+    }
+
+    function onMessage(evt) {
+        console.log('收到 ws 消息 -- ' + evt);
+//            writeToScreen('response: ' + evt.data + '');
+//            rsData = eval('(' + evt.data + ')');
+        // orderBook("当前挂单"), mLine("分时图"), kLine("k线图"), stocksPrice("股票实时价格");
+        //股票走势类型
+        //
+        var msg = JSON.parse(evt.data);
+        var wsType = msg.type;
+        switch (wsType) {
+            case 'stocksPrice':
+                covertToStocksNewPrice(msg);
+                break;
+            case 'mLine':
+                convertToMline(msg);
+                break;
+            case 'orderBook':
+                convertToOrderBook(msg);
+                break;
+            case 'kLine':
+                break;
+            default:
+                console.log('未知数据类型' + wsType);
+//                    alert('未知数据类型');
+        }
+
+    }
+
+    function onError(evt) {
+        writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+    }
+
+    function doSend(message) {
+        writeToScreen("SENT: " + message);
+        websocket.send(message);
+    }
+
+    function writeToScreen(message) {
+        console.log(message);
+    }
+
+    function convertToMline(msg) {
+//            console.log('转换走势价格。。。');
+        var t = msg.t;
+        var datas = [];
+        console.log(msg)
+        for (var i = 0; i < t.length; i++) {
+            //时间   当前价  均价   交易量
+            var data = [];
+            data[0] = t[i].time;
+            data[1] = t[i].price;
+            data[2] = t[i].avgPrice;
+            data[3] = t[i].curVol;
+            datas.push(data);
+        }
+        if (transaction.priceMove.isInit) {
+//                console.log('refresh 走势价格。。。' + datas);
+            transaction.priceMove.refresh(datas, true);
+        } else {
+            console.log('init 走势价格。。。');
+            //TODO 需要设置昨天收盘价， 和股票id
+            var priceMoveInitData = {data: [], yestclose: 33.01};
+            transaction.priceMove.init(priceMoveInitData)
+        }
+        datas = [];
+    }
+
+    function covertToStocksNewPrice(msg) {
+        var stockNewPriceArr = msg.t.stocks;
+        var datas = [];
+        for (var i = 0; i < stockNewPriceArr.length; i++) {
+            var data = {
+                stockId: stockNewPriceArr[i].stockId,
+                title: stockNewPriceArr[i].stockName,
+                price: stockNewPriceArr[i].price,
+//                    TODO 根据股票id查询开盘价计算涨跌
+//                    range: ratioCalculate('','')
+                range: '-' + (Math.floor(Math.random() * 1000) / 100)
+            };
+            if (transaction.target.isInit) {
+                transaction.target.refresh(data);
+            } else {
+                console.log('未初始化');
+                datas.push(data);
+            }
+        }
+        if (!transaction.target.isInit) {
+            console.log('正在初始化最新价格列表....');
+            transaction.target.init(datas);
+        }
+        datas = [];
+
+    }
+
+    function convertToOrderBook(msg) {
+        console.log('收到挂单列表数据 --  ' + msg.t);
+        console.log('收到挂单列表数据 str --  ' + JSON.stringify(msg.t));
+        var sellArr = msg.t.sell;
+        var buyArr = msg.t.buy;
+        if (!transaction.tradeOrderList.isInit) {
+            transaction.tradeOrderList.init({sell: sellArr, buy: buyArr});
+        } else {
+            transaction.tradeOrderList.refreshSell(sellArr);
+            transaction.tradeOrderList.refreshBuy(buyArr);
+        }
+    }
+
+    function changeStock(instanceId, stockId) {
+//            alert(instanceId);
+        //{"instanceId":"instanceId","stockId":"SHJZ001","type":"mLine"}
+        console.log("***************************************")
+        var param = {
+            instanceId: instanceId,
+            stockId: stockId,
+            type: 'mLine'
+        };
+        doSend(JSON.stringify(param));
+    }
+
+</script>
+</body>
+</html>

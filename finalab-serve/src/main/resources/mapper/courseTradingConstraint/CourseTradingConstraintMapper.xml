@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bytetcp.finalab.serve.courseTradingConstraint.mapper.CourseTradingConstraintMapper">
+    
+    <resultMap type="CourseTradingConstraint" id="CourseTradingConstraintResult">
+        <result property="id"    column="id"    />
+        <result property="caseId"    column="case_id"    />
+        <result property="constraintName"    column="constraint_name"    />
+        <result property="grossQuantity"    column="gross_quantity"    />
+        <result property="grossUnitFines"    column="gross_unit_fines"    />
+        <result property="netPosition"    column="net_position"    />
+        <result property="netUnitFines"    column="net_unit_fines"    />
+        <result property="tradingTarget"    column="trading_target"    />
+        <result property="courseId"    column="course_id"    />
+    </resultMap>
+	
+	<sql id="selectCourseTradingConstraintVo">
+        select id, case_id, constraint_name, gross_quantity, gross_unit_fines, net_position, net_unit_fines, trading_target, course_id from course_trading_constraint
+    </sql>
+	
+    <select id="selectCourseTradingConstraintList" parameterType="CourseTradingConstraint" resultMap="CourseTradingConstraintResult">
+        <include refid="selectCourseTradingConstraintVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="caseId != null "> and case_id = #{caseId}</if>
+             <if test="constraintName != null  and constraintName != '' "> and constraint_name = #{constraintName}</if>
+             <if test="grossQuantity != null "> and gross_quantity = #{grossQuantity}</if>
+             <if test="grossUnitFines != null "> and gross_unit_fines = #{grossUnitFines}</if>
+             <if test="netPosition != null "> and net_position = #{netPosition}</if>
+             <if test="netUnitFines != null "> and net_unit_fines = #{netUnitFines}</if>
+             <if test="tradingTarget != null  and tradingTarget != '' "> and trading_target = #{tradingTarget}</if>
+             <if test="courseId != null "> and course_id = #{courseId}</if>
+         </where>
+    </select>
+    
+    <select id="selectCourseTradingConstraintById" parameterType="Long" resultMap="CourseTradingConstraintResult">
+        <include refid="selectCourseTradingConstraintVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCourseTradingConstraint" parameterType="CourseTradingConstraint" useGeneratedKeys="true" keyProperty="id">
+        insert into course_trading_constraint
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="caseId != null  ">case_id,</if>
+			<if test="constraintName != null  and constraintName != ''  ">constraint_name,</if>
+			<if test="grossQuantity != null  ">gross_quantity,</if>
+			<if test="grossUnitFines != null  ">gross_unit_fines,</if>
+			<if test="netPosition != null  ">net_position,</if>
+			<if test="netUnitFines != null  ">net_unit_fines,</if>
+			<if test="tradingTarget != null  and tradingTarget != ''  ">trading_target,</if>
+			<if test="courseId != null  ">course_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="caseId != null  ">#{caseId},</if>
+			<if test="constraintName != null  and constraintName != ''  ">#{constraintName},</if>
+			<if test="grossQuantity != null  ">#{grossQuantity},</if>
+			<if test="grossUnitFines != null  ">#{grossUnitFines},</if>
+			<if test="netPosition != null  ">#{netPosition},</if>
+			<if test="netUnitFines != null  ">#{netUnitFines},</if>
+			<if test="tradingTarget != null  and tradingTarget != ''  ">#{tradingTarget},</if>
+			<if test="courseId != null  ">#{courseId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateCourseTradingConstraint" parameterType="CourseTradingConstraint">
+        update course_trading_constraint
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="caseId != null  ">case_id = #{caseId},</if>
+            <if test="constraintName != null  and constraintName != ''  ">constraint_name = #{constraintName},</if>
+            <if test="grossQuantity != null  ">gross_quantity = #{grossQuantity},</if>
+            <if test="grossUnitFines != null  ">gross_unit_fines = #{grossUnitFines},</if>
+            <if test="netPosition != null  ">net_position = #{netPosition},</if>
+            <if test="netUnitFines != null  ">net_unit_fines = #{netUnitFines},</if>
+            <if test="tradingTarget != null  and tradingTarget != ''  ">trading_target = #{tradingTarget},</if>
+            <if test="courseId != null  ">course_id = #{courseId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteCourseTradingConstraintById" parameterType="Long">
+        delete from course_trading_constraint where id = #{id}
+    </delete>
+	
+    <delete id="deleteCourseTradingConstraintByIds" parameterType="String">
+        delete from course_trading_constraint where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/main.css">
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script>window.jQuery || document.write('<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"><\/script>')</script>
+    <script type="text/javascript" src="./charting_library-master/charting_library/charting_library.min.js"></script>
+    <script type="text/javascript" src="./charting_library-master/charting_library/datafeed/udf/datafeed.js"></script>
+</head>
+
+<body>
+
+    <div class=" container quotat">
+        <div class="row">
+            <div class="left-cont">
+                <div class="row info-cont">
+                    <div class="left-cont">
+                        <ul class="list">
+                            <li class="tit">
+                                <span>标的名称</span>
+                                <span>最新价</span>
+                                <span>涨幅</span>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <span>平安健康</span>
+                                    <span>58.8</span>
+                                    <span class="green">+1.68%</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <span>平安银行</span>
+                                    <span>109.8</span>
+                                    <span class="red">+1.68%</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <span>平安健康</span>
+                                    <span>58.8</span>
+                                    <span class="green">+1.68%</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <span>平安银行</span>
+                                    <span>109.8</span>
+                                    <span class="red">+1.68%</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <span>平安健康</span>
+                                    <span>58.8</span>
+                                    <span class="green">+1.68%</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <span>平安银行</span>
+                                    <span>109.8</span>
+                                    <span class="red">+1.68%</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <span>平安健康</span>
+                                    <span>58.8</span>
+                                    <span class="green">+1.68%</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <span>平安银行</span>
+                                    <span>109.8</span>
+                                    <span class="red">+1.68%</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <span>平安健康</span>
+                                    <span>58.8</span>
+                                    <span class="green">+1.68%</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <span>平安银行</span>
+                                    <span>109.8</span>
+                                    <span class="red">+1.68%</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="right-cont">
+                        <div class="tab-tit">
+                            <h3>平安健康</h3>
+                            <ul class="tab-sp">
+                                <li class="active">分时图</li>
+                                <li>K线图</li>
+                            </ul>
+                        </div>
+                        <div class="chart">
+                            <div class="ch_div" style="display: block;">
+                                此处是图表1
+                            </div>
+                            <div class="ch_div" style="height: 300px">
+                                <div id="tv_chart_container" style="height: 300px"></div>
+                                此处是图表2
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="right-cont">
+                <div class="details">
+                    <div class="tit">
+                        <h3>平安健康</h3>
+                    </div>
+                    <ul class="opt">
+                        <li class="header">
+                            <span>最新成交价</span>
+                            <span>仓位</span>
+                            <span>购买价</span>
+                        </li>
+                        <li>
+                            <span class="green">28.8</span>
+                            <span>2000</span>
+                            <span class="red">58.5</span>
+                        </li>
+                    </ul>
+                    <div class="j-opt">
+                        <h4>O：</h4>
+                        <input type="text" class="form-control text">
+                        <h4>V：</h4>
+                        <input type="text" class="form-control text no_r">
+                        <a class="downbtn" href=""><img src="./imgs/sd.png" alt=""></a>
+                    </div>
+                    <ul class="list">
+                        <li><span>卖七</span><span class="gray">ANOM</span><span
+                                class="green">51.8</span><span>2000</span></li>
+                        <li><span>卖六</span><span class="gray">ANOM</span><span
+                                class="green">51.8</span><span>2000</span></li>
+                        <li><span>卖五</span><span class="gray">ANOM</span><span
+                                class="green">51.8</span><span>2000</span></li>
+                        <li><span>卖四</span><span class="gray">ANOM</span><span
+                                class="green">51.8</span><span>2000</span></li>
+                        <li><span>卖三</span><span class="gray">ANOM</span><span
+                                class="green">51.8</span><span>2000</span></li>
+                        <li><span>卖二</span><span class="gray">ANOM</span><span
+                                class="green">51.8</span><span>2000</span></li>
+                        <li><span>卖一</span><span class="gray">ANOM</span><span
+                                class="green">51.8</span><span>2000</span></li>
+                    </ul>
+                    <ul class="list">
+                        <li><span>买一</span><span class="gray">ANOM</span><span class="red">51.8</span><span>2000</span>
+                        </li>
+                        <li><span>买二</span><span class="gray">ANOM</span><span class="red">51.8</span><span>2000</span>
+                        </li>
+                        <li><span>买三</span><span class="gray">ANOM</span><span class="red">51.8</span><span>2000</span>
+                        </li>
+                        <li><span>买四</span><span class="gray">ANOM</span><span class="red">51.8</span><span>2000</span>
+                        </li>
+                        <li><span>买五</span><span class="gray">ANOM</span><span class="red">51.8</span><span>2000</span>
+                        </li>
+                        <li><span>买六</span><span class="gray">ANOM</span><span class="red">51.8</span><span>2000</span>
+                        </li>
+                        <li><span>买七</span><span class="gray">ANOM</span><span class="red">51.8</span><span>2000</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row news">
+                <div class="tit">
+                    <h3>新闻</h3>
+                </div>
+                <ul class="one">
+                    <li><a href="javascript:;">股票大宗交易：欢迎来到大宗交易模拟市场，案例开始</a></li>
+                </ul>
+                <ul>
+                    <li>
+                        <a class="active" href="javascript:;">平安健康准备以¥123.32买入60000支SHJZ0012股票，请问你是否接受订单？（30S）</a>
+                        <a class="btn" href="javascript:;">是</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="row tabslist">
+                <ul id="myTab" class="nav nav-tabs">
+                    <li class="active">
+                        <a href="#trade" data-toggle="tab">交易下单</a>
+                    </li>
+                    <li><a href="#order" data-toggle="tab">程序下单</a></li>
+                    <li><a href="#registered" data-toggle="tab">已挂单</a></li>
+                </ul>
+                <div id="myTabContent" class="tab-content">
+                    <div class="tab-pane fade in active" id="trade">
+                        <div class="tab-row">
+                            <h4>交易标的</h4>
+                            <p>平安健康</p>
+                        </div>
+                        <div class="tab-row">
+                            <h4>交易类型</h4>
+                            <div class="radiolist">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="type" id="type1" value="option1" checked>市场价
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="type" id="type2" value="option2">委托单
+                                    </label>
+                                </div>
+                            </div>
+                            <h4>数量</h4>
+                            <input type="text" class="form-control text" placeholder="单行输入">
+                            <i>（Shares）</i>
+                            <h4>金额</h4>
+                            <input type="text" class="form-control text" placeholder="单行输入">
+                            <button type="button" class="btn btn-danger">卖出</button>
+                            <button type="button" class="btn btn-success">买入</button>
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade" id="order">
+                        <textarea cols="120" rows="18"></textarea>
+                        <div class="tips">
+                            <span>提示</span>
+                        </div>
+                        <div class="operate">
+                            <button type="button" class="btn btn-success">运行</button>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="registered">
+                        <p>3333</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 .col-md-12 .col-sm-12 .col-xs-12">
+                <div class="datalist">
+                    <div class="tit">
+                        <h3>持仓盈亏明细</h3>
+                        <p>（总盈亏：300）</p>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>交易标的</th>
+                                <th>持仓数量</th>
+                                <th>成本金额</th>
+                                <th>最新价格</th>
+                                <th>最新市值</th>
+                                <th>未实现盈利</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>平安健康</td>
+                                <td>100</td>
+                                <td>12</td>
+                                <td>15</td>
+                                <td>1500</td>
+                                <td>300</td>
+                                <td><a href="javascript:;">一键平仓</a></td>
+                            </tr>
+                            <tr>
+                                <td>平安健康</td>
+                                <td>100</td>
+                                <td>12</td>
+                                <td>15</td>
+                                <td>1500</td>
+                                <td>300</td>
+                                <td><a href="javascript:;">一键平仓</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 .col-md-12 .col-sm-12 .col-xs-12">
+                <div class="datalist">
+                    <div class="tit">
+                        <h3>平仓盈亏明细</h3>
+                        <p>（总盈亏：300）</p>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>交易标的</th>
+                                <th>持仓数量</th>
+                                <th>成本金额</th>
+                                <th>最新价格</th>
+                                <th>最新市值</th>
+                                <th>已实现盈利</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>平安健康</td>
+                                <td>100</td>
+                                <td>12</td>
+                                <td>15</td>
+                                <td>1500</td>
+                                <td>300</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 .col-md-12 .col-sm-12 .col-xs-12">
+                <div class="datalist">
+                    <div class="tit">
+                        <h3>交易明细</h3>
+                        <p><a href="javascript:;">（全部详情>>）</a></p>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>交易标的</th>
+                                <th>买卖标记</th>
+                                <th>成交时间</th>
+                                <th>成交数量</th>
+                                <th>成交价格</th>
+                                <th>单笔资金流向</th>
+                                <th>累计资金流向</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>交易费-平安健康</td>
+                                <td>NA</td>
+                                <td>2s</td>
+                                <td>100</td>
+                                <td>2</td>
+                                <td>-200</td>
+                                <td>-500</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="navigation">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                <li>
+                                    <a href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <li><a href="#">1</a></li>
+                                <li><a href="#">2</a></li>
+                                <li><a href="#">3</a></li>
+                                <li><a href="#">4</a></li>
+                                <li><a href="#">5</a></li>
+                                <li>
+                                    <a href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+            // 切换分时图和K线图
+            $(".right-cont .tab-tit ul li ").click(function () {
+                $(this).addClass("active").siblings().removeClass("active");
+                var index = $(this).index();
+                $(".right-cont .chart .ch_div").eq(index).show().siblings(".right-cont .chart .ch_div").hide();
+            })
+        })
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+        
+        TradingView.onready(function () {
+            var widget = window.tvWidget = new TradingView.widget({
+                fullscreen: true,
+                symbol: 'AAPL',
+                interval: '1',
+                container_id: "tv_chart_container",
+                datafeed: createFeed(),
+                // debug :true,
+                library_path: "./charting_library-master/charting_library/",
+                locale: getParameterByName('lang') || "zh",
+                //	Regression Trend-related functionality is not implemented yet, so it's hidden for a while
+                drawings_access: { type: 'black', tools: [{ name: "Regression Trend" }] },
+                disabled_features: [
+                    "use_localstorage_for_settings",
+                    "left_toolbar", 
+                    "timeframes_toolbar", 
+                    "header_symbol_search", 
+                    "header_screenshot", 
+                    "header_undo_redo", 
+                    "header_resolutions", 
+                    //  "header_settings",
+                    "header_chart_type", 
+                    "header_interval_dialog_button",
+                    "show_interval_dialog_on_key_press",
+                    "symbol_search_hot_key",
+                    "study_dialog_search_control",
+                    "display_market_status",
+                    "header_compare",
+                    "edit_buttons_in_legend",
+                    "symbol_info",
+                    "border_around_the_chart",
+                    "main_series_scale_menu",
+                    "star_some_intervals_by_default",
+                    "datasource_copypaste",
+                    "right_bar_stays_on_scroll",
+                    "context_menus",
+                    "go_to_date",
+                    "compare_symbol",
+                    "border_around_the_chart",
+                    "timezone_menu",
+                    "volume_force_overlay", 
+                    "remove_library_container_border"
+                ],
+                enabled_features: [
+                    "dont_show_boolean_study_arguments",
+                    "remove_library_container_border",
+                    "side_toolbar_in_fullscreen_mode",
+                    "hide_last_na_study_output",
+                    "constraint_dialogs_movement", //todo: nie do końca jestem pewien
+                    "hide_left_toolbar_by_default"
+                ],
+                studies_overrides: {
+                    "volume.volume.color.0": "#fcc3c4",
+                    "volume.volume.color.1": "#aee6d5",
+                    "volume.volume.transparency": 75
+                },
+                overrides: {
+                    left_toolbar: false,
+                    "paneProperties.legendProperties.showStudyTitles": false,
+                    "paneProperties.legendProperties.showLegend": false, 
+                    "paneProperties.legendProperties.showStudyArguments": false,
+                    "paneProperties.legendProperties.showStudyValues": false,
+                    "symbolWatermarkProperties.color": "rgba(0,0,0, 0)",
+                    "paneProperties.background": "#fff", 
+                    "paneProperties.vertGridProperties.color": "#f9f9fb", 
+                    "paneProperties.horzGridProperties.color": "#f9f9fb", 
+                    "paneProperties.crossHairProperties.color": "#58637a",
+                    "paneProperties.crossHairProperties.style": 2,
+                    "mainSeriesProperties.showCountdown": true,
+                    "scalesProperties.showSeriesLastValue": true,
+                    "mainSeriesProperties.visible": false,
+                    "mainSeriesProperties.showPriceLine": true,
+                    "mainSeriesProperties.priceLineWidth": 1,
+                    "mainSeriesProperties.lockScale": false,
+                    "mainSeriesProperties.minTick": "default",
+                    "mainSeriesProperties.extendedHours": false,
+                    volumePaneSize: "medium", 
+                    editorFontsList: [
+                        "Lato",
+                        "Arial",
+                        "Verdana",
+                        "Courier New",
+                        "Times New Roman"
+                    ],
+                    "paneProperties.topMargin": 5,
+                    "paneProperties.bottomMargin": 5,
+                    "paneProperties.leftAxisProperties.autoScale": true,
+                    "paneProperties.leftAxisProperties.autoScaleDisabled": false,
+                    "paneProperties.leftAxisProperties.percentage": false,
+                    "paneProperties.leftAxisProperties.percentageDisabled": false,
+                    "paneProperties.leftAxisProperties.log": false,
+                    "paneProperties.leftAxisProperties.logDisabled": false,
+                    "paneProperties.leftAxisProperties.alignLabels": true,
+                    "paneProperties.legendProperties.showStudyArguments": false,
+                    "paneProperties.legendProperties.showStudyTitles": true,
+                    "paneProperties.legendProperties.showStudyValues": true,
+                    "paneProperties.legendProperties.showSeriesTitle": true,
+                    "paneProperties.legendProperties.showSeriesOHLC": true,
+                    "scalesProperties.showLeftScale": false,
+                    "scalesProperties.showRightScale": true,
+                    "scalesProperties.backgroundColor": "#20334d",
+                    "scalesProperties.lineColor": "#333940", 
+                    "scalesProperties.textColor": "#9E9FA6", 
+                    "scalesProperties.scaleSeriesOnly": false,
+                    "scalesProperties.fontSize": 13,
+                    "mainSeriesProperties.priceAxisProperties.autoScale": true,
+                    "mainSeriesProperties.priceAxisProperties.autoScaleDisabled": false,
+                    "mainSeriesProperties.priceAxisProperties.percentage": false,
+                    "mainSeriesProperties.priceAxisProperties.percentageDisabled": false,
+                    "mainSeriesProperties.priceAxisProperties.log": false,
+                    "mainSeriesProperties.priceAxisProperties.logDisabled": false,
+                    "mainSeriesProperties.candleStyle.upColor": "#24b787",
+                    "mainSeriesProperties.candleStyle.downColor": "#f75456",
+                    "mainSeriesProperties.candleStyle.drawWick": true,
+                    "mainSeriesProperties.candleStyle.drawBorder": true,
+                    "mainSeriesProperties.candleStyle.borderColor": "#24b787",
+                    "mainSeriesProperties.candleStyle.borderUpColor": "#24b787",
+                    "mainSeriesProperties.candleStyle.borderDownColor": "#f75456",
+                    "mainSeriesProperties.candleStyle.wickColor": "#737375",
+                    "mainSeriesProperties.candleStyle.wickUpColor": "#24b787",
+                    "mainSeriesProperties.candleStyle.wickDownColor": "#f75456",
+                    "mainSeriesProperties.candleStyle.barColorsOnPrevClose": false,
+                    "mainSeriesProperties.haStyle.upColor": "#5DC176",
+                    "mainSeriesProperties.haStyle.downColor": "#EF6E59",
+                    "mainSeriesProperties.haStyle.drawWick": true,
+                    "mainSeriesProperties.haStyle.drawBorder": true,
+                    "mainSeriesProperties.haStyle.borderColor": "#5DC176",
+                    "mainSeriesProperties.haStyle.borderUpColor": "#5DC176",
+                    "mainSeriesProperties.haStyle.borderDownColor": "#EF6E59",
+                    "mainSeriesProperties.haStyle.wickColor": "#737375",
+                    "mainSeriesProperties.haStyle.wickUpColor": "#5DC176",
+                    "mainSeriesProperties.haStyle.wickDownColor": "#EF6E59",
+                    "mainSeriesProperties.haStyle.barColorsOnPrevClose": false,
+                    "mainSeriesProperties.barStyle.upColor": "#5DC176",
+                    "mainSeriesProperties.barStyle.downColor": "#EF6E59",
+                    "mainSeriesProperties.barStyle.barColorsOnPrevClose": false,
+                    "mainSeriesProperties.barStyle.dontDrawOpen": false,
+                    "mainSeriesProperties.lineStyle.linestyle": 0,
+                    "mainSeriesProperties.lineStyle.linewidth": 1,
+                    "mainSeriesProperties.lineStyle.priceSource": "close",
+                    "mainSeriesProperties.areaStyle.linestyle": 0,
+                    "mainSeriesProperties.areaStyle.linewidth": 1,
+                    "mainSeriesProperties.areaStyle.priceSource": "close",
+                    "mainSeriesProperties.areaStyle.transparency": 80,
+                },
+                custom_css_url: "chart.css",
+                charts_storage_api_version: "1.1",
+                client_id: 'tradingview.com',
+                timezone: 'Asia/Shanghai',
+                user_id: 'public_user_id',
+                widgetbar: {
+                    details: true,
+                    watchlist: true,
+                    watchlist_settings: {
+                        default_symbols: ["NYSE:AA", "NYSE:AAL", "NASDAQ:AAPL"],
+                        readonly: false
+                    }
+                },
+            });
+
+            function createMAStudies() {
+                widget.MAStudies = []
+                let chart = widget.chart()
+                let mas = [{
+                    day: 5,
+                    color: "#821f68"
+                }, {
+                    day: 10,
+                    color: "#5c7798"
+                }, {
+                    day: 30,
+                    color: "#397d51"
+                }, {
+                    day: 60,
+                    color: "#60407f"
+                }];
+                mas.forEach(item => {
+                    chart.createStudy(
+                        "Moving Average",
+                        false,
+                        false, [item.day],
+                        entity => {
+                            widget.MAStudies.push(entity);
+                        }, {
+                            "plot.color": item.color
+                        }
+                    );
+                });
+                chart.onIntervalChanged().subscribe(null, function (interval, obj) {
+                    widget.changingInterval = false;
+                });
+            }
+
+            var buttons = [{
+                label: "1分钟",
+                resolution: "1"
+            }, {
+                label: "5分钟",
+                resolution: "5"
+            }, {
+                label: "15分钟",
+                resolution: "15"
+            }, {
+                label: "30分钟",
+                resolution: "30"
+            }
+            ];
+
+            function createButton(buttons) {
+                let chart = widget.chart()
+                buttons.forEach((item, index) => {
+                    let button = widget.createButton();
+                    item.resolution === widget.interval &&
+                        updateSelectedIntervalButton(button);
+                    button
+                        .attr("data-resolution", item.resolution)
+                        .attr(
+                            "data-chart-type",
+                            item.chartType === undefined ? 1 : item.chartType
+                        )
+                        .html("<span>" + item.label + "</span>")
+                        .on("click", function () {
+                            if (!widget.changingInterval &&
+                                !button.hasClass("selected")
+                            ) {
+                                let chartType = +button.attr("data-chart-type");
+                                let resolution = button.attr("data-resolution");
+
+                                if (chart.resolution() !== resolution) {
+                                    widget.changingInterval = true;
+                                    chart.setResolution(resolution);
+                                }
+                                if (chart.chartType() !== chartType) {
+                                    chart.setChartType(chartType);
+                                }
+                                updateSelectedIntervalButton(button);
+                                showMAStudies(chartType !== 3);
+                            }
+                        });
+                });
+            }
+
+            function showMAStudies(visible) {
+                let chart = widget.chart()
+                widget.MAStudies.forEach(item => {
+                    chart.setEntityVisibility(item, visible);
+                });
+            }
+
+            function updateSelectedIntervalButton(button) {
+                widget.selectedIntervalButton &&
+                    widget.selectedIntervalButton.removeClass("selected");
+                button.addClass("selected");
+                widget.selectedIntervalButton = button;
+            }
+
+            function createStudy(){
+                widget.chart().createStudy('Moving Average', false, false, [5], null, {
+                'Plot.color': '#238031'
+                });
+                widget.chart().createStudy('Moving Average', false, false, [10], null, {
+                'Plot.color': '#850058'
+                });
+            }
+
+       
+            widget.onChartReady(function () {
+                //设置均线种类 均线样式
+                createMAStudies()
+                //生成时间按钮
+                createButton(buttons);
+                createFeed()
+            });
+         });
+        function createFeed(){
+                let this_chart = this;
+                let Datafeed = {};
+                Datafeed.DataPulseUpdater = function(datafeed, updateFrequency) {
+        this._datafeed = datafeed;
+        this._subscribers = {};
+
+        this._requestsPending = 0;
+        var that = this;
+
+        var update = function() {
+          if (that._requestsPending > 0) {
+            return;
+          }
+
+          for (var listenerGUID in that._subscribers) {
+            var subscriptionRecord = that._subscribers[listenerGUID];
+            var resolution = subscriptionRecord.resolution;
+
+            var datesRangeRight = parseInt(new Date().valueOf() / 1000);
+
+            //  BEWARE: please note we really need 2 bars, not the only last one
+            //  see the explanation below. `10` is the `large enough` value to work around holidays
+            var datesRangeLeft =
+              datesRangeRight - that.periodLengthSeconds(resolution, 10);
+
+            that._requestsPending++;
+
+            (function(_subscriptionRecord) {
+              // eslint-disable-line
+              that._datafeed.getBars(
+                _subscriptionRecord.symbolInfo,
+                resolution,
+                datesRangeLeft,
+                datesRangeRight,
+                function(bars) {
+                  that._requestsPending--;
+
+                  //    means the subscription was cancelled while waiting for data
+                  if (!that._subscribers.hasOwnProperty(listenerGUID)) {
+                    return;
+                  }
+
+                  if (bars.length === 0) {
+                    return;
+                  }
+
+                  var lastBar = bars[bars.length - 1];
+                  if (!isNaN(_subscriptionRecord.lastBarTime) &&
+                    lastBar.time < _subscriptionRecord.lastBarTime
+                  ) {
+                    return;
+                  }
+
+                  var subscribers = _subscriptionRecord.listeners;
+
+                  //    BEWARE: this one isn't working when first update comes and this update makes a new bar. In this case
+                  //    _subscriptionRecord.lastBarTime = NaN
+                  var isNewBar = !isNaN(_subscriptionRecord.lastBarTime) &&
+                    lastBar.time > _subscriptionRecord.lastBarTime;
+
+                  //    Pulse updating may miss some trades data (ie, if pulse period = 10 secods and new bar is started 5 seconds later after the last update, the
+                  //    old bar's last 5 seconds trades will be lost). Thus, at fist we should broadcast old bar updates when it's ready.
+                  if (isNewBar) {
+                    if (bars.length < 2) {
+                      throw new Error(
+                        "Not enough bars in history for proper pulse update. Need at least 2."
+                      );
+                    }
+
+                    var previousBar = bars[bars.length - 2];
+                    for (var i = 0; i < subscribers.length; ++i) {
+                      subscribers[i](previousBar);
+                    }
+                  }
+
+                  _subscriptionRecord.lastBarTime = lastBar.time;
+
+                  for (var i = 0; i < subscribers.length; ++i) {
+                    subscribers[i](lastBar);
+                  }
+                },
+
+                //  on error
+                function() {
+                  that._requestsPending--;
+                }
+              );
+            })(subscriptionRecord);
+          }
+        };
+
+        if (typeof updateFrequency != "undefined" && updateFrequency > 0) {
+          setInterval(update, updateFrequency);
+        }
+      };
+
+
+      Datafeed.DataPulseUpdater.prototype.periodLengthSeconds = function(
+        resolution,
+        requiredPeriodsCount
+      ) {
+        var daysCount = 0;
+
+        if (resolution === "D") {
+          daysCount = requiredPeriodsCount;
+        } else if (resolution === "M") {
+          daysCount = 31 * requiredPeriodsCount;
+        } else if (resolution === "W") {
+          daysCount = 7 * requiredPeriodsCount;
+        } else {
+          daysCount = requiredPeriodsCount * resolution / (24 * 60);
+        }
+
+        return daysCount * 24 * 60 * 60;
+      };
+
+      Datafeed.DataPulseUpdater.prototype.subscribeDataListener = function(
+        symbolInfo,
+        resolution,
+        newDataCallback,
+        listenerGUID
+      ) {
+        this._datafeed._logMessage("Subscribing " + listenerGUID);
+
+        if (!this._subscribers.hasOwnProperty(listenerGUID)) {
+          this._subscribers[listenerGUID] = {
+            symbolInfo: symbolInfo,
+            resolution: resolution,
+            lastBarTime: NaN,
+            listeners: []
+          };
+        }
+
+        this._subscribers[listenerGUID].listeners.push(newDataCallback);
+      };
+
+      Datafeed.DataPulseUpdater.prototype.unsubscribeDataListener = function(
+        listenerGUID
+      ) {
+        this._datafeed._logMessage("Unsubscribing " + listenerGUID);
+        delete this._subscribers[listenerGUID];
+      };
+
+      Datafeed.Container = function(updateFrequency) {
+        this._configuration = {
+          supports_search: false,
+          supports_group_request: false,
+          supported_resolutions: [
+            "1",
+            "5",
+            "15",
+            "30",
+          ],
+          supports_marks: true,
+          supports_timescale_marks: true,
+          exchanges: ["APPL"]
+        };
+
+        this._barsPulseUpdater = new Datafeed.DataPulseUpdater(
+          this,
+          updateFrequency || 10 * 1000
+        );
+
+        this._enableLogging = true;
+        this._callbacks = {};
+
+        this._initializationFinished = true;
+        this._fireEvent("initialized");
+        this._fireEvent("configuration_ready");
+      };
+
+
+      Datafeed.Container.prototype._fireEvent = function(event, argument) {
+        if (this._callbacks.hasOwnProperty(event)) {
+          var callbacksChain = this._callbacks[event];
+          for (var i = 0; i < callbacksChain.length; ++i) {
+            callbacksChain[i](argument);
+          }
+
+          this._callbacks[event] = [];
+        }
+      };
+
+      Datafeed.Container.prototype._logMessage = function(message) {
+        if (this._enableLogging) {
+          var now = new Date();
+          console.log(
+            "CHART LOGS: " +
+            now.toLocaleTimeString() +
+            "." +
+            now.getMilliseconds() +
+            "> " +
+            message
+          );
+        }
+      };
+
+      Datafeed.Container.prototype.on = function(event, callback) {
+        if (!this._callbacks.hasOwnProperty(event)) {
+          this._callbacks[event] = [];
+        }
+
+        this._callbacks[event].push(callback);
+        return this;
+      };
+
+      Datafeed.Container.prototype.onReady = function(callback) {
+        let that = this;
+        if (this._configuration) {
+          setTimeout(function() {
+            callback(that._configuration);
+          }, 0);
+        } else {
+          this.on("configuration_ready", function() {
+            callback(that._configuration);
+          });
+        }
+      };
+      //通过商品名称解析商品信息
+      Datafeed.Container.prototype.resolveSymbol = function(
+        symbolName,
+        onSymbolResolvedCallback,
+        onResolveErrorCallback
+      ) {
+        // console.log( this_vue.currency1,'09999=====pppp888ppgsggsgsgs')
+        this._logMessage("GOWNO :: resolve symbol " + symbolName);
+        Promise.resolve().then(() => {
+          function adjustScale() {
+            if ( window.tvWidget.last_price > 1000) return 100;
+            else return 100000000;
+          }
+
+          this._logMessage(
+            "GOWNO :: onResultReady inject " +
+            'APPL'
+          );
+          onSymbolResolvedCallback({
+            name: 'APPL', //商品名称
+            timezone: "Asia/Shangha", //商品的交易所时区
+            pricescale: adjustScale(),
+            minmov: 1, //最小波动
+            minmov2: 0,
+            ticker: 'APPL', //商品体系中此商品的唯一标识符
+            description: "", //商品说明
+            session: "24x7", //商品交易时间
+            type: "bitcoin", //仪表的可选类型
+            pricescale: 100000000,
+            "exchange-traded": "myExchange",
+            // "exchange-listed": "myExchange",
+            has_intraday: true, //布尔值显示商品是否具有日内（分钟）历史数据, 如果它为false，则当图表中的该商品处于活动状态时，日内周期的所有按钮将被禁用。 如果设置为true，则由datafeed直接提供的所有周期必须在intraday_multipliers数组中设定。
+            intraday_multipliers: ["1", "5", "15", "30"], //这是一个包含日内周期(分钟单位)的数组
+            has_weekly_and_monthly: false, //布尔值显示商品是否具有以W和M为单位的历史数据
+            has_no_volume: false, //布尔表示商品是否拥有成交量数据
+            regular_session: "24x7"
+          });
+        });
+      };
+      var bars = [
+         {
+             time:1561606020000,
+             close:42.1,
+             open:41.0,
+             high:43.0,
+             low:40.4,
+             volume:12000
+         }, {
+             time:1561606080000,
+             close:43.4,
+             open:42.9,
+             high:44.1,
+             low:42.1,
+             volume:18500
+         }, {
+             time:1561606140000,
+             close:44.3,
+             open:43.7,
+             high:44.8,
+             low:42.8,
+             volume:24000
+         }, {
+            time:1561606200000,
+             close:42.8,
+             open:44.5,
+             high:44.5,
+             low:42.3,
+             volume:45000
+         }, {
+            time:1561606260000,
+             close:40.8,
+             open:47.5,
+             high:48.5,
+             low:42.3,
+             volume:35000
+         }]
+    
+      Datafeed.Container.prototype.getBars = function(
+        symbolInfo,
+        resolution,
+        from,
+        to,
+        onHistoryCallback,
+        onErrorCallback,
+        firstDataRequest
+      ) {
+
+        // if (firstDataRequest) {
+          if (resolution == 1) {
+            resolution = '1min'
+          }
+          if (resolution == 5) {
+            resolution = '5min'
+          }
+          if (resolution == 15) {
+            resolution = '15min'
+          }
+          if (resolution == 30) {
+            resolution = '30min'
+          }
+          console.log(from,to,'当前时间段'+resolution)
+          //历史数据回调
+          onHistoryCallback(bars)
+       
+      };
+
+      Datafeed.Container.prototype.subscribeBars = function(
+        symbolInfo,
+        resolution,
+        onRealtimeCallback,
+        listenerGUID,
+        onResetCacheNeededCallback
+      ) {
+        if (resolution == 1) {
+          resolution = '1min'
+        }
+        if (resolution == 5) {
+          resolution = '5min'
+        }
+        if (resolution == 15) {
+          resolution = '15min'
+        }
+        if (resolution == 30) {
+          resolution = '30min'
+        }
+        //实时数据回调
+        var klineCurrent =
+         {        
+             time:1561606500000,
+             close:42.1,
+             open:41.0,
+             high:43.0,
+             low:40.4,
+             volume:12000
+         }
+           onRealtimeCallback(klineCurrent)  
+     
+      };
+
+      Datafeed.Container.prototype.unsubscribeBars = function(listenerGUID) {
+        this._barsPulseUpdater.unsubscribeDataListener(listenerGUID);
+      };
+
+      return new Datafeed.Container();
+
+
+            }
+         
+   </script>
+</body>
+
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+<style>
+    .caseName {
+        font-size: 22px;
+        font-weight: bold;
+        /*vertical-align:middle;*/
+
+    }
+
+    .caseIconId {
+        width: 220px;
+        height: 220px;
+        border: solid 1px;
+        /*vertical-align:middle;*/
+    }
+
+    .image {
+        margin-top: 50px;
+    }
+
+    .b {
+        /*margin: 0 auto;*/
+        float: left;
+        text-align: center;
+    }
+
+    .a {
+        /*margin: 0 auto;*/
+        float: left;
+    }
+
+    .c {
+        margin: 0 auto;
+        float: left;
+    }
+
+    .courseName {
+        margin: 0 auto;
+        width: 300px;
+        height: 40px;
+    }
+
+    .row {
+        height: 40px;
+        margin-top: 50px;
+        /*margin: 0 auto;*/
+    }
+
+</style>
+<div class="container-div">
+
+<div>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-4">
+            <img id="caseIconId" class="caseIconId" th:src="'/profile/caseIcon/' + ${cases.caseIcon}" style="width: 150px; height: 150px"/>
+            <div>
+                <span class="caseName"><strong th:text="*{cases.caseName}"></strong></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 col-md-offset-4">
+            <div class="b"><label style="margin-top: 10px;">案例课件名称：</label></div>
+            <div class="b"><input type="text" name="courseName" class="form-control" placeholder="请输入案例课件名称"></div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 10px">
+        <div class="col-md-6 col-md-offset-4">
+            <div style="float: left ;padding-top:5px"><p>允许新名单加入：</p></div>
+            <!-- fa text-info fa-2x fa-toggle-off -->
+            <div style="float: left"><i id="OnOff" class="fa text-info fa-2x fa-toggle-on" onclick='enable()'></i></div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 10px">
+        <div class="col-md-6 col-md-offset-4">
+        <button type="button" class="btn btn-w-m btn-warning" onclick="createCourse()">立即加载</button>
+        </div>
+    </div>
+    <input type="hidden" name="caseId" th:value="*{cases.id}">
+    <input type="hidden" name="caseType" th:value="*{cases.caseType}">
+
+</div>
+
+</div>
+<div th:include="include::footer"></div>
+</body>
+<script th:inline="javascript">
+    $("#OnOff").val(1);
+
+    function enable() {
+        var val = $("#OnOff").val();
+        var msg = val == 1 ? "确认不允许新名单参与吗?" : "确认允许新名单参与吗?";
+        $.modal.confirm(msg, function () {
+            if (val == 1) {
+                $("#OnOff").removeClass("fa-toggle-on");
+                $("#OnOff").addClass("fa-toggle-off");
+                $("#OnOff").val(0);
+            } else {
+                $("#OnOff").removeClass("fa-toggle-off");
+                $("#OnOff").addClass("fa-toggle-on");
+                $("#OnOff").val(1);
+            }
+        })
+    }
+
+    function createCourse() {
+
+        var course = {};
+        course["allowIn"] = $("#OnOff").val();
+        course["caseType"] = $("input[name='caseType']").val();
+        var courseName = $("input[name='courseName']").val();
+        if (courseName == "" || courseName == null) {
+            $.modal.msgError("课件名称不能空");
+        } else {
+            course["courseName"] = $("input[name='courseName']").val();
+            course["caseId"] = $("input[name='caseId']").val();
+            $.modal.loading("正在加载，请稍后...");
+            setTimeout(function () {
+                $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: ctx + "serve/course/add",
+                    data: course,
+                    async: false,
+                    error: function (request) {
+                        $.modal.closeLoading();
+                        $.modal.alertError("系统错误");
+                    },
+                    success: function (data) {
+
+                        if (data.toString() == "加载失败") {
+                            $.modal.closeLoading();
+                            $.modal.alertError("案例课件开课失败");
+                        } else {
+                            $.modal.closeLoading();
+                            refreshItemById("/serve/course")
+                            var url = ctx + 'serve/course';
+                            createMenuItem(url, "课件");
+                        }
+                    }
+                });
+            }, 1000)
+        }
+
+    }
+
+    function closeTabById(tabId) {
+        var topWindow = $(window.parent.document);
+        $('.menuTabs .page-tabs-content', topWindow).find("a[data-id='" + tabId + "'] i").trigger("click");
+    }
+
+    function refreshItemById (tabId){
+        var topWindow = $(window.parent.document);
+        var target = $('.RuoYi_iframe[data-id="' + tabId + '"]', topWindow);
+        var url = target.attr('src');
+        target.attr('src', url).ready();
+    }
+</script>
+</html>

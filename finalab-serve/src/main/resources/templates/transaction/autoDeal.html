@@ -1,0 +1,106 @@
+<script th:inline="javascript" th:fragment="autoDeal_js">
+
+    var autoSocket = null;
+    $("#auto_stop").attr('style',"background-color: #b4b4b44").attr('disabled', 'false');
+    // $("#auto_stop").removeAttr('onclick');
+    function startAutoDeal() {
+
+        var param = {courseId: courseId};
+        $.post(checkUrl, param, function (result) {
+            if (result.code != '0') {
+                $.modal.msgWarning('课件未启动或已停止');
+                return;
+            }
+        });
+
+        autoSocket = new WebSocket(autoSocketUrl);
+
+        autoSocket.onopen = function (event) {
+            openSocket(event);
+        }
+        autoSocket.onmessage = function(event) {
+            handleMsg(event);
+        }
+        autoSocket.onclose = function(event) {
+            closeSocket(event);
+        }
+        autoSocket.onerror = function(event) {
+            handleError(event);
+        }
+    }
+
+    function closeAutoDeal() {
+        if (autoSocket != null) {
+            autoSocket.close();
+        }
+        $("#auto_start").removeAttr("style");
+        $("#auto_start").removeAttr('disabled');
+        // $("#auto_start").attr('onclick',startAutoDeal());
+
+        $("#auto_stop").attr('style',"background-color: #b4b4b44").attr('disabled', 'false');
+        // $("#auto_stop").removeAttr('onclick');
+    }
+
+    function openSocket(event) {
+        var socketParam = {
+            "instanceId": instanceId,
+            "code": $("#auto_deal_code").val(),
+            "traderId": userId,
+            "traderName": userName
+        };
+        autoSocket.send(JSON.stringify(socketParam));
+        $("#auto_deal_res").empty();
+        $("#auto_start").attr('style',"background-color: #b4b4b44").attr('disabled', 'false');
+        // $("#auto_start").removeAttr('onclick');
+
+        $("#auto_stop").removeAttr("style");
+        $("#auto_stop").removeAttr('disabled');
+        // $("#auto_stop").attr('onclick', closeAutoDeal());
+    }
+
+    function handleMsg(event) {
+        var result = event.data;
+        var textarea = $("#auto_deal_res").append(result + "\n");
+        textarea.scrollTop(textarea[0].scrollHeight - textarea.height());
+        // $("#auto_deal_res").val(result +　"\n" + $("#auto_deal_res").val());
+    }
+
+    function closeSocket(event) {
+        console.log("auto_deal_closed");
+    }
+
+    function handleError(event) {
+        console.log("auto_deal_error");
+    }
+
+    var defaultVal = '/**\n' +
+        ' * 默认方法名字\n' +
+        ' */\n' +
+        'class AutoOrder extends AbstractAutoOrder {\n' +
+        '\n' +
+        '    /**\n' +
+        '     * 默认构造方法\n' +
+        '     * @param instanceId\n' +
+        '     */\n' +
+        '    AutoOrder(AutoRequest autoRequest) {\n' +
+        '        super(autoRequest);\n' +
+        '    }\n' +
+        '\n' +
+        '    /**\n' +
+        '     * 在此函数下进行代码编写\n' +
+        '     * 支持:\n' +
+        '     * 1、getStockPrice(String stockId)                                 获取股票价格\n' +
+        '     * 2、buyStockForLimit(String stockId, int quantity, double price)  委托单-买单\n' +
+        '     * 3、sellStockForLimit(String stockId, int quantity, double price) 委托单-卖单\n' +
+        '     * 4、buyStockForMarket(String stockId, int quantity)               市场单-买单\n' +
+        '     * 5、sellStockForMarket(String stockId, int quantity)              市场单-卖单\n' +
+        '     */\n' +
+        '    void execute() {\n' +
+        '        for (int i = 0; i < 100; i++) {\n' +
+        '            getStockPrice("CW1");\n' +
+        '            Thread.sleep(1000L);\n' +
+        '        }\n' +
+        '    }\n' +
+        '}';
+    $("#auto_deal_code").append(defaultVal);
+</script>

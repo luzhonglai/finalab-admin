@@ -1,0 +1,119 @@
+<div class="panel-body" id="profitTop_div" th:fragment="profitTop_div">
+    <table id="bootstrap-table-profitTop" data-mobile-responsive="true"></table>
+</div>
+<script th:inline="javascript" th:fragment="profitTop_js">
+    var profitTopUrl = "/serve/userStock";
+    var ctrcourseId =  [[${courseVo.id}]];
+    var profitTopIntervalId = '';
+
+    function stockSpace() {
+        this.initPage = function () {
+            initStockSpace();
+        };
+        this.intervalId = profitTopIntervalId;
+    }
+
+    function initStockSpace() {
+        var options = {
+            url: profitTopUrl + "/teacherList/" + ctrcourseId ,
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            search: false,
+            showExport: false,
+            showRefresh: false,
+            showColumns: false,
+            showToggle: false,
+            showSearch: false,
+            pagination: true,
+            pageSize: 100,
+            tableObj: $('#bootstrap-table-profitTop'),
+            columns: [
+                {
+                    field : 'id',
+                    title : '主键id',
+                    visible: false
+                },
+                {
+                    field : 'courseId',
+                    title : '课程id',
+                    visible: false
+                },
+                {
+                    field : 'instanceId',
+                    title : '实例id',
+                    visible: false
+                },
+                {
+                    field : 'userId',
+                    title : 'TraderID',
+                    sortable: true
+                },
+                {
+                    field : 'userName',
+                    title : '账号',
+                    sortable: true
+                },
+                {
+                    field : 'stockId',
+                    title : '股票代码',
+                    visible: false
+                },
+                {
+                    field : 'stockName',
+                    title : '交易标的',
+                    sortable: false
+                },
+                {
+                    field : 'stockQuantity',
+                    title : '持仓数量',
+                    sortable: true
+                },
+                {
+                    field : 'costPrice',
+                    title : '成本价格',
+                    sortable: true
+                },
+                {
+                    field : 'closePrice',
+                    title : '清算金额',
+                    sortable: true
+                },
+                {
+                    field : 'dealPrice',
+                    title : '最新价格',
+                    sortable: true
+                },{
+                    field : 'totalPrice',
+                    title : '最新市值',
+                    sortable: true
+                },
+                {
+                    field : 'profit',
+                    title : '未实现盈利',
+                    sortable: true
+                },
+                {
+                    field : 'isClose',
+                    title : '是否平仓：1：已平仓；0：未平仓',
+                    visible: false
+                },
+                {
+                    field : 'createTime',
+                    title : '创建时间',
+                    visible: false
+                },
+                {
+                    field : 'modifyTime',
+                    title : '修改时间',
+                    visible: false
+                }]
+        };
+        $.table.init(options);
+    };
+
+    // profitTopIntervalId = window.setInterval(function () {
+    //     $.table.refresh($('#bootstrap-table-profitTop'));
+    // }, 1000);
+</script>

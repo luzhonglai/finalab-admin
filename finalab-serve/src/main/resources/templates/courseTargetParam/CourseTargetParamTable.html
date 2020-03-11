@@ -1,0 +1,117 @@
+<div class="panel-body" id="CourseTargetParamTable_div" th:fragment="CourseTargetParamTable_div">
+    <div class="col-sm-12 search-collapse" style="margin-bottom: 10px;margin-top: -20px;">
+        <form id="courseTargetParamformId">
+            <div class="select-list" >
+                <ul>
+                    <li>
+                        参数名称：<input type="text" name="paramName"/>
+                    </li>
+                    <li>
+                        组编号：<input type="text" name="groupNum"/>
+                    </li>
+                    <li>
+                        <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search('courseTargetParamformId')"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                        <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset('courseTargetParamformId')"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+    <table id="bootstrap-table-CourseTargetParam" data-mobile-responsive="true"></table>
+</div>
+
+<script th:inline="javascript" th:fragment="CourseTargetParamTable_js">
+    var editFlag = [[${@permission.hasPermi('serve:caseParameters:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('serve:caseParameters:remove')}]];
+    var caseId = [[${cases.id}]];
+    var courseVoId = [[${courseVo.id}]]
+    var ctpprefix = ctx + "serve/courseTargetParam";
+    var paramTypes = [[${@dict.getType('excel_param_type')}]];
+
+
+    // 获取数据字典数据
+
+    function CourseTargetParamTable() {
+        this.initPage = function () {
+            initCourseTargetParamTable();
+        }
+    }
+
+
+    function initCourseTargetParamTable() {
+        var options = {
+            url: ctpprefix + "/list/" + courseVoId,
+            createUrl: ctpprefix + "/add",
+            updateUrl: ctpprefix + "/edit/{id}",
+            removeUrl: ctpprefix + "/remove",
+            modalName: "课件标的参数",
+            search: false,
+            showExport: false,
+            pagination: false,
+            showRefresh: false,
+            showColumns: false,
+            showToggle: false,
+            showSearch: false,
+            tableObj: $('#bootstrap-table-CourseTargetParam'),
+            columns: [
+                {
+                    field : 'id',
+                    title : '自增id',
+                    visible: false
+                },
+                {
+                    field : 'caseId',
+                    title : '案例表的id',
+                    visible: false,
+                    sortable: false
+                },
+                {
+                    field : 'paramName',
+                    title : '参数名称',
+                    sortable: false
+                },
+                {
+                    field : 'targetName',
+                    title : '标的名称',
+                    sortable: false
+                },
+                {
+                    field : 'targetType',
+                    title : '类型',
+                    sortable: true
+                    // formatter: function (value, row, index) {
+                    //     return $.table.selectDictLabelNoStyle(paramTypes , row.targetType);
+                    // }
+                },
+                {
+                    field : 'targetValue',
+                    title : '取值',
+                    sortable: true
+                },{
+                    field : 'groupNum',
+                    title : '组编号',
+                    sortable: true
+                },
+                {
+                    field : 'description',
+                    title : '说明',
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        return $.table.tooltip(value, 20);
+                    }
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        // actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    }
+    ;
+</script>

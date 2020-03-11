@@ -1,0 +1,107 @@
+<div class="panel-body" id="marketNews_div" th:fragment="marketNews_div">
+    <table id="bootstrap-table-marketNews" data-mobile-responsive="true"></table>
+</div>
+
+<script th:inline="javascript" th:fragment="marketNews_js">
+    var editFlag = [[${@permission.hasPermi('serve:marketNews:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('serve:marketNews:remove')}]];
+    var MNprefix = ctx + "serve/marketNews";
+    var caseId = [[${cases.id}]];
+
+    function TradingMarketNews() {
+        this.initPage = function () {
+            initTradingMarketNews();
+        }
+    }
+
+    function initTradingMarketNews() {
+        var options = {
+            url: MNprefix + "/list/" + caseId,
+            createUrl: MNprefix + "/add",
+            updateUrl: MNprefix + "/edit/{id}",
+            removeUrl: MNprefix + "/remove",
+            exportUrl: MNprefix + "/export",
+            modalName: "案例市场新闻",
+            search: false,
+            showExport: false,
+            pagination: false,
+            showRefresh: false,
+            showColumns: false,
+            showToggle: false,
+            showSearch: false,
+            tableObj: $('#bootstrap-table-marketNews'),
+            columns: [
+                {
+                    field : 'id',
+                    title : '主键id',
+                    visible: false
+                },
+                {
+                    field : 'caseId',
+                    title : '案例id',
+                    visible: false
+                },
+                {
+                    field : 'groupNum',
+                    title : '组号',
+                    sortable: false
+                },
+                {
+                    field : 'phaseNum',
+                    title : '阶段数字',
+                    sortable: false
+                },
+                {
+                    field : 'timeNum',
+                    title : '时间数字',
+                    sortable: false
+                },
+                {
+                    field : 'sendAim',
+                    title : '发送目标',
+                    sortable: false
+                },
+                {
+                    field : 'isCompel',
+                    title : '是否强制',
+                    sortable: false
+                },
+                {
+                    field : 'action',
+                    title : '动作',
+                    sortable: false
+                },
+                {
+                    field : 'compelStockId',
+                    title : '强制标的',
+                    sortable: false
+                },
+                {
+                    field : 'newsTitle',
+                    title : '新闻标题',
+                    sortable: false
+                },
+                {
+                    field : 'content',
+                    title : '内容',
+                    sortable: false
+                },
+                {
+                    field : 'targetString',
+                    title : '替换文字',
+                    sortable: false
+                },
+
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    };
+</script>

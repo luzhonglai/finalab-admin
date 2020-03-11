@@ -1,0 +1,193 @@
+<div id="m_clear_action_detail" th:fragment="m_clear_action_detail_div">
+
+    <table id="clear_action_detail_table" class="table text-nowrap" style="font-size: 8px;"></table>
+</div>
+
+<script th:inline="javascript" th:fragment="m_clear_action_detail_js">
+    var clearActionDetailPrefix = ctx + "serve/clearActionDetail";
+
+    $(function() {
+        var clearActionDetailOptions = {
+            url: clearActionDetailPrefix + "/list",
+            pageSize: 10,
+            pageNumber: 1,
+            pageList: [10, 20, 25],
+            queryParams: function (params) {
+                var param =
+                    {
+                        instanceId: instanceId,
+                        traderId: userId,
+                        loopNum: loopNum,
+                        // thePeriod: thePeriod,
+                        pageOffset: params.offset,
+                        pageLimit: params.limit
+                    }
+                return param;
+            },
+            createUrl: clearActionDetailPrefix + "/add",
+            updateUrl: clearActionDetailPrefix + "/edit/{id}",
+            removeUrl: clearActionDetailPrefix + "/remove",
+            exportUrl: clearActionDetailPrefix + "/export",
+            modalName: "平仓明细",
+            search: false,
+            showRefresh: false,
+            showColumns: false,
+            showToggle: false,
+            showSearch: false,
+            showExport: false,
+            pagination: true,
+            tableObj: $('#clear_action_detail_table'),
+            columns: [
+                {
+                    field : 'id',
+                    title : '',
+                    visible: false
+                },
+                {
+                    field : 'createTime',
+                    title : '创建时间',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'modifyTime',
+                    title : '修改时间',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'thePeriod',
+                    title : '阶段数',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'loopNum',
+                    title : '第几次循环',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'instanceId',
+                    title : '',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'timeLine',
+                    title : '一秒一秒的时间',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'stockId',
+                    title : '股票id',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'stockName',
+                    title : '股票名称',
+                    sortable: false
+                },
+                {
+                    field : 'clearQuantity',
+                    title : '平仓数量',
+                    sortable: true
+                },
+                {
+                    field : 'costAllPrice',
+                    title : '成本金额',
+                    sortable: true,
+                    formatter: function(value, row, index) {
+                        let quote = stockMap[row.stockId].QuotedDecimals;
+                        return Math.abs((value/row.clearQuantity).toFixed(quote));
+                    }
+                },
+                {
+                    field : 'clearAllPrice',
+                    title : '平仓价格',
+                    sortable: false,
+                    visible: false,
+                    formatter: function(value, row, index) {
+                        let quote = stockMap[row.stockId].QuotedDecimals;
+                        return value.toFixed(quote);
+                    }
+                },
+                {
+                    field : 'clearPrice',
+                    title : '平仓价格',
+                    sortable: true,
+                    formatter: function(value, row, index) {
+                        let quote = stockMap[row.stockId].QuotedDecimals;
+                        return value.toFixed(quote);
+                    }
+                },
+                {
+                    field : 'profitLoss',
+                    title : '已实现盈利',
+                    sortable: true,
+                    formatter: function(value, row, index) {
+                        let quote = stockMap[row.stockId].QuotedDecimals;
+                        return value.toFixed(quote);
+                    }
+                },
+                {
+                    field : 'traderId',
+                    title : '交易人id,机器人是-1',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'traderName',
+                    title : '交易人名字,机器人ANON',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'tradeType',
+                    title : '交易类型, BID("买单"), ASK("卖单");',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'financialType',
+                    title : '金融产品类型,股票（stock)，期货(future)，股指(index)，期权(option)，现汇（spot)',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'orderAction',
+                    title : 'BID("买单"), ASK("卖单"), CANCEL("取消"), CLOSE_OUT("平仓"),NIT_PEND("初始化挂单"), TREND_PEND("走势挂单"), REBOT_PEND("机器人挂单");',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    title: '操作',
+                    visible: false,
+                    formatter: function(value, row, index) {
+                       return null;
+                    }
+                }]
+        };
+        $.table.init(clearActionDetailOptions);
+    });
+
+    function clearActionDetailProfit() {
+        $.ajax({
+            url:clearActionDetailPrefix + "/countProfit",
+            data: {
+                instanceId:instanceId,
+                traderId: userId,
+                loopNum: loopNum,
+                thePeriod: thePeriod
+            },
+            async: false,
+            dataType: 'json',
+            type: 'post',
+            success: function(result) {
+                $("#clearAction_Profit").text('（总盈亏：' + result + '）');
+            }
+        });
+    }
+</script>

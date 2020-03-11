@@ -1,0 +1,84 @@
+<div class="panel-body" id="updateVar_div" th:fragment="updateVar_div">
+
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table-updateVar" data-mobile-responsive="true"></table>
+        </div>
+</div>
+
+<script th:inline="javascript" th:fragment="updateVar_js">
+
+    var updateVarUrl = ctx + "serve/updateVar";
+    var uvCaseId = [[${cases.id}]];
+    function updateVar() {
+        this.initPage = function () {
+            initUpdateVar();
+        }
+    }
+
+    function initUpdateVar() {
+        var options = {
+            url: updateVarUrl + "/list/" + uvCaseId,
+            modalName: "变量更新",
+            search: false,
+            showExport: false,
+            pagination: false,
+            showRefresh: false,
+            showColumns: false,
+            showToggle: false,
+            showSearch: false,
+            tableObj: $("#bootstrap-table-updateVar"),
+            columns: [
+                {
+                    field : 'id',
+                    title : '',
+                    visible: false
+                },
+                {
+                    field : 'period',
+                    title : '阶段',
+                    sortable: false
+                },
+                {
+                    field : 'tick',
+                    title : '秒数',
+                    sortable: false
+                },
+                {
+                    field : 'type',
+                    title : '类型',
+                    sortable: false
+                },
+                {
+                    field : 'subType',
+                    title : '标的编码',
+                    sortable: false
+                },
+                {
+                    field : 'variable',
+                    title : '变量名称',
+                    sortable: false
+                },
+                {
+                    field : 'value',
+                    title : '值',
+                    sortable: false
+                },
+                {
+                    field : 'caseId',
+                    title : '案例id',
+                    sortable: false
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    };
+</script>

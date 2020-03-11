@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bytetcp.finalab.serve.tradingTarget.mapper.TradingTargetMapper">
+    
+    <resultMap type="TradingTarget" id="TradingTargetResult">
+        <result property="id"    column="id"    />
+        <result property="caseId"    column="case_id"    />
+        <result property="targetNum"    column="target_num"    />
+        <result property="targetType"    column="target_type"    />
+        <result property="targetName"    column="target_name"    />
+    </resultMap>
+	
+	<sql id="selectTradingTargetVo">
+        select id, case_id, target_num, target_type, target_name from trading_target
+    </sql>
+	
+    <select id="selectTradingTargetList" parameterType="TradingTarget" resultMap="TradingTargetResult">
+        <include refid="selectTradingTargetVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="caseId != null "> and case_id = #{caseId}</if>
+             <if test="targetNum != null  and targetNum != '' "> and target_num = #{targetNum}</if>
+             <if test="targetType != null  and targetType != '' "> and target_type = #{targetType}</if>
+             <if test="targetName != null  and targetName != '' "> and target_name = #{targetName}</if>
+         </where>
+    </select>
+    
+    <select id="selectTradingTargetById" parameterType="Long" resultMap="TradingTargetResult">
+        <include refid="selectTradingTargetVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTradingTarget" parameterType="TradingTarget" useGeneratedKeys="true" keyProperty="id">
+        insert into trading_target
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="caseId != null  ">case_id,</if>
+			<if test="targetNum != null  and targetNum != ''  ">target_num,</if>
+			<if test="targetType != null  and targetType != ''  ">target_type,</if>
+			<if test="targetName != null  and targetName != ''  ">target_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="caseId != null  ">#{caseId},</if>
+			<if test="targetNum != null  and targetNum != ''  ">#{targetNum},</if>
+			<if test="targetType != null  and targetType != ''  ">#{targetType},</if>
+			<if test="targetName != null  and targetName != ''  ">#{targetName},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateTradingTarget" parameterType="TradingTarget">
+        update trading_target
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="caseId != null  ">case_id = #{caseId},</if>
+            <if test="targetNum != null  and targetNum != ''  ">target_num = #{targetNum},</if>
+            <if test="targetType != null  and targetType != ''  ">target_type = #{targetType},</if>
+            <if test="targetName != null  and targetName != ''  ">target_name = #{targetName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteTradingTargetById" parameterType="Long">
+        delete from trading_target where id = #{id}
+    </delete>
+	
+    <delete id="deleteTradingTargetByIds" parameterType="String">
+        delete from trading_target where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteTradingTargetByActive" parameterType="TradingTarget">
+        delete from trading_target
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="caseId != null "> and case_id = #{caseId}</if>
+            <if test="targetNum != null  and targetNum != '' "> and target_num = #{targetNum}</if>
+            <if test="targetType != null  and targetType != '' "> and target_type = #{targetType}</if>
+            <if test="targetName != null  and targetName != '' "> and target_name = #{targetName}</if>
+        </where>
+    </delete>
+
+    <insert id="insertTradingTargetList" useGeneratedKeys="true" keyProperty="id">
+        insert into trading_target
+        (case_id, target_num, target_type, target_name)
+        VALUES
+        <foreach collection="tradingTargets" item="tradingTarget"  separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{tradingTarget.caseId},
+                #{tradingTarget.targetNum},
+                #{tradingTarget.targetType},
+                #{tradingTarget.targetName}
+            </trim>
+        </foreach>
+    </insert>
+    
+</mapper>

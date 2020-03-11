@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bytetcp.finalab.serve.targetParam.mapper.TargetParamMapper">
+    
+    <resultMap type="TargetParam" id="TargetParamResult">
+        <result property="id"    column="id"    />
+        <result property="caseId"    column="case_id"    />
+        <result property="groupNum"    column="group_num"    />
+        <result property="batchNum"    column="batch_num"    />
+        <result property="paramName"    column="param_name"    />
+        <result property="targetName"    column="target_name"    />
+        <result property="targetType"    column="target_type"    />
+        <result property="targetValue"    column="target_value"    />
+        <result property="description"    column="description"    />
+    </resultMap>
+	
+	<sql id="selectTargetParamVo">
+        select id, case_id, group_num, param_name, target_name, target_type, target_value, description from target_param
+    </sql>
+
+    <sql id="selectCourseTargetParamVo">
+        select id, case_id, param_name, target_name, target_type, target_value, description from course_target_param
+    </sql>
+
+    <select id="selectCourseTargetParambyCourseId" parameterType="Long" resultMap="TargetParamResult">
+        <!--<include refid="selectCourseTargetParamVo"/>-->
+        <!--<where>-->
+            <!--<if test="courseId != null "> and course_id = #{courseId}</if>-->
+        <!--</where>-->
+        select * from course_target_param where course_id = #{courseId}
+    </select>
+	
+    <select id="selectTargetParamList" parameterType="TargetParam" resultMap="TargetParamResult">
+        <include refid="selectTargetParamVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="caseId != null "> and case_id = #{caseId}</if>
+             <if test="groupNum != null "> and group_num = #{groupNum}</if>
+             <if test="paramName != null  and paramName != '' "> and param_name LIKE CONCAT('%',#{paramName},'%')</if>
+             <if test="targetName != null  and targetName != '' "> and target_name = #{targetName}</if>
+             <if test="targetType != null "> and target_type = #{targetType}</if>
+             <if test="targetValue != null  and targetValue != '' "> and target_value = #{targetValue}</if>
+             <if test="description != null  and description != '' "> and description = #{description}</if>
+         </where>
+    </select>
+    
+    <select id="selectTargetParamById" parameterType="Long" resultMap="TargetParamResult">
+        <include refid="selectTargetParamVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTargetParam" parameterType="TargetParam" useGeneratedKeys="true" keyProperty="id">
+        insert into target_param
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="caseId != null  ">case_id,</if>
+			<if test="groupNum != null  ">group_num,</if>
+			<if test="paramName != null  and paramName != ''  ">param_name,</if>
+			<if test="targetName != null  and targetName != ''  ">target_name,</if>
+			<if test="targetType != null  ">target_type,</if>
+			<if test="targetValue != null  and targetValue != ''  ">target_value,</if>
+			<if test="description != null  and description != ''  ">description,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="caseId != null  ">#{caseId},</if>
+			<if test="groupNum != null  ">#{groupNum},</if>
+			<if test="paramName != null  and paramName != ''  ">#{paramName},</if>
+			<if test="targetName != null  and targetName != ''  ">#{targetName},</if>
+			<if test="targetType != null  ">#{targetType},</if>
+			<if test="targetValue != null  and targetValue != ''  ">#{targetValue},</if>
+			<if test="description != null  and description != ''  ">#{description},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateTargetParam" parameterType="TargetParam">
+        update target_param
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="caseId != null  ">case_id = #{caseId},</if>
+            <if test="paramName != null  and paramName != ''  ">param_name = #{paramName},</if>
+            <if test="targetName != null  and targetName != ''  ">target_name = #{targetName},</if>
+            <if test="targetType != null  ">target_type = #{targetType},</if>
+            <if test="targetValue != null  and targetValue != ''  ">target_value = #{targetValue},</if>
+            <if test="description != null  and description != ''  ">description = #{description},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteTargetParamById" parameterType="Long">
+        delete from target_param where id = #{id}
+    </delete>
+	
+    <delete id="deleteTargetParamByIds" parameterType="String">
+        delete from target_param where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <delete id="deleteTargetParamByActive" parameterType="TargetParam">
+        delete from target_param
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="caseId != null "> and case_id = #{caseId}</if>
+            <if test="paramName != null  and paramName != '' "> and param_name = #{paramName}</if>
+            <if test="targetName != null  and targetName != '' "> and target_name = #{targetName}</if>
+            <if test="targetType != null "> and target_type = #{targetType}</if>
+            <if test="targetValue != null  and targetValue != '' "> and target_value = #{targetValue}</if>
+            <if test="description != null  and description != '' "> and description = #{description}</if>
+        </where>
+    </delete>
+
+    <insert id="insertTargetParamList" useGeneratedKeys="true" keyProperty="id">
+        insert into target_param
+        (case_id,group_num, param_name, target_name, target_type, target_value, description)
+        VALUES
+        <foreach collection="targetParams" item="targetParam"  separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{targetParam.caseId},
+                #{targetParam.groupNum},
+                #{targetParam.paramName},
+                #{targetParam.targetName},
+                #{targetParam.targetType},
+                #{targetParam.targetValue},
+                #{targetParam.description}
+            </trim>
+        </foreach>
+    </insert>
+    
+</mapper>

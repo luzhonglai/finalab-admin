@@ -1,0 +1,242 @@
+<div id="course_deal_detail_div" th:fragment="course_deal_detail_div">
+    <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="deal_detail_from">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                账号：<input type="text" name="traderName" id="deal_detail_traderName"/>
+                            </li>
+                            <li>
+                                成交时间：<input type="text" onkeyup="value=value.replace(/[^\d]*$/,'');" name="timeLine" id="deal_detail_timeLine"/>
+                            </li>
+                            <input type="hidden" id="course_deal_detail" name="courseId" th:value="*{courseVo.id}"/>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="refreshTable()"><i
+                                        class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm"
+                                   onclick="$.form.reset('deal_detail_from')"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="exportExcel()" >
+                                    <i class="fa fa-download"></i> 导出
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+
+            <div class="col-sm-12 select-table table-striped">
+                <table id="course-positions-detail-table" data-mobile-responsive="true"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript" th:fragment="course_deal_detail_js">
+    var tranDetailUrl = ctx + "serve/positionsDetail";
+
+
+
+    function tranDetailTab() {
+        this.initPage = function () {
+            tranDetailInCourse();
+        };
+    }
+
+    function tranDetailInCourse() {
+        var tranDetailOptions = {
+            url: tranDetailUrl + "/listForCourse",
+            queryParams: quereParam,
+            modalName: "成交明细",
+            sortName: 'thePeriod desc, timeLine',
+            sortOrder: 'desc',
+            search: false,
+            showExport: false,
+            showRefresh: true,
+            showColumns: false,
+            showToggle: false,
+            showSearch: false,
+            pagination: true,
+            pageSize: 10,
+            pageNumber: 1,
+            pageList: [10, 20, 25],
+            tableObj: $('#course-positions-detail-table'),
+            columns: [
+                {
+                    field: 'traderId',
+                    title: 'TraderId',
+                    sortable: true
+                },
+
+                {
+                    field: 'thePeriod',
+                    title: '阶段数',
+                    sortable: true,
+                    visible: true
+                },
+                {
+                    field: 'timeLine',
+                    title: '成交时间',
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        return value + "s";
+                    }
+                },
+                {
+                    field: 'stockId',
+                    title: '股票id',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'stockName',
+                    title: '交易标的',
+                    sortable: true
+                },
+                {
+                    field: 'traderName',
+                    title: '账号',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'userName',
+                    title: '姓名',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'dealPrice',
+                    title: '成交价格',
+                    sortable: true,
+                    visible: true,
+                    formatter: function(value, row, index) {
+                        if (value != null && typeof(value) != 'undefined' ) {
+                            return value.toFixed(2);
+                        }
+                    }
+                },
+                {
+                    field: 'dealQuantity',
+                    title: '成交数量',
+                    sortable: true,
+                    visible: true
+                },
+                {
+                    title: '成本金额',
+                    formatter: function (value, row, index) {
+                        var toFixedVal = 2;
+                        if (stockQuotedDecimals != null
+                            && stockQuotedDecimals != ''
+                            && stockQuotedDecimals[row.stockId] != '') {
+                            toFixedVal = stockQuotedDecimals[row.stockId];
+                        }
+
+                        return (row.dealPrice * row.dealQuantity).toFixed(toFixedVal);
+                    }
+                },
+                {
+                    field: 'positionQuantity',
+                    title: '净仓位',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'id',
+                    title: '',
+                    visible: false
+                },
+                {
+                    field: 'createTime',
+                    title: '创建时间',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'modifyTime',
+                    title: '修改时间',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'loopNum',
+                    title: '第几次循环',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'instanceId',
+                    title: '',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'tradeType',
+                    title: '类型',
+                    sortable: true,
+                    visible: true
+                    // formatter: function(value, row, index) {
+                    //     return value == 'BID' ? '买单' : '卖单';
+                    // }
+                },
+                {
+                    field: 'financialType',
+                    title: '金融产品类型,股票（stock)，期货(future)，股指(index)，期权(option)，现汇（spot)',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'orderAction',
+                    title: 'BID("买单"), ASK("卖单"), CANCEL("取消"), CLOSE_OUT("平仓"),NIT_PEND("初始化挂单"), TREND_PEND("走势挂单"), REBOT_PEND("机器人挂单");',
+                    sortable: true,
+                    visible: false
+                }
+                ]
+        };
+        $.table.init(tranDetailOptions);
+
+    };
+
+    function quereParam(params) {
+        var param = {
+            courseId: courseId,
+            traderName: $("#deal_detail_traderName").val(),
+            timeLine:$("#deal_detail_timeLine").val(),
+            pageOffset: params.offset,
+            pageLimit: params.limit,
+            sort: params.sort,
+            order: params.order
+        }
+        return param;
+    }
+
+
+    function refreshTable() {
+        $.table.refresh($("#course-positions-detail-table"));
+    }
+
+    function exportExcel() {
+        $.ajax({
+            url: tranDetailUrl + "/exportForCourse",
+            data: {
+                courseId: courseId,
+                traderName: $("#deal_detail_traderName").val(),
+                timeLine: $("#deal_detail_timeLine").val(),
+                sort: 'thePeriod desc, timeLine',
+                order: 'desc'
+            },
+            type: "post",
+            success: function (result) {
+                if (result.code == web_status.SUCCESS) {
+                    window.location.href = ctx + "common/download?fileName=" + result.msg + "&delete=" + true;
+                } else {
+                    $.modal.alertError(result.msg);
+                }
+                $.modal.closeLoading();
+            }
+        })
+    }
+
+</script>

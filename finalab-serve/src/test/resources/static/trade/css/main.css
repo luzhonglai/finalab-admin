@@ -1,0 +1,397 @@
+body {
+    background: #f9f9f9;
+}
+.quotat {
+    width: 100%;
+    font-family: "微软雅黑";
+}
+.quotat .row {
+    margin-left: -6px;
+    margin-right: -6px;
+}
+.quotat .row div {
+    padding-left:6px;
+    padding-right:6px;
+}
+.quotat .row .info-cont {
+    padding:0;
+}
+.quotat .info-cont .list {
+    background: #fff;
+    list-style: none;
+    padding:0;
+    min-height:470px;
+    padding:10px;
+}
+.quotat .info-cont .list li {
+    width: 100%;
+    overflow: hidden;
+}
+.quotat .info-cont .list li a {
+    float: left;
+    width: 100%;
+}
+.quotat .info-cont .list li a:hover {
+    background: #fdfbee;
+}
+.quotat .info-cont .list li span {
+    width: 33.3%;
+    text-align: center;
+    float: left;
+    color: #333;
+    line-height: 32px;
+}
+.quotat .info-cont .list li span.red {
+    color:red;
+}
+.quotat .info-cont .list li span.green {
+    color:#00bc16;
+}
+.quotat .info-cont .list li.tit span {
+    font-size: 8px;
+    color: #888;
+}
+
+.quotat .info-cont .left-cont {
+    width:25%;
+    float: left;
+}
+.quotat .info-cont .right-cont {
+    width:75%;
+    float: right;
+}
+.quotat .info-cont .right-cont .tab-tit {
+    background: #fff;
+    margin: 0;
+    float: left;
+    height: 50px;
+    width: 100%;
+    border-bottom: 1px solid #eaeaea;
+}
+.quotat .info-cont .right-cont .tab-tit h3 {
+    margin: 0;
+    float: left;
+    line-height: 50px;
+    font-size: 10px;
+    color: #333;
+    font-weight: bold;
+    margin-left: 10px;
+}
+.quotat .info-cont .right-cont .tab-tit ul {
+    float: right;
+    list-style: none;
+    margin-top: 10px;
+}
+.quotat .info-cont .right-cont .tab-tit ul li {
+    float: left;
+    padding: 3px 10px;
+    border-radius: 3px;
+    margin-right: 10px;
+    color: #888;
+    border:1px solid #eaeaea;
+    cursor: pointer;
+}
+.quotat .info-cont .right-cont .tab-tit ul li:hover {
+    border:1px solid #00bc16;
+    color:#00bc16;
+}
+.quotat .info-cont .right-cont .tab-tit ul li.active {
+    background: #00bc16;
+    color: #fff;
+    border:1px solid #00bc16;
+}
+.quotat .row .news {
+    background: #fff;
+    width: 100%;
+    float: left;
+    margin:0;
+}
+.quotat .info-cont .chart {
+    background: #fff;
+    height: 420px;
+    text-align: center;
+    font-size: 30px;
+    line-height: 380px;
+    color: #999;
+    float: left;
+    width: 100%;
+}
+.quotat .info-cont .chart .ch_div {
+    display: none;
+}
+.quotat .row .news .tit {
+    width: 6%;
+    height:40px;
+    float: left;
+    text-align: center;
+    margin-top: 18px;
+    border-right: 1px solid #dbdbdb;
+}
+.quotat .row .news .tit h3 {
+    margin:0;
+    padding:0;
+    font-size: 14px;
+    color: #333;
+    font-weight: 600;
+    line-height: 40px;
+}
+.quotat .row .news ul {
+    float: left;
+    list-style: none;
+    width: 90%;
+}
+.quotat .row .news ul.one {
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+.quotat .row .news ul:last-child {
+    margin: 6px 0 10px 0;
+}
+.quotat .row .news ul li {
+    width: 100%;
+    line-height: 26px;
+}
+.quotat .row .news ul li a {
+    color: #333;
+    float: left;
+}
+.quotat .row .news ul li a:hover, .quotat .row .news ul li a.active {
+    color: red;
+    text-decoration: none;
+}
+.quotat .row .news ul li a.btn {
+    width: 40px;
+    height: 22px;
+    background: #ff9800;
+    color: #fff;
+    line-height: 21px;
+    margin:0 0 0 10px;
+    padding: 0;
+}
+.quotat .row .tabslist {
+    background: #fff;
+    margin: 10px 0 0 0;
+    float: left;
+    width: 100%;
+}
+.quotat .tabslist .nav, .quotat .tabslist .tab-content {
+    margin-top: 10px;
+}
+.quotat .tabslist .tab-content {
+    min-height: 200px;
+}
+.quotat .tabslist .tab-row {
+    width: 100%;
+    height: 40px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+.quotat .tabslist .tab-row h4 {
+    float: left;
+    font-size: 14px;
+    color: #333;
+    line-height: 40px;
+    font-weight: 600;
+    margin: 0 10px 0 0;
+}
+.quotat .tabslist .tab-row p {
+    float: left;
+    color: #999;
+    line-height: 40px;
+    margin: 0;
+}
+.quotat .tabslist .radiolist {
+    float: left;
+    margin-right: 50px;
+}
+.quotat .tabslist .radiolist .radio {
+    float: left;
+    width: 80px;
+    overflow: hidden;
+    margin:10px 0 0 0;
+    padding: 0;
+}
+.quotat .tabslist .text {
+    float: left;
+    width: 14%;
+    margin-top: 3px;
+}
+.quotat .tabslist i {
+    float: left;
+    line-height: 40px;
+    font-style: normal;
+    margin-right: 5%;
+}
+.quotat .tabslist .btn {
+    float: right;
+    margin: 50px 0 20px 10px;
+    padding: 6px 20px;
+}
+.quotat .row .details {
+    width: 100%;
+    background: #fff;
+    margin: 0;
+    padding:0 10px 10px;
+    float: left;
+    min-height: 830px;
+}
+.quotat .details .tit {
+    border-bottom: 1px solid #eaeaea;
+}
+.quotat .details .tit h3 {
+    font-size: 10px;
+    color: #333;
+    font-weight: bold;
+}
+.quotat .details ul.opt {
+    width: 100%;
+    list-style: none;
+    margin: 10px 0 0 0;
+    padding: 0;
+    border-bottom: 1px solid #eaeaea;
+}
+.quotat .details .opt li {
+    width: 100%;
+    overflow: hidden;
+    margin: 0 auto;
+    height: 36px;
+    line-height: 36px;
+}
+.quotat .details .opt li span {
+    width: 33.3%;
+    float: left;
+}
+.quotat .details .opt li span.red {
+    color:red;
+}
+.quotat .details .opt li span.green {
+    color:#00bc16;
+}
+.quotat .details .opt li.header span {
+    color: #999;
+    font-size: 8px;
+}
+.quotat .left-cont {
+    width:80%;
+    float: left;
+}
+.quotat .right-cont {
+    width:20%;
+    float: right;
+}
+.quotat .details .j-opt {
+    width: 100%;
+    overflow: hidden;
+    margin-top: 15px;
+    padding-bottom: 11px;
+    
+}
+.quotat .details .j-opt h4 {
+    float: left;
+    font-size: 12px;
+    color: #333;
+}
+.quotat .details .j-opt .text {
+    float: left;
+    width: 20%;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+.quotat .details .j-opt .no_r {
+    margin-right: 5px;
+}
+.quotat .details .j-opt .downbtn {
+    float: left;
+    width: 20px;
+    height: 20px;
+    margin-top: 5px;
+}
+.quotat .details .j-opt .downbtn img {
+    width: 16px;
+    height: 18px;
+}
+.quotat .details .list {
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 10px 0;
+    border-top: 1px solid #eaeaea;
+}
+.quotat .details .list li {
+    width: 100%;
+    overflow: hidden;
+    cursor: pointer;
+}
+.quotat .details .list li:hover {
+    background: #fdfbee;
+}
+.quotat .details .list li span {
+    float: left;
+    width: 25%;
+    line-height: 32px;
+    color: #333;
+}
+.quotat .details .list li span.gray {
+    color: #999;
+}
+.quotat .details .list li span.green {
+    color: #00bc16;
+}
+.quotat .details .list li span.red {
+    color: red;
+}
+.quotat .datalist {
+    width: 100%;
+    background: #fff;
+    float: left;
+    margin-top: 10px;
+}
+.quotat .datalist .tit {
+    width: 100%;
+    overflow: hidden;
+    margin-top: 10px;
+}
+.quotat .datalist .tit h3 {
+    font-size: 10px;
+    color: #333;
+    font-weight: bold;
+    float: left;
+    line-height: 40px;
+    margin: 0;
+}
+.quotat .datalist .tit p {
+    float: left;
+    color: #666;
+    line-height: 40px;
+}
+.quotat .datalist .tit a:hover {
+    text-decoration: none;
+}
+.quotat .datalist .table a {
+    display: inline-block;
+    padding:3px 10px;
+    background: #00bc16;
+    color: #fff;
+    border-radius: 3px;
+    font-size: 10px;
+}
+.quotat .datalist .navigation {
+    width: 100%;
+    text-align: center;
+}
+.gray {
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    -ms-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
+    filter: grayscale(100%);
+    filter: gray;
+}
+
+
+
+
+
+
+
+

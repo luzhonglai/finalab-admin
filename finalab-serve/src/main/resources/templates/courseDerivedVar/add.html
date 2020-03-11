@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-courseDerivedVar-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">案例id：</label>
+				<div class="col-sm-8">
+					<input id="caseId" name="caseId" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">课件id：</label>
+				<div class="col-sm-8">
+					<input id="courseId" name="courseId" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">变量名称：</label>
+				<div class="col-sm-8">
+					<input id="varName" name="varName" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">标的名称：</label>
+				<div class="col-sm-8">
+					<input id="targetName" name="targetName" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">阶段数：</label>
+				<div class="col-sm-8">
+					<input id="period" name="period" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">时间数字：</label>
+				<div class="col-sm-8">
+					<input id="timeNum" name="timeNum" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">变量值：</label>
+				<div class="col-sm-8">
+					<input id="varValue" name="varValue" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">组数：</label>
+				<div class="col-sm-8">
+					<input id="groupNum" name="groupNum" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">创建时间：</label>
+				<div class="col-sm-8">
+					<input id="createTime" name="createTime" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "serve/courseDerivedVar"
+		$("#form-courseDerivedVar-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/add", $('#form-courseDerivedVar-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

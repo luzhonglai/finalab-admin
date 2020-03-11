@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bytetcp.finalab.serve.updateVar.mapper.UpdateVarMapper">
+    
+    <resultMap type="UpdateVar" id="UpdateVarResult">
+        <result property="id"    column="id"    />
+        <result property="period"    column="period"    />
+        <result property="tick"    column="tick"    />
+        <result property="type"    column="type"    />
+        <result property="subType"    column="sub_type"    />
+        <result property="variable"    column="variable"    />
+        <result property="value"    column="value"    />
+        <result property="caseId"    column="case_id"    />
+    </resultMap>
+	
+	<sql id="selectUpdateVarVo">
+        select id, period, tick, type, sub_type, variable, value, case_id from update_var
+    </sql>
+	
+    <select id="selectUpdateVarList" parameterType="UpdateVar" resultMap="UpdateVarResult">
+        <include refid="selectUpdateVarVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="period != null "> and period = #{period}</if>
+             <if test="tick != null "> and tick = #{tick}</if>
+             <if test="type != null  and type != '' "> and type = #{type}</if>
+             <if test="subType != null  and subType != '' "> and sub_type = #{subType}</if>
+             <if test="variable != null  and variable != '' "> and variable = #{variable}</if>
+             <if test="value != null  and value != '' "> and value = #{value}</if>
+             <if test="caseId != null "> and case_id = #{caseId}</if>
+         </where>
+    </select>
+    
+    <select id="selectUpdateVarById" parameterType="Long" resultMap="UpdateVarResult">
+        <include refid="selectUpdateVarVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUpdateVar" parameterType="UpdateVar" useGeneratedKeys="true" keyProperty="id">
+        insert into update_var
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="period != null  ">period,</if>
+			<if test="tick != null  ">tick,</if>
+			<if test="type != null  and type != ''  ">type,</if>
+			<if test="subType != null  and subType != ''  ">sub_type,</if>
+			<if test="variable != null  and variable != ''  ">variable,</if>
+			<if test="value != null  and value != ''  ">value,</if>
+			<if test="caseId != null  ">case_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="period != null  ">#{period},</if>
+			<if test="tick != null  ">#{tick},</if>
+			<if test="type != null  and type != ''  ">#{type},</if>
+			<if test="subType != null  and subType != ''  ">#{subType},</if>
+			<if test="variable != null  and variable != ''  ">#{variable},</if>
+			<if test="value != null  and value != ''  ">#{value},</if>
+			<if test="caseId != null  ">#{caseId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateUpdateVar" parameterType="UpdateVar">
+        update update_var
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="period != null  ">period = #{period},</if>
+            <if test="tick != null  ">tick = #{tick},</if>
+            <if test="type != null  and type != ''  ">type = #{type},</if>
+            <if test="subType != null  and subType != ''  ">sub_type = #{subType},</if>
+            <if test="variable != null  and variable != ''  ">variable = #{variable},</if>
+            <if test="value != null  and value != ''  ">value = #{value},</if>
+            <if test="caseId != null  ">case_id = #{caseId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteUpdateVarById" parameterType="Long">
+        delete from update_var where id = #{id}
+    </delete>
+	
+    <delete id="deleteUpdateVarByIds" parameterType="String">
+        delete from update_var where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="insertUpdateVarList" useGeneratedKeys="true" keyProperty="id">
+        insert into update_var
+        (period, tick, type, sub_type, variable, value, case_id)
+        VALUES
+        <foreach collection="updateVarList" item="updateVar"  separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{updateVar.period},
+                #{updateVar.tick},
+                #{updateVar.type},
+                #{updateVar.subType},
+                #{updateVar.variable},
+                #{updateVar.value},
+                #{updateVar.caseId}
+            </trim>
+        </foreach>
+    </insert>
+    
+</mapper>

@@ -1,0 +1,360 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="halertttp://www.thymeleaf.org">
+<meta charset="utf-8">
+<style type="text/css">
+    .detail .image, .detail .content {
+        float: left;
+    }
+
+    .image {
+        margin: 10px;
+    }
+
+    .content {
+        margin: 10px;
+    }
+
+    .caseName {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .caseId, .caseType, .create .courseName {
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .selectCaseType {
+        float: left;
+        margin-top: -30px;
+        margin-left: 100px;
+    }
+
+    .float-lift-2 {
+        float: left;
+    }
+
+    td {
+        /*table-layout: fixed;*/
+        /*width: 300px;*/
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .panel-body {
+        padding: 0px;
+    }
+
+</style>
+<head th:include="include :: header"></head>
+<body class="gray-bg" th:classappend="${@config.getKey('sys.index.skinName')}">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li class="float-lift-2">
+                            <div class="detail">
+                                <div class="image"><img id="caseIconId"
+                                                        th:src="'/profile/caseIcon/' + ${cases.caseIcon}"
+                                                        style="border:solid 1px; width: 130px;height: 130px"></div>
+                                <div id="CaseInfo" class="content">
+                                    <div id="courseName">
+                                        <p class="courseName"><strong>课件名称：[[${courseVo.courseName}]]</strong></p>
+                                    </div>
+                                    <p class="caseName"><strong th:text="*{cases.caseName}"></strong></p>
+
+                                    <div class="float-lift-2" style="text-align:center;">
+                                        <p style="margin-top: 6px;" class="caseId" th:text="案例编号：+ ${cases.id}"></p>
+                                    </div>
+                                    <div class="float-lift-2" style="text-align:center;margin-left: 30px;">
+                                        <p class="caseType">
+                                            <span>案例分类:&nbsp;&nbsp;&nbsp;</span>
+                                            <select id="selectCaseType" disabled="true" style="width:70px;" name="caseType"
+                                                    th:with="type=${@dict.getType('case_type')}">
+                                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+                                                        th:value="${dict.dictValue}"
+                                                        th:field="*{cases.caseType}"></option>
+                                            </select>&nbsp;&nbsp;
+                                            <!--<button class="btn btn-primary btn-success" style="padding-left: 6px;padding-right: 6px;" type="button" th:onclick="saveAll()">-->
+                                                <!--&lt;!&ndash;<i class="fa fa-check"></i>&ndash;&gt;更新分类-->
+                                            <!--</button>-->
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p style="margin-top: 1px;" align="left" class="create"><strong
+                                                th:text="上传人：+ ${cases.createName}"></strong></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <div id="caseEditDiv" style="float:right">
+                            <li class="float-lift-2"
+                                style="margin-left: 1px;margin-top: 130px;margin-right: 1px;height: 40px;width: 400px;">
+                                <button class="btn btn-success" onclick="uploadExcel()" type="button"><i
+                                        class="fa fa-upload"></i>&nbsp;&nbsp;<span class="bold">上传</span>
+                                </button>&nbsp;&nbsp;&nbsp;
+                                <button id="deletecase" style="border-left-width: 2px;border-right-width: 2px;"
+                                        class="btn btn-danger" type="button" th:onclick="delAll()"><i
+                                        class="fa fa-warning"></i> <span class="bold">删除</span>
+                                </button>
+                            </li>
+                        </div>
+                    </ul>
+                </div>
+            </form>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true">案例参数</a>
+                </li>
+                <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">标的参数</a>
+                </li>
+                <!--<li class=""><a data-toggle="tab" href="#tab-3" aria-expanded="false">标的</a>-->
+                <!--</li>-->
+                <li class=""><a data-toggle="tab" href="#tab-4" aria-expanded="false">交易约束</a>
+                </li>
+                <li class=""><a data-toggle="tab" href="#tab-5" aria-expanded="false">清算表</a>
+                </li>
+
+                <li class=""><a data-toggle="tab" href="#tab-6" aria-expanded="false">用户新闻</a>
+                </li>
+                <li class=""><a data-toggle="tab" href="#tab-7" aria-expanded="false">市场新闻</a>
+                </li>
+                <li class=""><a data-toggle="tab" href="#tab-8" aria-expanded="false">价格走势</a>
+                </li>
+                <li class=""><a data-toggle="tab" href="#tab-9" aria-expanded="false">变量更新</a>
+                </li>
+                <li class=""><a data-toggle="tab" href="#tab-10" aria-expanded="false">衍生变量</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="tab-1" class="tab-pane active">
+                    <div class="panel-body" style="padding: 0px;">
+                        <div class="ibox-content" style="border: 0px">
+                            <div th:replace="courseParameters/CourseCaseParamTable :: CourseCaseParamTable_div"></div>
+                        </div>
+                        <!--<div class="ibox-content"><button class="btn btn-primary btn-rounded" onclick="addInput()">添加</button></div>-->
+
+                    </div>
+                </div>
+                <div id="tab-2" class="tab-pane">
+                    <div class="panel-body">
+                        <div class="panel-body" style="padding: 0px;">
+                            <div class="ibox-content" style="border: 0px">
+                                <div th:replace="courseTargetParam/CourseTargetParamTable :: CourseTargetParamTable_div"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--<div id="tab-3" class="tab-pane">-->
+                    <!--<div class="panel-body">-->
+                        <!--<div class="panel-body" style="padding: 0px;">-->
+                            <!--<div class="ibox-content" style="border: 0px">-->
+                                <!--<div th:replace="courseTradingTarget/CourseTradingTargetTable :: CourseTradingTargetTable_div"></div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <div id="tab-4" class="tab-pane">
+                    <div class="panel-body">
+                        <div class="panel-body" style="padding: 0px;">
+                            <div class="ibox-content" style="border: 0px">
+                                <div th:replace="courseTradingConstraint/CourseTradingConstraintTable :: CourseTradingConstraintTable_div"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab-5" class="tab-pane">
+                    <div class="panel-body">
+                        <div class="panel-body" style="padding: 0px;">
+                            <div class="ibox-content" style="border: 0px">
+                                <div th:replace="courseLiquidation/CourseLiquidationTable :: CourseCourseLiquidationTable_div"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab-6" class="tab-pane">
+                    <div class="panel-body">
+                        <div class="panel-body" style="padding: 0px;">
+                            <div class="ibox-content" style="border: 0px">
+                                <div th:replace="courseUserNews/courseUserNewsTable :: courseUserNews_div"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab-7" class="tab-pane">
+                    <div class="panel-body">
+                        <div class="panel-body" style="padding: 0px;">
+                            <div class="ibox-content" style="border: 0px">
+                                <div th:replace="courseMarketNews/courseMarketNewsTable :: courseMarketNews_div"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab-8" class="tab-pane">
+                    <div class="panel-body">
+                        <div class="panel-body" style="padding: 0px;">
+                            <div class="ibox-content" style="border: 0px">
+                                <div th:replace="coursePriceMove/CoursePriceMoveTable :: CoursePriceMoveTable_div"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab-9" class="tab-pane">
+                    <div class="panel-body">
+                        <div class="panel-body" style="padding: 0px;">
+                            <div class="ibox-content" style="border: 0px">
+                                <div th:replace="courseUpdateVar/course_UpdateVar :: courseUpdateVar_div"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-10" class="tab-pane">
+                    <div class="panel-body">
+                        <div class="panel-body" style="padding: 0px;">
+                            <div class="ibox-content" style="border: 0px">
+                                <div th:replace="courseDerivedVar/course_derivedVar_table :: course_derivedVar_div"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div th:include="include :: footer"></div>
+<div th:replace="courseParameters/CourseCaseParamTable :: CourseCaseParamTable_js"></div>
+<div th:replace="courseTargetParam/CourseTargetParamTable :: CourseTargetParamTable_js"></div>
+<!--<div th:replace="courseTradingTarget/CourseTradingTargetTable :: CourseTradingTargetTable_js"></div>-->
+<div th:replace="courseTradingConstraint/CourseTradingConstraintTable :: CourseTradingConstraintTable_js"></div>
+<div th:replace="courseLiquidation/CourseLiquidationTable :: CourseCourseLiquidationTable_js"></div>
+<div th:replace="courseUserNews/courseUserNewsTable :: courseUserNews_js"></div>
+<div th:replace="courseMarketNews/courseMarketNewsTable :: courseMarketNews_js"></div>
+<div th:replace="coursePriceMove/CoursePriceMoveTable :: CoursePriceMoveTable_js"></div>
+<div th:replace="courseUpdateVar/course_UpdateVar :: courseUpdateVar_js"></div>
+<div th:replace="courseDerivedVar/course_derivedVar_table :: course_derivedVar_js"></div>
+
+
+
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('serve:caseParameters:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('serve:caseParameters:remove')}]];
+    var caseId = [[${cases.id}]];
+    // 获取数据字典数据
+    var courseVoId = [[${courseVo.id}]]
+    var prefix = ctx + "serve/courseCaseParamters/";
+
+    //注册table对象
+    $.registTable(new CourseCaseParamTable());//课件案例参数
+    $.registTable(new CourseTargetParamTable());//课件标的参数
+    // $.registTable(new CourseTradingTargetTable())//课件标的
+    $.registTable(new CourseTradingConstraintTable())//课件交易约束
+    $.registTable(new CourseCourseLiquidationTable())//课件清算表
+    $.registTable(new CourseUserNewsTable())//用户新闻表
+    $.registTable(new CourseMarketNews())//市场新闻表
+    $.registTable(new CoursePriceMoveTable())//课件价格走势
+    $.registTable(new courseUpdateVar())//课件价格走势
+    $.registTable(new courseDerivedVarTab())
+    //初始化选项卡
+    $.initFirstTable();
+
+    //切换方法
+    $.changeTable();
+
+
+
+    $("#courseName").append('')
+    $("#caseEditDiv").html('')
+
+
+    function delAll() {
+        var msg = "确认要删除当前案例下全部数据吗?"
+        $.modal.confirm(msg, function () {
+            var paraformdata = new FormData();
+            paraformdata.append("caseId", caseId)
+            $.ajax({
+                url: prefix + "delAll",
+                data: paraformdata,
+                type: "post",
+                processData: false,
+                contentType: false,
+                error: function (result) {
+
+                },
+                success: function (result) {
+                    //3.隐藏
+                    console.log("成功");
+
+                    refreshItemById("/serve/cases");
+                    //关闭当前窗口
+                    closeCurrentTab();
+                    //$.modal.closeAll
+
+                }
+            })
+        })
+    }
+
+    function saveAll() {
+        var caseType = $('#selectCaseType option:selected').val();
+        var paraformdata = new FormData();
+        if (courseVoId != null || courseVoId != "") {
+            paraformdata.append("courseId", courseVoId);
+        }
+        paraformdata.append("caseType", caseType);
+        paraformdata.append("caseId", caseId);
+        $.ajax({
+            url: prefix + "updateCaseType",
+            data: paraformdata,
+            type: "post",
+            processData: false,
+            contentType: false,
+            async: false,
+            error: function (result) {
+                console.log("保存失败" + result.toString())
+                $.modal.msgError(result.msg);
+            },
+            success: function (result) {
+                //3.隐藏
+                console.log("保存成功" + result)
+                //location.reload();
+                $.modal.msgSuccess(result.msg);
+            }
+        })
+    }
+
+    function uploadExcel() {
+        var msg = "该操作会删除当前案例下全部数据,请确认!"
+        $.modal.confirm(msg, function () {
+            //能取到caseId和courseId
+            var reloanUrl = ctx + "serve/caseParameters/reload/" + caseId;
+            var editUrl = ctx + "serve/caseParameters/parEdit/" + caseId;
+            createMenuItem(reloanUrl, "上传案例");
+            closeTabById(editUrl);
+        })
+    }
+
+    function closeTabById(tabId) {
+        var topWindow = $(window.parent.document);
+        $('.menuTabs .page-tabs-content', topWindow).find("a[data-id='" + tabId + "'] i").trigger("click");
+    }
+
+    /** 刷新指定选项卡 */
+    function refreshItemById (tabId){
+        var topWindow = $(window.parent.document);
+        var target = $('.RuoYi_iframe[data-id="' + tabId + '"]', topWindow);
+        var url = target.attr('src');
+        target.attr('src', url).ready();
+    }
+
+</script>
+
+</body>
+</html>

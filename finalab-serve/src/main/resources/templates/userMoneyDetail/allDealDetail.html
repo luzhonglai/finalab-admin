@@ -1,0 +1,210 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+
+<div class="container-div">
+    <div class="row">
+        <!--<div class="col-sm-12 search-collapse">-->
+            <!--<form id="formId">-->
+                <!--<div class="select-list">-->
+                    <!--<ul>-->
+                        <!---->
+                        <!--<li>-->
+                            <!--<input type="hidden"  name="traderId" th:value="*{traderId}"/>-->
+                        <!--</li>-->
+
+                        <!--<li>-->
+                           <!--<input type="hidden" name="courseId" th:value="*{courseId}"/>-->
+                        <!--</li>-->
+
+                        <!---->
+
+                        <!--<li>-->
+                            <!--<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>-->
+                            <!--<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                <!--</div>-->
+            <!--</form>-->
+        <!--</div>-->
+
+        <div class="col-sm-12 select-table table-striped">
+            <table id="all_deal_detail" data-mobile-responsive="true"></table>
+            <!--<input type="hidden"  id="traderId" th:value="*{traderId}"/>-->
+            <!--<input type="hidden" id="courseId" th:value="*{courseId}"/>-->
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:inline="javascript">
+    var traderId = [[${traderId}]];
+    var courseId = [[${courseId}]];
+    var instanceId = [[${instanceId}]];
+    var umdPrefix = ctx + "serve/userMoneyDetail";
+
+    $(function() {
+        var options = {
+            url: umdPrefix + "/getLastLoopDetail",
+            createUrl: umdPrefix + "/add",
+            updateUrl: umdPrefix + "/edit/{id}",
+            removeUrl: umdPrefix + "/remove",
+            exportUrl: umdPrefix + "/export",
+            modalName: "用户金额明细",
+            sortName: 'thePeriod desc, timeLine',
+            sortOrder: 'desc',
+            search: false,
+            showRefresh: true,
+            showColumns: false,
+            showToggle: false,
+            showSearch: false,
+            showExport: false,
+            pagination: false,
+            // pageSize: 10,
+            // pageNumber: 1,
+            // pageList: [10, 20, 25],
+            queryParams: function (params) {
+                var param = {
+                    courseId: courseId,
+                    instanceId: instanceId,
+                    traderId: traderId,
+                    pageOffset: params.offset,
+                    pageLimit: params.limit,
+                    sort: params.sort,
+                    order: params.order
+                }
+                return param;
+            },
+            tableObj: $("#all_deal_detail"),
+            columns: [
+                {
+                    field : 'id',
+                    title : '',
+                    visible: false
+                },
+                {
+                    field : 'createTime',
+                    title : '创建时间',
+                    sortable: false,
+                    visible: false
+                },
+                {
+                    field : 'modifyTime',
+                    title : '修改时间',
+                    sortable: false,
+                    visible: false
+                },
+                {
+                    field : 'loopNum',
+                    title : '第几次循环',
+                    sortable: false,
+                    visible: false
+                },
+
+                {
+                    field : 'instanceId',
+                    title : '',
+                    sortable: false,
+                    visible: false
+                },
+                {
+                    field : 'courseId',
+                    title : '课件id',
+                    sortable: false,
+                    visible: false
+                },
+                {
+                    field : 'stockId',
+                    title : '股票id',
+                    sortable: false,
+                    visible: false
+                },
+                {
+                    field : 'stockName',
+                    title : '交易标的',
+                    sortable: true,
+                    formatter : function (value, row, index) {
+                        return value + '-' + row.actionName;
+                    }
+                },
+                {
+                    field : 'actionName',
+                    title : '交易类型',
+                    sortable: true,
+                    formatter:function (value, row, index) {
+                        return value == '买单' || value == '卖单' ? value.substr(0,1) : 'NA';
+                    }
+                },
+                {
+                    field : 'timeLine',
+                    title : '成交时间（秒）',
+                    sortable: true
+                },
+                {
+                    field : 'financialType',
+                    title : '金融产品类型',
+                    sortable: true,
+                    visible: false
+
+                },
+                {
+                    field : 'dealQuantity',
+                    title : '成交数量',
+                    sortable: true
+                },
+                {
+                    field : 'dealPrice',
+                    title : '成交价格',
+                    sortable: true,
+                    formatter: function(value, row, index) {
+                        if (value != null && typeof(value) != 'undefined' ) {
+                            return value.toFixed(2);
+                        }
+                    }
+                },
+                {
+                    field : 'costPrice',
+                    title : '单笔成交总额',
+                    sortable: true,
+                    formatter: function(value, row, index) {
+                        if (value != null && typeof(value) != 'undefined' ) {
+                            return value.toFixed(2);
+                        }
+                    }
+                },
+                {
+                    field : 'totalPrice',
+                    title : '累计成交总额',
+                    sortable: true,
+                    formatter: function(value, row, index) {
+                        if (value != null && typeof(value) != 'undefined' ) {
+                            return value.toFixed(2);
+                        }
+                    }
+                },
+                {
+                    field : 'traderId',
+                    title : '交易人id,机器人是-1',
+                    sortable: false,
+                    visible: false
+                },
+                {
+                    field : 'traderName',
+                    title : '交易人名字,机器人ANON',
+                    sortable: false,
+                    visible: false
+                },
+                {
+                    field : 'thePeriod',
+                    title : '阶段数',
+                    sortable: true,
+                    visible: true
+                },]
+        };
+        $.table.init(options);
+    });
+
+</script>
+</body>
+</html>

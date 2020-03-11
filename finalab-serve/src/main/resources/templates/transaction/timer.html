@@ -1,0 +1,133 @@
+<script th:inline="javascript" th:fragment="timer_js">
+    function Timer(interval) {
+        if(undefined == interval || null == interval){
+            interval = 1000;
+        }
+        this.interval = interval;
+        this.tasks = [];
+        this.worker = null;
+        clearInterval(this.worker);
+    }
+
+    Timer.prototype.add_task = function (name, fun) {
+        this.tasks[name] = fun;
+    }
+
+    Timer.prototype.start = function (){
+        var t = this;
+        t.worker = setInterval(function(){
+            for(let name in t.tasks){
+                var task = t.tasks[name];
+                task();
+            }
+        },t.interval);
+    }
+
+    Timer.prototype.stop = function(){
+        clearInterval(this.worker);
+    }
+
+    function task1(){
+        console.log("交易明细表更新");
+        $.table.refresh($("#user_money_detail_table"));
+    }
+
+    function task2(){
+        console.log("持仓明细表更新");
+        $.table.refresh($('#positions_table'));
+        var count = 0;
+        $('.profit').each(function (index, element) {
+            var text = $(element).text();
+            if (text != '--') {
+                count = count + Number(text);
+            } else {
+                count = '--';
+            }
+        });
+        $('#z-profit').text('（总盈亏：' + count + '）');
+    }
+
+    function task3() {
+        console.log("平仓明细表更新")
+        $.table.refresh($("#clear_action_detail_table"));
+        clearActionDetailProfit();
+    }
+
+    function task4() {
+        console.log("挂单列表更新");
+        $.table.refresh($("#entry_order_table"));
+        var rows = $("#entry_order_table").bootstrapTable("getData").length;
+        if (rows == 0) {
+            $("#cancelAll").attr('disabled', 'false');
+            $("#cancelAll").removeAttr('onclick');
+        } else {
+            // $("#cancelAll").removeAttr("style");
+            $("#cancelAll").removeAttr('disabled');
+            $("#cancelAll").attr('onclick', 'orderCancelAll("CANCEL_ALL")');
+        }
+    }
+
+    function task5() {
+        console.log("更新右侧股票成交价格和仓位");
+        var stockId = transaction.priceMove.stockId;
+            if (tdCommon.notEmpty(stockId)) {
+                var param = {instanceId: instanceId, stockId: stockId};
+                //解析数据 刷新仓位
+                transaction.submit(lastPositionsTotal, JSON.stringify(param), function (result) {
+                    if (result.code == 0) {
+                        var quote = stockMap[stockId].QuotedDecimals;
+                        var nowQuantity = result.data.nowQuantity;
+                        var avgPrice = nowQuantity == 0 ? 0 : (result.data.totalPrice/nowQuantity).toFixed(quote);
+                        var storeHouseData = {storeHouse: nowQuantity.toString(),
+                            avgBuyPrice: avgPrice.toString(), newestPrice: ''};
+                        transaction.storeHouse.refresh(storeHouseData);
+                    } else if (result.code != 0) {
+                        var storeHouseData = {storeHouse: '--',
+                            avgBuyPrice: '--'};
+                        transaction.storeHouse.refresh(storeHouseData);
+                    }
+                });
+            } else {
+                console.log('等待股票走势数据初始化，本次不获取用户仓位信息')
+            }
+    }
+
+    function task6() {
+        var param = {
+            instanceId: instanceId,
+            courseId: courseId,
+            thePeriod: thePeriod,
+            loopNum: loopNum,
+            traderId: userId
+        };
+        transaction.submit(allQuantityUrl, JSON.stringify(param), function (result) {
+            quantityMap = result.data;
+
+        });
+        $("#derived_table").bootstrapTable('load', datas);
+        //  $.table.refresh($("#derived_table"));
+    }
+
+    var timer = new Timer();
+    timer.add_task("task1",function(){
+        task1();
+    });
+    timer.add_task("task2",function(){
+        task2();
+    });
+    timer.add_task("task3",function(){
+        task3();
+    });
+    timer.add_task("task4",function(){
+        task4();
+    });
+    timer.add_task("task5",function(){
+        task5();
+    });
+    timer.add_task("task6",function(){
+        task6();
+    });
+    console.log(timer);
+    timer.start();
+
+</script>

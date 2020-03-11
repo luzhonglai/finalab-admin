@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bytetcp.finalab.serve.courseTargetParam.mapper.CourseTargetParamMapper">
+    
+    <resultMap type="CourseTargetParam" id="CourseTargetParamResult">
+        <result property="id"    column="id"    />
+        <result property="caseId"    column="case_id"    />
+        <result property="groupNum"  column="group_num"/>
+        <result property="paramName"    column="param_name"    />
+        <result property="targetName"    column="target_name"    />
+        <result property="targetType"    column="target_type"    />
+        <result property="targetValue"    column="target_value"    />
+        <result property="description"    column="description"    />
+        <result property="courseId"    column="course_id"    />
+    </resultMap>
+
+    <resultMap id="CourseTargetParamResultMap" type="java.util.HashMap">
+        <result property="key" column="param_name" javaType="java.lang.String" />
+        <result property="value" column="target_value" javaType="java.lang.String" />
+    </resultMap>
+	
+	<sql id="selectCourseTargetParamVo">
+        select id, case_id,group_num, param_name, target_name, target_type, target_value, description, course_id from course_target_param
+    </sql>
+	
+    <select id="selectCourseTargetParamList" parameterType="CourseTargetParam" resultMap="CourseTargetParamResult">
+        <include refid="selectCourseTargetParamVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="caseId != null "> and case_id = #{caseId}</if>
+            <if test="groupNum != null "> and group_num = #{groupNum}</if>
+             <if test="paramName != null  and paramName != '' "> and param_name LIKE CONCAT('%',#{paramName},'%')</if>
+             <if test="targetName != null  and targetName != '' "> and target_name = #{targetName}</if>
+             <if test="targetType != null "> and target_type = #{targetType}</if>
+             <if test="targetValue != null  and targetValue != '' "> and target_value = #{targetValue}</if>
+             <if test="description != null  and description != '' "> and description = #{description}</if>
+             <if test="courseId != null "> and course_id = #{courseId}</if>
+         </where>
+    </select>
+
+    <select id="selectCourseTargetParam" parameterType="CourseTargetParam" resultMap="CourseTargetParamResult">
+        <include refid="selectCourseTargetParamVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+             <if test="caseId != null "> and case_id = #{caseId}</if>
+            <if test="groupNum != null "> and group_num = #{groupNum}</if>
+            <if test="paramName != null  and paramName != '' "> and param_name = #{paramName}</if>
+             <if test="targetName != null  and targetName != '' "> and target_name = #{targetName}</if>
+             <if test="targetType != null "> and target_type = #{targetType}</if>
+             <if test="targetValue != null  and targetValue != '' "> and target_value = #{targetValue}</if>
+             <if test="description != null  and description != '' "> and description = #{description}</if>
+             <if test="courseId != null "> and course_id = #{courseId}</if>
+         </where>
+    </select>
+
+    <select id="selectCourseTargetParamMap" parameterType="CourseTargetParam" resultMap="CourseTargetParamResultMap">
+        select param_name, target_value from course_target_param
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+             <if test="caseId != null "> and case_id = #{caseId}</if>
+            <if test="groupNum != null "> and group_num = #{groupNum}</if>
+            <if test="paramName != null  and paramName != '' "> and param_name = #{paramName}</if>
+             <if test="targetName != null  and targetName != '' "> and target_name = #{targetName}</if>
+             <if test="targetType != null "> and target_type = #{targetType}</if>
+             <if test="targetValue != null  and targetValue != '' "> and target_value = #{targetValue}</if>
+             <if test="description != null  and description != '' "> and description = #{description}</if>
+             <if test="courseId != null "> and course_id = #{courseId}</if>
+         </where>
+    </select>
+    
+    <select id="selectCourseTargetParamById" parameterType="Long" resultMap="CourseTargetParamResult">
+        <include refid="selectCourseTargetParamVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCourseTargetParam" parameterType="CourseTargetParam" useGeneratedKeys="true" keyProperty="id">
+        insert into course_target_param
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="caseId != null  ">case_id,</if>
+            <if test="groupNum != null ">group_num,</if>
+            <if test="paramName != null  and paramName != ''  ">param_name,</if>
+			<if test="targetName != null  and targetName != ''  ">target_name,</if>
+			<if test="targetType != null  ">target_type,</if>
+			<if test="targetValue != null  and targetValue != ''  ">target_value,</if>
+			<if test="description != null  and description != ''  ">description,</if>
+			<if test="courseId != null  ">course_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="caseId != null  ">#{caseId},</if>
+            <if test="groupNum != null ">#{groupNum}</if>
+            <if test="paramName != null  and paramName != ''  ">#{paramName},</if>
+			<if test="targetName != null  and targetName != ''  ">#{targetName},</if>
+			<if test="targetType != null  ">#{targetType},</if>
+			<if test="targetValue != null  and targetValue != ''  ">#{targetValue},</if>
+			<if test="description != null  and description != ''  ">#{description},</if>
+			<if test="courseId != null  ">#{courseId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateCourseTargetParam" parameterType="CourseTargetParam">
+        update course_target_param
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="caseId != null  ">case_id = #{caseId},</if>
+            <if test="groupNum != null ">group_num = #{groupNum},</if>
+            <if test="paramName != null  and paramName != ''  ">param_name = #{paramName},</if>
+            <if test="targetName != null  and targetName != ''  ">target_name = #{targetName},</if>
+            <if test="targetType != null  ">target_type = #{targetType},</if>
+            <if test="targetValue != null  and targetValue != ''  ">target_value = #{targetValue},</if>
+            <if test="description != null  and description != ''  ">description = #{description},</if>
+            <if test="courseId != null  ">course_id = #{courseId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteCourseTargetParamById" parameterType="Long">
+        delete from course_target_param where id = #{id}
+    </delete>
+	
+    <delete id="deleteCourseTargetParamByIds" parameterType="String">
+        delete from course_target_param where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

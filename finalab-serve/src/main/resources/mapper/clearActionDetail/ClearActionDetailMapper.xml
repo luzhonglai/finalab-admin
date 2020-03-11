@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bytetcp.finalab.serve.clearActionDetail.mapper.ClearActionDetailMapper">
+    
+    <resultMap type="ClearActionDetail" id="ClearActionDetailResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="modifyTime"    column="modify_time"    />
+        <result property="thePeriod"    column="the_period"    />
+        <result property="loopNum"    column="loop_num"    />
+        <result property="instanceId"    column="instance_id"    />
+        <result property="timeLine"    column="time_line"    />
+        <result property="stockId"    column="stock_id"    />
+        <result property="stockName"    column="stock_name"    />
+        <result property="costAllPrice"    column="cost_all_price"    />
+        <result property="clearAllPrice"    column="clear_all_price"    />
+        <result property="profitLoss"    column="profit_loss"    />
+        <result property="clearQuantity"    column="clear_quantity"    />
+        <result property="traderId"    column="trader_id"    />
+        <result property="traderName"    column="trader_name"    />
+        <result property="tradeType"    column="trade_type"    />
+        <result property="financialType"    column="financial_type"    />
+        <result property="orderAction"    column="order_action"    />
+        <result property="clearPrice"    column="clear_price"    />
+    </resultMap>
+	
+	<sql id="selectClearActionDetailVo">
+        select id, create_time, modify_time, the_period, loop_num, instance_id, time_line, stock_id, stock_name, cost_all_price, clear_all_price, profit_loss, clear_quantity, trader_id, trader_name, trade_type, financial_type, order_action, clear_price from clear_action_detail
+    </sql>
+	
+    <select id="selectClearActionDetailList" parameterType="ClearActionDetail" resultMap="ClearActionDetailResult">
+        <include refid="selectClearActionDetailVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="modifyTime != null "> and modify_time = #{modifyTime}</if>
+             <if test="thePeriod != null "> and the_period = #{thePeriod}</if>
+             <if test="loopNum != null "> and loop_num = #{loopNum}</if>
+             <if test="instanceId != null  and instanceId != '' "> and instance_id = #{instanceId}</if>
+             <if test="timeLine != null "> and time_line = #{timeLine}</if>
+             <if test="stockId != null  and stockId != '' "> and stock_id = #{stockId}</if>
+             <if test="stockName != null  and stockName != '' "> and stock_name = #{stockName}</if>
+             <if test="costAllPrice != null "> and cost_all_price = #{costAllPrice}</if>
+             <if test="clearAllPrice != null "> and clear_all_price = #{clearAllPrice}</if>
+             <if test="profitLoss != null "> and profit_loss = #{profitLoss}</if>
+             <if test="clearQuantity != null "> and clear_quantity = #{clearQuantity}</if>
+             <if test="traderId != null "> and trader_id = #{traderId}</if>
+             <if test="traderName != null  and traderName != '' "> and trader_name = #{traderName}</if>
+             <if test="tradeType != null  and tradeType != '' "> and trade_type = #{tradeType}</if>
+             <if test="financialType != null  and financialType != '' "> and financial_type = #{financialType}</if>
+             <if test="orderAction != null  and orderAction != '' "> and order_action = #{orderAction}</if>
+             <if test="clearPrice != null"> and clear_price = #{clearPrice}</if>
+         </where>
+    </select>
+    
+    <select id="selectClearActionDetailById" parameterType="Long" resultMap="ClearActionDetailResult">
+        <include refid="selectClearActionDetailVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertClearActionDetail" parameterType="ClearActionDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into clear_action_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="createTime != null  ">create_time,</if>
+			<if test="modifyTime != null  ">modify_time,</if>
+			<if test="thePeriod != null  ">the_period,</if>
+			<if test="loopNum != null  ">loop_num,</if>
+			<if test="instanceId != null  and instanceId != ''  ">instance_id,</if>
+			<if test="timeLine != null  ">time_line,</if>
+			<if test="stockId != null  and stockId != ''  ">stock_id,</if>
+			<if test="stockName != null  and stockName != ''  ">stock_name,</if>
+			<if test="costAllPrice != null  ">cost_all_price,</if>
+			<if test="clearAllPrice != null  ">clear_all_price,</if>
+			<if test="profitLoss != null  ">profit_loss,</if>
+			<if test="clearQuantity != null  ">clear_quantity,</if>
+			<if test="traderId != null  ">trader_id,</if>
+			<if test="traderName != null  and traderName != ''  ">trader_name,</if>
+			<if test="tradeType != null  and tradeType != ''  ">trade_type,</if>
+			<if test="financialType != null  and financialType != ''  ">financial_type,</if>
+			<if test="orderAction != null  and orderAction != ''  ">order_action,</if>
+            <if test="clearPrice != null"> clear_price,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="modifyTime != null  ">#{modifyTime},</if>
+			<if test="thePeriod != null  ">#{thePeriod},</if>
+			<if test="loopNum != null  ">#{loopNum},</if>
+			<if test="instanceId != null  and instanceId != ''  ">#{instanceId},</if>
+			<if test="timeLine != null  ">#{timeLine},</if>
+			<if test="stockId != null  and stockId != ''  ">#{stockId},</if>
+			<if test="stockName != null  and stockName != ''  ">#{stockName},</if>
+			<if test="costAllPrice != null  ">#{costAllPrice},</if>
+			<if test="clearAllPrice != null  ">#{clearAllPrice},</if>
+			<if test="profitLoss != null  ">#{profitLoss},</if>
+			<if test="clearQuantity != null  ">#{clearQuantity},</if>
+			<if test="traderId != null  ">#{traderId},</if>
+			<if test="traderName != null  and traderName != ''  ">#{traderName},</if>
+			<if test="tradeType != null  and tradeType != ''  ">#{tradeType},</if>
+			<if test="financialType != null  and financialType != ''  ">#{financialType},</if>
+			<if test="orderAction != null  and orderAction != ''  ">#{orderAction},</if>
+            <if test="clearPrice != null">#{clearPrice},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateClearActionDetail" parameterType="ClearActionDetail">
+        update clear_action_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="modifyTime != null  ">modify_time = #{modifyTime},</if>
+            <if test="thePeriod != null  ">the_period = #{thePeriod},</if>
+            <if test="loopNum != null  ">loop_num = #{loopNum},</if>
+            <if test="instanceId != null  and instanceId != ''  ">instance_id = #{instanceId},</if>
+            <if test="timeLine != null  ">time_line = #{timeLine},</if>
+            <if test="stockId != null  and stockId != ''  ">stock_id = #{stockId},</if>
+            <if test="stockName != null  and stockName != ''  ">stock_name = #{stockName},</if>
+            <if test="costAllPrice != null  ">cost_all_price = #{costAllPrice},</if>
+            <if test="clearAllPrice != null  ">clear_all_price = #{clearAllPrice},</if>
+            <if test="profitLoss != null  ">profit_loss = #{profitLoss},</if>
+            <if test="clearQuantity != null  ">clear_quantity = #{clearQuantity},</if>
+            <if test="traderId != null  ">trader_id = #{traderId},</if>
+            <if test="traderName != null  and traderName != ''  ">trader_name = #{traderName},</if>
+            <if test="tradeType != null  and tradeType != ''  ">trade_type = #{tradeType},</if>
+            <if test="financialType != null  and financialType != ''  ">financial_type = #{financialType},</if>
+            <if test="orderAction != null  and orderAction != ''  ">order_action = #{orderAction},</if>
+            <if test="clearPrice != null">clear_price = #{clearPrice},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteClearActionDetailById" parameterType="Long">
+        delete from clear_action_detail where id = #{id}
+    </delete>
+	
+    <delete id="deleteClearActionDetailByIds" parameterType="String">
+        delete from clear_action_detail where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="countProfit" resultType="Double" parameterType="ClearActionDetail">
+        select ROUND(SUM(profit_loss),2) from clear_action_detail
+        <where>
+            <if test="thePeriod != null "> and the_period = #{thePeriod}</if>
+            <if test="loopNum != null "> and loop_num = #{loopNum}</if>
+            <if test="instanceId != null  and instanceId != '' "> and instance_id = #{instanceId}</if>
+            <if test="traderId != null "> and trader_id = #{traderId}</if>
+        </where>
+    </select>
+    
+</mapper>

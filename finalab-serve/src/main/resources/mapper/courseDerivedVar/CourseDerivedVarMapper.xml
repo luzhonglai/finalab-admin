@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bytetcp.finalab.serve.courseDerivedVar.mapper.CourseDerivedVarMapper">
+    
+    <resultMap type="CourseDerivedVar" id="CourseDerivedVarResult">
+        <result property="id"    column="id"    />
+        <result property="caseId"    column="case_id"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="varName"    column="var_name"    />
+        <result property="targetName"    column="target_name"    />
+        <result property="period"    column="period"    />
+        <result property="timeNum"    column="time_num"    />
+        <result property="varValue"    column="var_value"    />
+        <result property="groupNum"    column="group_num"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+	
+	<sql id="selectCourseDerivedVarVo">
+        select id, case_id, course_id, var_name, target_name, period,  time_num, var_value, group_num, create_time from course_derived_var
+    </sql>
+	
+    <select id="selectCourseDerivedVarList" parameterType="CourseDerivedVar" resultMap="CourseDerivedVarResult">
+        <include refid="selectCourseDerivedVarVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="caseId != null "> and case_id = #{caseId}</if>
+             <if test="courseId != null "> and course_id = #{courseId}</if>
+             <if test="varName != null  and varName != '' "> and var_name = #{varName}</if>
+             <if test="targetName != null  and targetName != '' "> and target_name = #{targetName}</if>
+             <if test="period != null "> and period = #{period}</if>
+             <if test="timeNum != null "> and time_num = #{timeNum}</if>
+             <if test="varValue != null "> and var_value = #{varValue}</if>
+             <if test="groupNum != null "> and group_num = #{groupNum}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+         </where>
+    </select>
+    
+    <select id="selectCourseDerivedVarById" parameterType="Long" resultMap="CourseDerivedVarResult">
+        <include refid="selectCourseDerivedVarVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCourseDerivedVar" parameterType="CourseDerivedVar" useGeneratedKeys="true" keyProperty="id">
+        insert into course_derived_var
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="caseId != null  ">case_id,</if>
+			<if test="courseId != null  ">course_id,</if>
+			<if test="varName != null  and varName != ''  ">var_name,</if>
+			<if test="targetName != null  and targetName != ''  ">target_name,</if>
+			<if test="period != null  ">period,</if>
+			<if test="timeNum != null  ">time_num,</if>
+			<if test="varValue != null  ">var_value,</if>
+			<if test="groupNum != null  ">group_num,</if>
+			<if test="createTime != null  ">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="caseId != null  ">#{caseId},</if>
+			<if test="courseId != null  ">#{courseId},</if>
+			<if test="varName != null  and varName != ''  ">#{varName},</if>
+			<if test="targetName != null  and targetName != ''  ">#{targetName},</if>
+			<if test="period != null  ">#{period},</if>
+			<if test="timeNum != null  ">#{timeNum},</if>
+			<if test="varValue != null  ">#{varValue},</if>
+			<if test="groupNum != null  ">#{groupNum},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <insert id="copyCourseDerivedVars">
+        insert into course_derived_var (case_id, course_id, var_name, target_name, period,  time_num, var_value, group_num, create_time)
+        select case_id, #{courseId}, var_name, target_name, period,  time_num, var_value, group_num, now() from derived_var where case_id = #{caseId};
+    </insert>
+	 
+    <update id="updateCourseDerivedVar" parameterType="CourseDerivedVar">
+        update course_derived_var
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="caseId != null  ">case_id = #{caseId},</if>
+            <if test="courseId != null  ">course_id = #{courseId},</if>
+            <if test="varName != null  and varName != ''  ">var_name = #{varName},</if>
+            <if test="targetName != null  and targetName != ''  ">target_name = #{targetName},</if>
+            <if test="period != null  ">period = #{period},</if>
+            <if test="timeNum != null  ">time_num = #{timeNum},</if>
+            <if test="varValue != null  ">var_value = #{varValue},</if>
+            <if test="groupNum != null  ">group_num = #{groupNum},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteCourseDerivedVarById" parameterType="Long">
+        delete from course_derived_var where id = #{id}
+    </delete>
+	
+    <delete id="deleteCourseDerivedVarByIds" parameterType="String">
+        delete from course_derived_var where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bytetcp.finalab.serve.liquidation.mapper.LiquidationMapper">
+    
+    <resultMap type="Liquidation" id="LiquidationResult">
+        <result property="id"    column="id"    />
+        <result property="targetName"    column="target_name"    />
+        <result property="caseId"    column="case_id"    />
+        <result property="groupNum"    column="group_num"    />
+        <result property="phaseNum"    column="phase_num"    />
+        <result property="liquidationType"    column="liquidation_type"    />
+        <result property="liquidationValue"    column="liquidation_value"    />
+    </resultMap>
+	
+	<sql id="selectLiquidationVo">
+        select id, target_name, case_id, group_num, phase_num, liquidation_type, liquidation_value from liquidation
+    </sql>
+	
+    <select id="selectLiquidationList" parameterType="Liquidation" resultMap="LiquidationResult">
+        <include refid="selectLiquidationVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="targetName != null  and targetName != '' "> and target_name = #{targetName}</if>
+             <if test="caseId != null "> and case_id = #{caseId}</if>
+             <if test="groupNum != null "> and group_num = #{groupNum}</if>
+             <if test="phaseNum != null "> and phase_num = #{phaseNum}</if>
+             <if test="liquidationType != null  and liquidationType != '' "> and liquidation_type = #{liquidationType}</if>
+             <if test="liquidationValue != null  and liquidationValue != '' "> and liquidation_value = #{liquidationValue}</if>
+         </where>
+    </select>
+    
+    <select id="selectLiquidationById" parameterType="Long" resultMap="LiquidationResult">
+        <include refid="selectLiquidationVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLiquidation" parameterType="Liquidation" useGeneratedKeys="true" keyProperty="id">
+        insert into liquidation
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="targetName != null  and targetName != ''  ">target_name,</if>
+			<if test="caseId != null  ">case_id,</if>
+			<if test="groupNum != null  ">group_num,</if>
+			<if test="phaseNum != null  ">phase_num,</if>
+			<if test="liquidationType != null  and liquidationType != ''  ">liquidation_type,</if>
+			<if test="liquidationValue != null  and liquidationValue != ''  ">liquidation_value,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="targetName != null  and targetName != ''  ">#{targetName},</if>
+			<if test="caseId != null  ">#{caseId},</if>
+			<if test="groupNum != null  ">#{groupNum},</if>
+			<if test="phaseNum != null  ">#{phaseNum},</if>
+			<if test="liquidationType != null  and liquidationType != ''  ">#{liquidationType},</if>
+			<if test="liquidationValue != null  and liquidationValue != ''  ">#{liquidationValue},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateLiquidation" parameterType="Liquidation">
+        update liquidation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="targetName != null  and targetName != ''  ">target_name = #{targetName},</if>
+            <if test="caseId != null  ">case_id = #{caseId},</if>
+            <if test="groupNum != null ">group_num = #{groupNum}</if>
+            <if test="phaseNum != null  ">phase_num = #{phaseNum},</if>
+            <if test="liquidationType != null  and liquidationType != ''  ">liquidation_type = #{liquidationType},</if>
+            <if test="liquidationValue != null  and liquidationValue != ''  ">liquidation_value = #{liquidationValue},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteLiquidationById" parameterType="Long">
+        delete from liquidation where id = #{id}
+    </delete>
+	
+    <delete id="deleteLiquidationByIds" parameterType="String">
+        delete from liquidation where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <insert id="insertLiquidationList" useGeneratedKeys="true" keyProperty="caseParamId">
+        insert into liquidation
+        (case_id, group_num, target_name, phase_num, liquidation_type, liquidation_value)
+        VALUES
+        <foreach collection="liquidations" item="liquidation"  separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{liquidation.caseId},
+                #{liquidation.groupNum},
+                #{liquidation.targetName},
+                #{liquidation.phaseNum},
+                #{liquidation.liquidationType},
+                #{liquidation.liquidationValue}
+            </trim>
+        </foreach>
+    </insert>
+    
+</mapper>

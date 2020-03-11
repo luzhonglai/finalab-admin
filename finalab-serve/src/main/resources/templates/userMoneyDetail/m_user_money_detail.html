@@ -1,0 +1,183 @@
+<div id="m_user_money_detail_div" th:fragment="m_user_money_detail_div">
+
+	<table id="user_money_detail_table" class="table table-condensed" style="font-size: 8px;"></table>
+</div>
+
+<script th:inline="javascript" th:fragment="m_user_money_detail_js">
+    var umdPrefix = ctx + "serve/userMoneyDetail";
+
+    $(function() {
+        var options = {
+            url: umdPrefix + "/list",
+            createUrl: umdPrefix + "/add",
+            updateUrl: umdPrefix + "/edit/{id}",
+            removeUrl: umdPrefix + "/remove",
+            exportUrl: umdPrefix + "/export",
+            modalName: "用户金额明细",
+            search: false,
+            sortName: 'thePeriod desc, timeLine',
+            sortOrder: 'desc',
+            showRefresh: false,
+            showColumns: false,
+            showToggle: false,
+            showSearch: false,
+            showExport: false,
+            pagination: true,
+            pageSize: 10,
+			pageNumber: 1,
+			pageList: [10, 20, 25],
+            queryParams: function (params) {
+                var param = {
+                    courseId: courseId,
+                    instanceId: instanceId,
+                    traderId: userId,
+                    loopNum: loopNum,
+                    // thePeriod: thePeriod,
+                    pageOffset: params.offset,
+					pageLimit: params.limit,
+					sort: params.sort,
+					order: params.order
+                }
+                console.log(params);
+                return param;
+            },
+			tableObj: $("#user_money_detail_table"),
+            columns: [
+                {
+                    field : 'id',
+                    title : '',
+                    visible: false
+                },
+                {
+                    field : 'createTime',
+                    title : '创建时间',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'modifyTime',
+                    title : '修改时间',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'loopNum',
+                    title : '第几次循环',
+                    sortable: true,
+                    visible: false
+                },
+
+                {
+                    field : 'instanceId',
+                    title : '',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'courseId',
+                    title : '课件id',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'stockId',
+                    title : '股票id',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'stockName',
+                    title : '交易标的',
+                    sortable: true,
+					formatter : function (value, row, index) {
+                        return value + '-' + row.actionName;
+					}
+                },
+                {
+                    field : 'actionName',
+                    title : '交易类型',
+                    sortable: true,
+                    formatter:function (value, row, index) {
+                        return value == '买单' || value == '卖单' ? value.substr(0,1) : 'NA';
+                    }
+                },
+                {
+                    field : 'timeLine',
+                    title : '成交时间（秒）',
+                    sortable: true
+                },
+                {
+                    field : 'financialType',
+                    title : '金融产品类型',
+                    sortable: true,
+                    visible: false
+
+                },
+                {
+                    field : 'dealQuantity',
+                    title : '成交数量',
+                    sortable: true
+                },
+                {
+                    field : 'dealPrice',
+                    title : '成交价格',
+                    sortable: true,
+					formatter: function(value, row, index) {
+						if (value != null && typeof(value) != 'undefined' ) {
+							return value.toFixed(2);
+						}
+					}
+                },
+                {
+                    field : 'costPrice',
+                    title : '单笔成交总额',
+                    sortable: true,
+					formatter: function(value, row, index) {
+						if (value != null && typeof(value) != 'undefined' ) {
+							return value.toFixed(2);
+						}
+					}
+                },
+				{
+                    field : 'totalPrice',
+                    title : '累计成交总额',
+                    sortable: true,
+					formatter: function(value, row, index) {
+                    	if (value != null && typeof(value) != 'undefined' ) {
+							return value.toFixed(2);
+						}
+					}
+                },
+                {
+                    field : 'traderId',
+                    title : '交易人id,机器人是-1',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'traderName',
+                    title : '交易人名字,机器人ANON',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'thePeriod',
+                    title : '阶段数',
+                    sortable: true,
+                    visible: true
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    visible: false,
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+</script>

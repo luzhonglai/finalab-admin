@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bytetcp.finalab.serve.course.mapper.CourseMapper">
+
+    <resultMap type="Course" id="CourseResult">
+        <result property="id" column="id"/>
+        <result property="caseId" column="case_id"/>
+        <result property="courseName" column="course_name"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="addNum" column="add_num"/>
+        <result property="teacherId" column="teacher_id"/>
+        <result property="status" column="status"/>
+        <result property="allowIn" column="allow_in"/>
+        <result property="cycleIn" column="cycle_in"/>
+        <result property="caseType" column="case_type"/>
+    </resultMap>
+
+    <sql id="selectCourseVo">
+        select id, case_id, course_name, start_time, end_time, add_num, teacher_id, status, allow_in, case_type from course
+    </sql>
+
+    <select id="selectCourseList" parameterType="Course" resultMap="CourseResult">
+        <include refid="selectCourseVo"/>
+        <where>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="caseId != null ">and case_id = #{caseId}</if>
+            <if test="courseName != null  and courseName != '' ">and course_name = #{courseName}</if>
+            <if test="startTime != null ">and start_time = #{startTime}</if>
+            <if test="endTime != null ">and end_time = #{endTime}</if>
+            <if test="addNum != null ">and add_num = #{addNum}</if>
+            <if test="teacherId != null ">and teacher_id = #{teacherId}</if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="allowIn != null ">and allow_in = #{allowIn}</if>
+            <if test="cycleIn != null ">and cycle_in = #{cycleIn}</if>
+            <if test="caseType != null ">and case_Type = #{caseType}</if>
+        </where>
+    </select>
+
+    <select id="selectCourseById" parameterType="Long" resultType="com.bytetcp.finalab.serve.course.vo.CourseVo">
+        select
+        t1.id,
+        t1.case_id as caseId,
+        t1.course_name as courseName,
+        t1.start_time as startTime,
+        t1.end_time as endTime,
+        t1.add_num as addNum,
+        t1.teacher_id as teacherId,
+        t1.status,
+        t1.allow_in as allowIn,
+        t2.user_name as teacherName,
+        t3.case_name as caseName,
+        t3.case_icon as caseIcon,
+        t1.cycle_in as cycleIn,
+        t1.case_type as caseType
+        from course t1
+        left join sys_user t2 on t1.teacher_id = t2.user_id
+        left join cases t3 on t3.id = t1.case_id
+        where t1.id = #{id}
+    </select>
+
+    <select id="selectCourseVoList" parameterType="Course" resultType="com.bytetcp.finalab.serve.course.vo.CourseVo">
+        select
+        t1.id,
+        t1.case_id as caseId,
+        t1.course_name as courseName,
+        t1.start_time as startTime,
+        t1.end_time as endTime,
+        t1.add_num as addNum,
+        t1.teacher_id as teacherId,
+        t1.status,
+        t1.allow_in as allowIn,
+        t1.case_type as caseType,
+        t2.user_name as teacherName,
+        t3.case_name as caseName,
+        t3.case_icon as caseIcon
+        from course t1
+        left join sys_user t2 on t1.teacher_id = t2.user_id
+        left join cases t3 on t3.id = t1.case_id
+        <where>
+            <if test="id != null ">and t1.id = #{id}</if>
+            <if test="caseId != null ">and t1.case_id = #{caseId}</if>
+            <if test="courseName != null  and courseName != '' ">and t1.course_name LIKE CONCAT('%',#{courseName},'%')</if>
+            <if test="startTime != null ">and t1.start_time = #{startTime}</if>
+            <if test="endTime != null ">and t1.end_time = #{endTime}</if>
+            <if test="addNum != null ">and t1.add_num = #{addNum}</if>
+            <if test="teacherId != null ">and t1.teacher_id = #{teacherId}</if>
+            <if test="status != null ">and t1.status = #{status}</if>
+        </where>
+    </select>
+
+    <insert id="insertCourse" parameterType="Course" useGeneratedKeys="true" keyProperty="id">
+        insert into course
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="caseId != null  ">case_id,</if>
+            <if test="courseName != null  and courseName != ''  ">course_name,</if>
+            <if test="startTime != null  ">start_time,</if>
+            <if test="endTime != null  ">end_time,</if>
+            <if test="addNum != null  ">add_num,</if>
+            <if test="teacherId != null  ">teacher_id,</if>
+            <if test="status != null  ">status,</if>
+            <if test="allowIn != null  ">allow_in,</if>
+            <if test="cycleIn != null  ">cycle_in,</if>
+            <if test="caseType != null ">case_type</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">#{id},</if>
+            <if test="caseId != null  ">#{caseId},</if>
+            <if test="courseName != null  and courseName != ''  ">#{courseName},</if>
+            <if test="startTime != null  ">#{startTime},</if>
+            <if test="endTime != null  ">#{endTime},</if>
+            <if test="addNum != null  ">#{addNum},</if>
+            <if test="teacherId != null  ">#{teacherId},</if>
+            <if test="status != null  ">#{status},</if>
+            <if test="allowIn != null  ">#{allowIn},</if>
+            <if test="cycleIn != null  ">#{cycleIn},</if>
+            <if test="caseType != null ">#{caseType},</if>
+        </trim>
+    </insert>
+
+    <update id="incrementAddNum" parameterType="java.lang.Long">
+        UPDATE course set add_num = add_num + 1 WHERE  id = #{courseId}
+    </update>
+
+    <update id="decrementAddNum" parameterType="java.lang.Long">
+        UPDATE course set add_num = add_num - 1 WHERE  id = #{courseId}
+    </update>
+
+    <update id="updateCourse" parameterType="Course">
+        update course
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="caseId != null  ">case_id = #{caseId},</if>
+            <if test="courseName != null  and courseName != ''  ">course_name = #{courseName},</if>
+            <if test="startTime != null  ">start_time = #{startTime},</if>
+            <if test="endTime != null  ">end_time = #{endTime},</if>
+            <if test="addNum != null  ">add_num = #{addNum},</if>
+            <if test="teacherId != null  ">teacher_id = #{teacherId},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="allowIn != null  ">allow_in = #{allowIn},</if>
+            <if test="cycleIn != null  ">cycle_in = #{cycleIn},</if>
+            <if test="caseType != null ">case_type = #{caseType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCourseById" parameterType="Long">
+        delete from course where id = #{id}
+    </delete>
+
+    <delete id="deleteCourseByCaseId" parameterType="Long">
+        delete from course where case_id = #{caseId}
+    </delete>
+
+    <delete id="deleteCourseByIds" parameterType="String">
+        delete from course where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="insertInstanceRunRecord" parameterType="com.bytetcp.finalab.serve.course.domain.InstanceRunRecode" useGeneratedKeys="true" keyProperty="id">
+        insert into instance_run_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="courseId != null  ">course_id,</if>
+            <if test="instanceId != null  ">instance_id,</if>
+            <if test="status != null  ">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">#{id},</if>
+            <if test="courseId != null  ">#{courseId},</if>
+            <if test="instanceId != null  and instanceId != ''  ">#{instanceId},</if>
+            <if test="status != null  and status != ''  ">#{status},</if>
+        </trim>
+    </insert>
+
+    <select id="selectInstance" parameterType="Long" resultType="com.bytetcp.finalab.serve.course.domain.InstanceRunRecode">
+
+        select
+        id as id,
+        instance_id as instanceId,
+        course_id AS courseId,
+        status as status
+        from instance_run_record where course_id = #{courseId} ORDER BY id DESC limit 1
+
+    </select>
+
+    <select id="getRunStatus"  resultType="com.bytetcp.finalab.serve.course.domain.InstanceRunRecode">
+
+        select
+        id as id,
+        instance_id as instanceId,
+        course_id AS courseId,
+        status as status
+        from instance_run_record where course_id = #{courseId} and instance_id = #{instanceId} limit 1
+
+    </select>
+
+    <select id="selectInstanceByLastStatus" parameterType="Long" resultType="java.lang.String">
+        SELECT STATUS FROM instance_run_record i
+        WHERE i.`id` = (SELECT MAX(id) FROM instance_run_record i1 WHERE i1.`course_id` = #{courseId})
+    </select>
+
+    <select id="selectPeriods" parameterType="Long" resultType="java.lang.String">
+        select a.para_value FROM course_case_paramters a WHERE a.course_id = #{courseId} AND a.para_name = 'Periods'
+    </select>
+
+    <select id="selectTicksPerPeriod" parameterType="Long" resultType="java.lang.String">
+        select a.para_value FROM course_case_paramters a WHERE a.course_id = #{courseId} AND a.para_name = 'TicksPerPeriod'
+    </select>
+
+    <select id="countRunningCourse" resultType="java.lang.Integer">
+        select count(status) from course where status = 1;
+    </select>
+
+</mapper>

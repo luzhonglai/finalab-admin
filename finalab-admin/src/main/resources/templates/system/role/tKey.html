@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/jquery-ztree/3.5/css/metro/zTreeStyle.css}" rel="stylesheet"/>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-tkey-edit" th:object="${sysTkey}">
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">教师注册码：</label>
+            <div class="col-sm-8">
+                <input class="form-control" placeholder="请输入注册码" type="text" name="tkey" id="tkey" th:field="*{tkey}" required/>
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script th:src="@{/ajax/libs/jquery-ztree/3.5/js/jquery.ztree.all-3.5.js}"></script>
+<script>
+    $("#form-tkey-edit").validate({
+        rules:{
+            tkey:{
+                required:true,
+                digits:true,
+            },
+        },
+        messages: {
+            "tkey": {
+                remote: "请填写注册码"
+            }
+        }
+    });
+
+
+    function tkey() {
+        var tkey = $("input[name='tkey']").val();
+        $.ajax({
+            cache : true,
+            type : "POST",
+            url : "/system/role/tkey",
+            data : {
+                "tkey": tkey
+            },
+            async : false,
+            error : function(request) {
+                $.modal.alertError("系统错误");
+            },
+            success : function(data) {
+                $.operate.successCallback(data);
+            }
+        });
+    }
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            tkey();
+        }
+    }
+</script>

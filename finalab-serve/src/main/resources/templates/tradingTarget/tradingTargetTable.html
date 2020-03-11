@@ -1,0 +1,73 @@
+<div class="panel-body" id="trading_target_div" th:fragment="trading_target_div">
+    <table id="bootstrap-table-tardingTarget" data-mobile-responsive="true"></table>
+</div>
+
+<script th:inline="javascript" th:fragment="tradingTarget_js">
+    // var editFlag = [[${@permission.hasPermi('serve:caseParameters:edit')}]];
+    // var removeFlag = [[${@permission.hasPermi('serve:caseParameters:remove')}]];
+    var editFlag = [[${@permission.hasPermi('serve:tradingTarget:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('serve:tradingTarget:remove')}]];
+    var ttCaseId = [[${cases.id}]];
+    var ttprefix = ctx + "serve/tradingTarget";
+
+    function tradingTarget() {
+        this.initPage = function () {
+            initTradingTarget();
+        }
+    }
+
+    function initTradingTarget() {
+        var options = {
+            url: ttprefix + "/list/" + ttCaseId,
+            createUrl: ttprefix + "/add",
+            updateUrl: ttprefix + "/edit/{id}",
+            removeUrl: ttprefix + "/remove",
+            exportUrl: ttprefix + "/export",
+            modalName: "标的",
+            search: false,
+            showExport: false,
+            pagination: false,
+            showRefresh: false,
+            showColumns: false,
+            showToggle: false,
+            showSearch: false,
+            tableObj: $('#bootstrap-table-tardingTarget'),
+            columns: [{
+                field: 'id',
+                title: '自增id',
+                visible: false
+            },{
+                field: 'caseId',
+                title: '案例Id',
+                visible: false,
+            },
+            {
+                field: 'targetNum',
+                title: '标的编号',
+                sortable: false
+            },
+            {
+                field: 'targetType',
+                title: '标的分类',
+                sortable: false
+            },
+            {
+                field: 'targetName',
+                title: '标的名称',
+                sortable: false
+            },
+            {
+                title: '操作',
+                align: 'center',
+                sortable: false,
+                formatter: function (value, row, index) {
+                    var actions = [];
+                    actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                    // actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                    return actions.join('');
+                }
+            }]
+        };
+        $.table.init(options);
+    };
+</script>

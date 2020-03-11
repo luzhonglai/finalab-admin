@@ -1,0 +1,502 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<style type="text/css">
+    .detail .image, .detail .content {
+        float: left;
+    }
+    .image {
+        margin: 10px;
+    }
+
+    .content {
+        margin: 5px;
+    }
+
+    .courseName {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .caseName, .courseStatus, .courseAllowIn {
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    div.content > p {
+        margin: 0 0 5px;
+    }
+
+    .courseAllowInSwitch {
+        float: left;
+        margin-top: -30px;
+        margin-left: 100px;
+    }
+
+    .courseCycleSwitch {
+        float: left;
+        margin-top: -30px;
+        margin-left: 50px;
+    }
+
+    .Kline-div .m-line {
+        height: 49%;
+        width: 100%;
+        margin-bottom: 1%;
+    }
+
+    .progress_bar .pro-bar {
+        background: hsl(105, 3%, 73%);
+        box-shadow: 0 5px 6px hsla(240, 100%, 97%, 0.1) inset;
+        height:5px;
+        margin-bottom: 24px;
+        margin-top: 50px;
+        position: relative;
+    }
+
+    .progress_bar .progress_bar_title{
+        /*color: hsl(218, 4%, 50%);*/
+        color: #08080a;
+        font-size: 13px;
+        font-weight: 300;
+        position: relative;
+        top: -25px;
+        z-index: 1;
+    }
+    .progress_bar .progress_number{
+        position: absolute;
+        right: -60px;
+        top: -8px;
+    }
+
+    .progress_bar .progress_persent{
+        float: right;
+        margin-top: -25px;
+    }
+    .progress_bar .progress-bar-inner {
+        background-color: hsl(0, 0%, 88%);
+        display: block;
+        width: 0;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transition: width 1s linear 0s;
+        animation: animate-positive 2s;
+    }
+    .progress_bar .progress-bar-inner:before {
+        content: "";
+        background-color: hsl(0, 0%, 100%);
+        border-radius: 50%;
+        width: 4px;
+        height: 4px;
+        position: absolute;
+        right: 1px;
+        top: 0;
+        z-index: 1;
+    }
+    .progress_bar .progress-bar-inner:after {
+        content: "";
+        width: 14px;
+        height: 14px;
+        background-color: inherit;
+        border-radius: 50%;
+        position: absolute;
+        right: -4px;
+        top: -5px;
+    }
+    @-webkit-keyframes animate-positive{
+        0% { width: 0%; }
+    }
+    @keyframes animate-positive{
+        0% { width: 0%; }
+    }
+</style>
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul style="display:flex">
+                        <li>
+                            <div class="detail">
+                                <div class="image"><img th:src="'/profile/caseIcon/' + *{courseVo.caseIcon}"
+                                                        style="width: 130px;height: 130px"></div>
+                                <div class="content">
+                                    <input type="hidden" id="courseId" th:value="*{courseVo.id}">
+                                    <p class="courseName"><strong th:text="*{courseVo.courseName}"></strong></p>
+                                    <p class="caseName" th:text="*{courseVo.caseName}"></p>
+                                    <p class="courseStatus" th:value="*{courseVo.status}"></p>
+                                    <span th:class="${@permission.hasPermi('serve:course:join')} == hidden ? 'readonly' : ''">
+                                        <div class="courseAllowIn"><p>允许新名单加入</p></div>
+                                        <div class="col-sm-9 courseAllowInSwitch">
+                                            <i th:class="${courseVo.allowIn} == 1?'fa text-info fa-2x fa-toggle-on':'fa text-info fa-2x fa-toggle-off'"
+                                               onclick="enable(this)" th:value="*{courseVo.allowIn}"></i>
+                                        </div>
+                                    </span>
+                                    <span th:class="${@permission.hasPermi('serve:course:cycle:open')} == hidden ? 'readonly' : ''">
+                                        <div class="courseAllowIn"><p>循环开启</p></div>
+                                        <div class="col-sm-4 courseCycleSwitch">
+                                            <i id="cycleIn"
+                                               th:class="${courseVo.cycleIn} == 1 ? 'fa text-info fa-2x fa-toggle-on':'fa text-info fa-2x fa-toggle-off'"
+                                               onclick="cycle(this)" th:value="*{courseVo.cycleIn}"></i>
+                                        </div>
+                                    </span>
+                                </div>
+                                <div style="float:left;margin-top: 115px;">
+                                    <button type="button"
+                                            th:class="${@permission.hasPermi('serve:cases:download:pdf')} == hidden ? 'hidden' : 'btn btn-primary btn-primary btn-sm'"
+                                            onclick="downloadPDF()"><i class="fa fa-download"></i>&nbsp;下载PDF
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+
+
+
+                            <li style="margin-top: 110px;margin-right: 100px;margin:auto 0 auto 20%;height: 75px;">
+
+                                    <div th:include="course/progress :: progress_div"></div>
+
+                                <div>
+                                <button id="startInstance" type="button"
+                                        th:class="${@permission.hasPermi('serve:courseStudent:start')} == hidden?'hidden':'btn btn-primary btn-primary btn-sm'"
+                                        onclick="startOrStop('START')"><i class="fa fa-step-forward"></i>&nbsp;启动
+                                </button>
+                                <input id="suspendInstanceInput" type="text" hidden value="SUSPEND"/>
+                                <button id="suspendInstance" type="button"
+                                        th:class="${@permission.hasPermi('serve:courseStudent:suspend')} == hidden?'hidden':'btn btn-warning btn-primary btn-sm'"
+                                        onclick='suspendOrResume()'><i class="fa fa-pause"></i>&nbsp;暂停
+                                </button>
+                                <button id="stopInstance" type="button"
+                                        th:class="${@permission.hasPermi('serve:courseStudent:stop')} == hidden?'hidden':'btn btn-danger btn-primary btn-sm'"
+                                        onclick='startOrStop("STOP")'><i class="fa fa-stop"></i>&nbsp;停止
+                                </button>
+                                </div>
+                            </li>
+
+                        <!--<li style="margin-top: 115px;">
+                            <span>
+                                        <div class="courseAllowIn"><p>循环开启</p></div>
+                                        <div class="col-sm-4 courseCycleSwitch">
+                                            <i id="cycleIn"
+                                               th:class="${courseVo.cycleIn} == 1 ? 'fa text-info fa-2x fa-toggle-on':'fa text-info fa-2x fa-toggle-off'"
+                                               onclick="cycle(this)" th:value="*{courseVo.cycleIn}"></i>
+                                        </div>
+                            </span>
+                        </li>-->
+                    </ul>
+                </div>
+            </form>
+
+        </div>
+        <!--<div class="col-sm-12 search-collapse">-->
+        <!--</div>-->
+        <div class="col-sm-12 select-table table-striped">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true">参与人数<span id="membersId">[[${membersProportion}]]</span></a>
+                </li>
+                <li th:class="${@permission.hasPermi('serve:course:tradeDetail')} == hidden ? 'hidden': ''">
+                    <a data-toggle="tab" href="#tab-2" aria-expanded="false">成交明细</a>
+                </li>
+                <li th:class="${@permission.hasPermi('serve:course:userStore')} == hidden ? 'hidden': ''">
+                    <a data-toggle="tab" href="#tab-3" aria-expanded="false">持仓量查看</a>
+                </li>
+                <li th:class="${@permission.hasPermi('serve:course:profit')} == hidden ? 'hidden': ''">
+                    <a data-toggle="tab" href="#tab-4" aria-expanded="false">交易盈亏</a>
+                </li>
+                <!--<li th:class="${@permission.hasPermi('serve:trade:monitor')} == hidden ? 'hidden': ''">-->
+                    <!--<a data-toggle="tab" href="#tab-5" aria-expanded="false">交易监控</a>-->
+                <!--</li>-->
+                <li th:class="${@permission.hasPermi('serve:trade:profitAndLossRank')} == hidden ? 'hidden': ''">
+                    <a data-toggle="tab" href="#tab-6" aria-expanded="false">盈亏排名</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div id="tab-1" class="tab-pane active">
+                    <div th:replace="course/student :: course_student_div"></div>
+                </div>
+                <div id="tab-2" class="tab-pane">
+                    <div th:replace="course/course_deal_detail :: course_deal_detail_div"></div>
+                </div>
+                <div id="tab-3" class="tab-pane">
+                    <div th:replace="course/course_positionsTotal :: course_positionsTotal_div"></div>
+                </div>
+                <div id="tab-4" class="tab-pane">
+                    <div th:replace="course/course_profit_detail :: course_profit_detail_div"></div>
+                </div>
+                <!--<div id="tab-5" class="tab-pane">-->
+                    <!--<div th:replace="course/tardingMonitoring :: tardingMonitoring_div"></div>-->
+                <!--</div>-->
+                <div id="tab-6" class="tab-pane">
+                    <a style="float:right;top: 23px;left: -21px;position: relative;z-index: 10000;" class="btn btn-info btn-sm "
+                       onclick="initProfitRanking()"><i class="fa fa-refresh" ></i>&nbsp;刷新</a>
+                    <div th:replace="course/profitRanking :: profitRanking_div"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--<div id="Kline-div" class="Kline-div" style="margin:  0 0 0 50px;">-->
+    <!--<div id="m-line" class="m-line">11111111</div>-->
+    <!--&lt;!&ndash; <div id="k-content" class="K-line"></div>  &ndash;&gt;-->
+    <!--</div>-->
+</div>
+<div th:include="include :: footer"></div>
+<script type="application/javascript">
+    $.modal.loading("数据加载中，请稍后...");
+    console.log("init javascript start." + Date.now());
+</script>
+<div th:replace="course/student :: course_student_js"></div>
+<div th:replace="course/progress :: progress_js"></div>
+
+<script th:inline="javascript">
+    console.log("init course detail first." + Date.now());
+    var datas = [[${@dict.getType('course_staus')}]];
+    var courseId = [[${courseVo.id}]];
+    var caseId = [[${courseVo.caseId}]];
+    var allowInFlag = [[${@permission.hasPermi('serve:courseStudent:allowIn')}]];
+    var instanceStatus = [[${instanceStatus}]];
+
+    var Periods = [[${Periods}]]
+
+    var stockQuotedDecimals = [[${stockQuotedDecimals}]]
+
+    $(function () {
+        //注册table对象
+        $.registTable(new Student());
+        //初始化选项卡
+        console.log("registTable end." + Date.now());
+        $.initFirstTable();
+        console.log("initFirstTable end." + Date.now());
+
+        //设置状态
+        initcourseStatus();
+
+        //重置按钮状态
+        handleButtonStatus(instanceStatus);
+
+        //切换方法
+        $.changeTable();
+
+        $.modal.closeLoading();
+    });
+
+    /**
+     * 启动或暂停
+     */
+    function startOrStop(status) {
+        changeCourseStatus(status);
+
+    }
+
+    /**
+     * 暂停与继续
+     */
+    function suspendOrResume() {
+        var status = $('#suspendInstanceInput').val();
+        changeCourseStatus(status);
+    }
+
+    function handleButtonStatus(status) {
+        if (status == "START") {
+            startHandle()
+            startProgress();
+        } else if (status == "SUSPEND" || status == "RESUME") {
+            suspendOrResumeHandle(status);
+        } else if (status == "STOP" || status == "default".toUpperCase()) {
+            stopHandle();
+            stopSocket();
+            closeSocket(null);
+        }
+    }
+
+    function startHandle() {
+        finalab.disable($('#startInstance'));
+        finalab.UnDisable($("#suspendInstance"));
+        finalab.UnDisable($("#stopInstance"));
+        instanceStatus = 'START';
+    }
+
+    function suspendOrResumeHandle(sts) {
+        if (sts == 'SUSPEND') {
+            finalab.disable($('#startInstance'));
+            finalab.UnDisable($("#suspendInstance"));
+            finalab.UnDisable($("#stopInstance"));
+            $('#suspendInstanceInput').val('RESUME');
+            $("#suspendInstance").html('<i class="fa fa-play"></i>&nbsp;继续');
+        } else if (sts == 'RESUME') {
+            finalab.disable($('#startInstance'));
+            finalab.UnDisable($("#suspendInstance"));
+            finalab.UnDisable($("#stopInstance"));
+            $('#suspendInstanceInput').val('SUSPEND');
+            $("#suspendInstance").html('<i class="fa fa-pause"></i>&nbsp;暂停');
+        } else {
+            console.log('暂停与继续状态标识有误 ' + sts);
+        }
+    }
+
+    function stopHandle() {
+        finalab.UnDisable($('#startInstance'));
+        finalab.disable($("#suspendInstance"));
+        finalab.disable($("#stopInstance"));
+        $('#suspendInstanceInput').val('SUSPEND');
+        $("#suspendInstance").html('<i class="fa fa-pause"></i>&nbsp;暂停');
+        $("#cycleIn").removeClass("fa-toggle-on");
+        $("#cycleIn").addClass("fa-toggle-off");
+        $("#cycleIn").attr('value', 0);
+        instanceStatus = 'STOP';
+    }
+
+    function initcourseStatus() {
+        var value = $(".courseStatus").attr("value");
+        changeCourseListStatus(value);
+    }
+
+    function changeCourseListStatus(value) {
+        var dict = $.table.selectDictLabel(datas, value);
+        $(".courseStatus").html(dict);
+    }
+
+
+    function enable(obj) {
+        if (allowInFlag == 'hidden') {
+            return;
+        }
+        var allowIn = $(obj).attr("value");
+        var allowInPost = allowIn == 1 ? 0 : 1;
+        var msg = allowIn == 1 ? "确认不允许新名单参与吗?" : "确认允许新名单参与吗?";
+        $.modal.confirm(msg, function () {
+            var courseId = $("#courseId").val();
+            var url = ctx + "serve/course/edit";
+            $.operate.post(url, {"id": courseId, "allowIn": allowInPost});
+            if (allowIn == 1) {
+                $(obj).removeClass("fa-toggle-on");
+                $(obj).addClass("fa-toggle-off");
+                $(obj).attr("value", 0);
+            } else {
+                $(obj).removeClass("fa-toggle-off");
+                $(obj).addClass("fa-toggle-on");
+                $(obj).attr("value", 1);
+            }
+        })
+    }
+
+    function changeCourseStatus(status) {
+        $.modal.loading("请稍后...");
+        var url = ctx + "serve/course/op/" + courseId;
+        // $.ajax({
+        //     type: 'post',
+        //     url: url,
+        //     data: {"status": status},
+        //     contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+        //     cache: false,
+        //     timeout: 10000,
+        //     success: function (result) {
+        //         $.modal.closeLoading();
+        //         if (result.code != 0) {
+        //             $.modal.msgError('操作失败');
+        //         } else {
+        //             handleButtonStatus(status);
+        //             changeCourseListStatus(result.data.status);
+        //         }
+        //     },
+        //     error: function (message) {
+        //         console.log('调用服务端异常 url - ' + url + ' param - ' + data + 'message - ' + message);
+        //     }
+        // });
+        $.post(url + "?status=" + status, function (result) {
+            $.modal.closeLoading();
+            if (result.code != 0) {
+                $.modal.msgError('操作失败' + '<p>' + result.msg + '</p>');
+            } else {
+                handleButtonStatus(status);
+                changeCourseListStatus(result.data.status);
+            }
+        });
+    }
+
+    function cycle(obj) {
+        if (allowInFlag == 'hidden') {
+            return;
+        }
+        if (instanceStatus == 'STOP' || instanceStatus.toLowerCase() == 'default') {
+            $.modal.msgWarning('请启动课件后在进行此操作');
+            return;
+        }
+        var cycleIn = $(obj).attr("value");
+        var CycleInPost = cycleIn == 1 ? 0 : 1;
+        var msg = cycleIn == 1 ? "确认关闭循环开启吗?" : "确认循环开启吗?";
+        $.modal.confirm(msg, function () {
+            var courseId = $("#courseId").val();
+            var url = ctx + "serve/course/changeCycleIn";
+            var param = {id: courseId, cycleIn: CycleInPost};
+            $.ajax({
+                url: url,
+                data: JSON.stringify(param),
+                type: 'post',
+                contentType: 'application/json',
+                success: function (result) {
+                    if (result.code != 0) {
+                        console.log("循环开启调用服务端异常：param" + JSON.stringify(param));
+                        return;
+                    }
+                    if (result.data.cycleIn == 0) {
+                        $(obj).removeClass("fa-toggle-on");
+                        $(obj).addClass("fa-toggle-off");
+                        $(obj).attr("value", 0);
+                    } else {
+                        $(obj).removeClass("fa-toggle-off");
+                        $(obj).addClass("fa-toggle-on");
+                        $(obj).attr("value", 1);
+                    }
+                }
+            })
+        })
+    }
+
+    function downloadPDF() {
+        $.ajax({
+            url: '/serve/cases/canDownload/' + caseId,
+            type: "post",
+            async: false,
+            contentType: false,
+            success: function(res) {
+                if (res.code != 0) {
+                    $.modal.alertError("未找到PDF文件");
+                    return;
+                } else {
+                    window.location.href = '/serve/cases/download/' + caseId;
+                }
+            },
+            error: function(res) {
+                $.modal.alertError("未找到PDF文件");
+                return;
+            }
+        });
+    }
+</script>
+
+
+<div th:replace="course/course_deal_detail :: course_deal_detail_js"></div>
+<div th:replace="course/course_positionsTotal :: course_positionsTotal_js"></div>
+<div th:replace="course/tardingMonitoring :: tardingMonitoring_js"></div>
+<div th:replace="course/course_profit_detail :: course_profit_detail_js"></div>
+<script src="/trade/js/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+
+<div th:replace="course/profitRanking :: profitRanking_js"></div>
+
+<script type="application/javascript">
+    $(function () {
+        $.registTable(new tranDetailTab());
+        $.registTable(new course_positionsTotal());
+        $.registTable(new userMoneyDetail());
+        // $.registTable(new tardingMonitoring());
+        $.registTable(new profitRanking());
+    })
+</script>
+</body>
+</html>

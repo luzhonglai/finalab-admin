@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bytetcp.finalab.serve.userStock.mapper.UserStockMapper">
+    
+    <resultMap type="UserStock" id="UserStockResult">
+        <result property="id"    column="id"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="instanceId"    column="instance_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="stockId"    column="stock_id"    />
+        <result property="stockName"    column="stock_name"    />
+        <result property="stockQuantity"    column="stock_quantity"    />
+        <result property="costPrice"    column="cost_price"    />
+        <result property="closePrice"    column="close_price"    />
+        <result property="dealPrice"    column="deal_price"    />
+        <result property="totalPrice"  column="totalPrice" />
+        <result property="profit"    column="profit"    />
+        <result property="isClose"    column="is_close"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="modifyTime"    column="modify_time"    />
+    </resultMap>
+	
+	<sql id="selectUserStockVo">
+        select id, course_id, instance_id, user_id, user_name, stock_id, stock_name, stock_quantity, cost_price, close_price, deal_price,(deal_price * stock_quantity) as totalPrice, profit, is_close, create_time, modify_time from user_stock
+    </sql>
+	
+    <select id="selectUserStockList" parameterType="UserStock" resultMap="UserStockResult">
+        <include refid="selectUserStockVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="courseId != null "> and course_id = #{courseId}</if>
+             <if test="instanceId != null  and instanceId != '' "> and instance_id = #{instanceId}</if>
+             <if test="userId != null "> and user_id = #{userId}</if>
+             <if test="userName != null  and userName != '' "> and user_name = #{userName}</if>
+             <if test="stockId != null  and stockId != '' "> and stock_id = #{stockId}</if>
+             <if test="stockName != null  and stockName != '' "> and stock_name = #{stockName}</if>
+             <if test="stockQuantity != null "> and stock_quantity = #{stockQuantity}</if>
+             <if test="costPrice != null "> and cost_price = #{costPrice}</if>
+             <if test="closePrice != null "> and close_price = #{closePrice}</if>
+             <if test="dealPrice != null "> and deal_price = #{dealPrice}</if>
+             <if test="profit != null "> and profit = #{profit}</if>
+             <if test="isClose != null "> and is_close = #{isClose}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="modifyTime != null "> and modify_time = #{modifyTime}</if>
+         </where>
+        ORDER BY id DESC
+    </select>
+    
+    <select id="selectUserStockById" parameterType="Long" resultMap="UserStockResult">
+        <include refid="selectUserStockVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserStock" parameterType="UserStock" useGeneratedKeys="true" keyProperty="id">
+        insert into user_stock
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="courseId != null  ">course_id,</if>
+			<if test="instanceId != null  and instanceId != ''  ">instance_id,</if>
+			<if test="userId != null  ">user_id,</if>
+			<if test="userName != null  and userName != ''  ">user_name,</if>
+			<if test="stockId != null  and stockId != ''  ">stock_id,</if>
+			<if test="stockName != null  and stockName != ''  ">stock_name,</if>
+			<if test="stockQuantity != null  ">stock_quantity,</if>
+			<if test="costPrice != null  ">cost_price,</if>
+			<if test="closePrice != null  ">close_price,</if>
+			<if test="dealPrice != null  ">deal_price,</if>
+			<if test="profit != null  ">profit,</if>
+			<if test="isClose != null  ">is_close,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="modifyTime != null  ">modify_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="courseId != null  ">#{courseId},</if>
+			<if test="instanceId != null  and instanceId != ''  ">#{instanceId},</if>
+			<if test="userId != null  ">#{userId},</if>
+			<if test="userName != null  and userName != ''  ">#{userName},</if>
+			<if test="stockId != null  and stockId != ''  ">#{stockId},</if>
+			<if test="stockName != null  and stockName != ''  ">#{stockName},</if>
+			<if test="stockQuantity != null  ">#{stockQuantity},</if>
+			<if test="costPrice != null  ">#{costPrice},</if>
+			<if test="closePrice != null  ">#{closePrice},</if>
+			<if test="dealPrice != null  ">#{dealPrice},</if>
+			<if test="profit != null  ">#{profit},</if>
+			<if test="isClose != null  ">#{isClose},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="modifyTime != null  ">#{modifyTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateUserStock" parameterType="UserStock">
+        update user_stock
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="courseId != null  ">course_id = #{courseId},</if>
+            <if test="instanceId != null  and instanceId != ''  ">instance_id = #{instanceId},</if>
+            <if test="userId != null  ">user_id = #{userId},</if>
+            <if test="userName != null  and userName != ''  ">user_name = #{userName},</if>
+            <if test="stockId != null  and stockId != ''  ">stock_id = #{stockId},</if>
+            <if test="stockName != null  and stockName != ''  ">stock_name = #{stockName},</if>
+            <if test="stockQuantity != null  ">stock_quantity = #{stockQuantity},</if>
+            <if test="costPrice != null  ">cost_price = #{costPrice},</if>
+            <if test="closePrice != null  ">close_price = #{closePrice},</if>
+            <if test="dealPrice != null  ">deal_price = #{dealPrice},</if>
+            <if test="profit != null  ">profit = #{profit},</if>
+            <if test="isClose != null  ">is_close = #{isClose},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="modifyTime != null  ">modify_time = #{modifyTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteUserStockById" parameterType="Long">
+        delete from user_stock where id = #{id}
+    </delete>
+	
+    <delete id="deleteUserStockByIds" parameterType="String">
+        delete from user_stock where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+    <select id="selectStockSpace" resultType="UserStock" parameterType="Long">
+         SELECT
+            a.id as id,
+            a.course_id as courseId,
+            a.instance_id as instanceId,
+            a.user_id as userId,
+            a.user_name as userName,
+            a.stock_id as stockId,
+            a.stock_name as stockName,
+            a.stock_quantity as stockQuantity,
+            a.cost_price as costPrice,
+			a.close_price as closePrice,
+            a.deal_price as dealPrice,
+            (a.deal_price * a.stock_quantity) as totalPrice,
+            a.profit as profit,
+            a.is_close as isClose,
+            a.create_time as createTime,
+            a.modify_time as modifyTime
+         FROM
+	        user_stock a
+         WHERE
+	        course_id = #{courseId} and instance_id = #{instanceId}
+	     ORDER BY a.id DESC
+    </select>
+    
+</mapper>

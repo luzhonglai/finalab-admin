@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bytetcp.finalab.serve.courseLiquidation.mapper.CourseLiquidationMapper">
+    
+    <resultMap type="CourseLiquidation" id="CourseLiquidationResult">
+        <result property="id"    column="id"    />
+        <result property="caseId"    column="case_id"    />
+        <result property="targetName"    column="target_name"    />
+        <result property="phaseNum"    column="phase_num"    />
+        <result property="liquidationType"    column="liquidation_type"    />
+        <result property="liquidationValue"    column="liquidation_value"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="groupNum"    column="group_num"    />
+    </resultMap>
+	
+	<sql id="selectCourseLiquidationVo">
+        select id, case_id, target_name, phase_num, liquidation_type, liquidation_value, course_id, group_num from course_liquidation
+    </sql>
+	
+    <select id="selectCourseLiquidationList" parameterType="CourseLiquidation" resultMap="CourseLiquidationResult">
+        <include refid="selectCourseLiquidationVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="caseId != null "> and case_id = #{caseId}</if>
+            <if test="targetName != null  and targetName != '' "> and target_name = #{targetName}</if>
+             <if test="phaseNum != null "> and phase_num = #{phaseNum}</if>
+             <if test="liquidationType != null  and liquidationType != '' "> and liquidation_type = #{liquidationType}</if>
+             <if test="liquidationValue != null  and liquidationValue != '' "> and liquidation_value = #{liquidationValue}</if>
+             <if test="courseId != null "> and course_id = #{courseId}</if>
+            <if test="groupNum != null "> and group_num = #{groupNum}</if>
+        </where>
+    </select>
+
+    <select id="selectCourseLiquidation" parameterType="CourseLiquidation" resultMap="CourseLiquidationResult">
+        <include refid="selectCourseLiquidationVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+             <if test="caseId != null "> and case_id = #{caseId}</if>
+             <if test="targetName != null  and targetName != '' "> and target_name = #{targetName}</if>
+             <if test="phaseNum != null "> and phase_num = #{phaseNum}</if>
+             <if test="liquidationType != null  and liquidationType != '' "> and liquidation_type = #{liquidationType}</if>
+             <if test="liquidationValue != null  and liquidationValue != '' "> and liquidation_value = #{liquidationValue}</if>
+             <if test="courseId != null "> and course_id = #{courseId}</if>
+            <if test="groupNum != null "> and group_num = #{groupNum}</if>
+        </where>
+    </select>
+
+    <select id="selectCourseLiquidationById" parameterType="Long" resultMap="CourseLiquidationResult">
+        <include refid="selectCourseLiquidationVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCourseLiquidation" parameterType="CourseLiquidation" useGeneratedKeys="true" keyProperty="id">
+        insert into course_liquidation
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="caseId != null  ">case_id,</if>
+			<if test="targetName != null  and targetName != ''  ">target_name,</if>
+			<if test="phaseNum != null  ">phase_num,</if>
+			<if test="liquidationType != null  and liquidationType != ''  ">liquidation_type,</if>
+			<if test="liquidationValue != null  and liquidationValue != ''  ">liquidation_value,</if>
+			<if test="courseId != null  ">course_id,</if>
+            <if test="groupNum != null  ">group_num,</if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="caseId != null  ">#{caseId},</if>
+			<if test="targetName != null  and targetName != ''  ">#{targetName},</if>
+			<if test="phaseNum != null  ">#{phaseNum},</if>
+			<if test="liquidationType != null  and liquidationType != ''  ">#{liquidationType},</if>
+			<if test="liquidationValue != null  and liquidationValue != ''  ">#{liquidationValue},</if>
+			<if test="courseId != null  ">#{courseId},</if>
+            <if test="groupNum != null  ">#{groupNum},</if>
+
+        </trim>
+    </insert>
+	 
+    <update id="updateCourseLiquidation" parameterType="CourseLiquidation">
+        update course_liquidation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="caseId != null  ">case_id = #{caseId},</if>
+            <if test="targetName != null  and targetName != ''  ">target_name = #{targetName},</if>
+            <if test="phaseNum != null  ">phase_num = #{phaseNum},</if>
+            <if test="liquidationType != null  and liquidationType != ''  ">liquidation_type = #{liquidationType},</if>
+            <if test="liquidationValue != null  and liquidationValue != ''  ">liquidation_value = #{liquidationValue},</if>
+            <if test="courseId != null  ">course_id = #{courseId},</if>
+            <if test="groupNum != null ">group_num = #{groupNum}</if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteCourseLiquidationById" parameterType="Long">
+        delete from course_liquidation where id = #{id}
+    </delete>
+	
+    <delete id="deleteCourseLiquidationByIds" parameterType="String">
+        delete from course_liquidation where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

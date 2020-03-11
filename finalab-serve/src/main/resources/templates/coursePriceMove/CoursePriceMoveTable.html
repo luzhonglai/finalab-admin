@@ -1,0 +1,110 @@
+<div class="panel-body" id="CoursePriceMoveTable_div" th:fragment="CoursePriceMoveTable_div">
+    <div class="col-sm-12 search-collapse" style="margin-bottom: 10px;margin-top: -20px;">
+        <form id="priceMoveformId">
+            <div class="select-list" >
+                <ul>
+                    <li>
+                        标的名称：<input type="text" name="targetName"/>
+                    </li>
+                    <li>
+                        组编号：<input type="text" name="groupNum"/>
+                    </li>
+                    <li>
+                        <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search('priceMoveformId')"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                        <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset('priceMoveformId')"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+    <table id="bootstrap-table-CoursePriceMove" data-mobile-responsive="true"></table>
+</div>
+<script th:inline="javascript" th:fragment="CoursePriceMoveTable_js">
+    var editFlag = [[${@permission.hasPermi('serve:coursePriceMove:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('serve:coursePriceMove:remove')}]];
+    var courseVoId = [[${courseVo.id}]]
+
+    var cpmprefix = ctx + "serve/coursePriceMove";
+
+    function CoursePriceMoveTable() {
+        this.initPage = function () {
+            initCoursePriceMoveTable();
+        }
+    }
+
+    function initCoursePriceMoveTable() {
+        var options = {
+            url: cpmprefix + "/list/" + courseVoId,
+            createUrl: cpmprefix + "/add",
+            updateUrl: cpmprefix + "/edit/{id}",
+            removeUrl: cpmprefix + "/remove",
+            exportUrl: cpmprefix + "/export",
+            modalName: "课件价格走势",
+            search: false,
+            showExport: false,
+            showRefresh: false,
+            showColumns: false,
+            showToggle: false,
+            showSearch: false,
+            pagination: true,
+            pageSize: 100,
+            tableObj: $('#bootstrap-table-CoursePriceMove'),
+            columns: [
+                {
+                    field : 'id',
+                    title : '自增Id',
+                    visible: false
+                },
+                {
+                    field : 'caseId',
+                    title : '案例Id',
+                    visible: false
+                },
+                {
+                    field : 'combinationName',
+                    title : '组合名称',
+                    sortable: false,
+                    visible: false
+                },
+                {
+                    field : 'targetName',
+                    title : '标的名称',
+                    sortable: false
+                },
+                {
+                    field : 'stage',
+                    title : '阶段',
+                },
+                {
+                    field : 'dateNum',
+                    title : '时间数字',
+                    sortable: false
+                },
+                {
+                    field : 'price',
+                    title : '价格',
+                    sortable: false
+                },{
+                    field : 'groupNum',
+                    title : '组编号',
+                    sortable: true,
+                },
+                {
+                    field : 'courseId',
+                    title : '课件id',
+                    visible: false
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        // actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    }
+</script>

@@ -1,0 +1,156 @@
+<div class="panel-body" id="courseTradingRecord_div" th:fragment="courseTradingRecord_div">
+    <div class="col-sm-12 search-collapse" style="margin-bottom: 11px;">
+        <form id="courseTradingRecordSearch">
+            <div class="select-list" >
+                <ul>
+                    <li>
+                        账号：<input type="text" name="userName"/>
+                    </li>
+                    <li>
+                        成交时间：<input type="text" name="timeTine"/>
+                    </li>
+                    <li>
+                        <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search('courseTradingRecordSearch')"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                        <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset('courseTradingRecordSearch')"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+    <table id="bootstrap-table-courseTradingRecord" data-mobile-responsive="true"></table>
+</div>
+<script th:inline="javascript" th:fragment="courseTradingRecord_js">
+    var ctrprefix = "/serve/instanceTrading";
+    var ctrcourseId =  [[${courseVo.id}]];
+    var tradingIntervalId = '';
+
+    // $("#courseTradingRecord_div").on('click',"button[name='refresh']",function(){
+    //     window.parent.$(".tabReload").click();
+    // })
+
+    function courseTradingRecord() {
+        this.initPage = function () {
+            initcourseTradingRecord();
+        };
+        this.intervalId = tradingIntervalId;
+    }
+
+    function initcourseTradingRecord() {
+        var options = {
+            url: ctrprefix + "/TradingRecord/" + ctrcourseId,
+            createUrl: ctrprefix + "/add",
+            updateUrl: ctrprefix + "/edit/{id}",
+            removeUrl: ctrprefix + "/remove",
+            exportUrl: ctrprefix + "/export",
+            modalName: "交易明细表",
+            search: false,
+            showExport: false,
+            showRefresh: false,
+            showColumns: false,
+            showToggle: false,
+            showSearch: false,
+            pagination: true,
+            pageSize: 20,
+            tableObj: $('#bootstrap-table-courseTradingRecord'),
+            columns: [
+                {
+                    field : 'id',
+                    title : '',
+                    visible: false
+                },
+                {
+                    field : 'courseId',
+                    title : '课程id',
+                    visible: false
+                },
+                {
+                    field : 'instanceId',
+                    title : '实例id',
+                    visible: false
+                },
+                {
+                    field : 'userId',
+                    title : 'TraderID',
+                    sortable: false
+                },
+                {
+                    field : 'userName',
+                    title : '账号',
+                    sortable: false
+                },
+                {
+                    field : 'stockId',
+                    title : '股票代码',
+                    visible: false
+                },
+                {
+                    field : 'stockName',
+                    title : '交易标的',
+                    sortable: false
+                },
+                {
+                    field : 'dealQuantity',
+                    title : '毛仓位',
+                    sortable: true
+                },
+                {
+                    field : 'dealPrice',
+                    title : '成交价格',
+                    sortable: true
+                },
+                {
+                    field : 'dealAveragePrice',
+                    title : '成交均价',
+                    sortable: false
+                },
+                {
+                    field : 'limitOrderRebate',
+                    title : '成交回报',
+                    visible: false
+                },
+                {
+                    field : 'penalty',
+                    title : '罚款',
+                    visible: false
+                },
+                {
+                    field : 'createTime',
+                    title : '创建时间',
+                    visible: false
+                },
+                {
+                    field : 'orderType',
+                    title : 'Market_Order("市场单"), Limit_Order("限价单");',
+                    visible: false
+                },
+                {
+                    field : 'timeTine',
+                    title : '时间段',
+                    visible: false
+                },
+
+                {
+                    field : 'dealPriceTotal',
+                    title : '单笔成交总额',
+                    visible: false
+                },
+                {
+                    field : 'priceTotal',
+                    title : '累计成交总额',
+                    visible: false
+                },
+                {
+                    field : 'modifyTime',
+                    title : '修改时间',
+                    visible: false
+                }]
+        };
+
+        if (courseId != null) {
+            $.table.init(options);
+            // tradingIntervalId  =  window.setInterval(function () {
+            //     $.table.refresh();
+            // }, 5000);
+        }
+    }
+</script>

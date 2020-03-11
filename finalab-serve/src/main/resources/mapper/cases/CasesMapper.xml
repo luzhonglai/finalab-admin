@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bytetcp.finalab.serve.cases.mapper.CasesMapper">
+    
+    <resultMap type="Cases" id="CasesResult">
+        <result property="id"    column="id"    />
+        <result property="caseName"    column="case_name"    />
+        <result property="version"    column="version"    />
+        <result property="caseIcon"    column="case_icon"    />
+        <result property="caseDesc"    column="case_desc"    />
+        <result property="pdfPath"    column="pdf_path"    />
+        <result property="pdfName"    column="pdf_name"    />
+        <result property="caseType"    column="case_type"    />
+        <result property="createId"    column="create_id"    />
+        <result property="createName"    column="create_name"    />
+        <result property="courseNum"    column="course_num"    />
+    </resultMap>
+	
+	<sql id="selectCasesVo">
+        select id, case_name, version, case_icon, case_desc, pdf_path, pdf_name, case_type, create_id, create_name, course_num from cases
+    </sql>
+	
+    <select id="selectCasesList" parameterType="Cases" resultMap="CasesResult">
+        <include refid="selectCasesVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="caseName != null  and caseName != '' "> and case_name LIKE CONCAT('%',#{caseName},'%')</if>
+             <if test="version != null "> and version = #{version}</if>
+             <if test="caseIcon != null  and caseIcon != '' "> and case_icon = #{caseIcon}</if>
+             <if test="caseDesc != null  and caseDesc != '' "> and case_desc = #{caseDesc}</if>
+             <if test="caseType != null "> and case_type = #{caseType}</if>
+             <if test="createId != null "> and create_id = #{createId}</if>
+             <if test="createName != null  and createName != '' "> and create_name = #{createName}</if>
+             <if test="courseNum != null "> and course_num = #{courseNum}</if>
+         </where>
+    </select>
+    
+    <select id="selectCasesById" parameterType="Long" resultMap="CasesResult">
+        <include refid="selectCasesVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCases" parameterType="Cases" useGeneratedKeys="true" keyProperty="id">
+        insert into cases
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="caseName != null  and caseName != ''  ">case_name,</if>
+			<if test="version != null  ">version,</if>
+			<if test="caseIcon != null  and caseIcon != ''  ">case_icon,</if>
+			<if test="caseDesc != null  and caseDesc != ''  ">case_desc,</if>
+			<if test="pdfPath != null  and pdfPath != ''  ">pdf_path,</if>
+			<if test="pdfName != null  and pdfName != ''  ">pdf_name,</if>
+			<if test="caseType != null  ">case_type,</if>
+			<if test="createId != null  ">create_id,</if>
+			<if test="createName != null  and createName != ''  ">create_name,</if>
+			<if test="courseNum != null  ">course_num,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="caseName != null  and caseName != ''  ">#{caseName},</if>
+			<if test="version != null  ">#{version},</if>
+			<if test="caseIcon != null  and caseIcon != ''  ">#{caseIcon},</if>
+			<if test="caseDesc != null  and caseDesc != ''  ">#{caseDesc},</if>
+			<if test="pdfPath != null  and pdfPath != ''  ">#{pdfPath},</if>
+			<if test="pdfName != null  and pdfName != ''  ">#{pdfName},</if>
+			<if test="caseType != null  ">#{caseType},</if>
+			<if test="createId != null  ">#{createId},</if>
+			<if test="createName != null  and createName != ''  ">#{createName},</if>
+			<if test="courseNum != null  ">#{courseNum},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateCases" parameterType="Cases">
+        update cases
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="caseName != null  and caseName != ''  ">case_name = #{caseName},</if>
+            <if test="version != null  ">version = #{version},</if>
+            <if test="caseIcon != null  and caseIcon != ''  ">case_icon = #{caseIcon},</if>
+            <if test="caseDesc != null  and caseDesc != ''  ">case_desc = #{caseDesc},</if>
+            <if test="caseType != null  ">case_type = #{caseType},</if>
+            <if test="createId != null  ">create_id = #{createId},</if>
+            <if test="createName != null  and createName != ''  ">create_name = #{createName},</if>
+            <if test="courseNum != null  ">course_num = #{courseNum},</if>
+            <if test="pdfPath != null  and pdfPath != ''  ">pdf_path = #{pdfPath},</if>
+            <if test="pdfName != null  and pdfName != ''  ">pdf_name = #{pdfName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteCasesById" parameterType="Long">
+        delete from cases where id = #{id}
+    </delete>
+	
+    <delete id="deleteCasesByIds" parameterType="String">
+        delete from cases where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="getCaseNum" resultType="int">
+        select count(1) from cases
+    </select>
+
+    <select id="getCourseNum" resultType="int">
+        select count(1) from course
+    </select>
+
+    <select id="getCourseNumByTeachId" resultType="int" parameterType="Long">
+        select count(1) from course
+        <where>
+            <if test="teacherId != null">teacher_id = #{teacherId}</if>
+        </where>
+    </select>
+</mapper>

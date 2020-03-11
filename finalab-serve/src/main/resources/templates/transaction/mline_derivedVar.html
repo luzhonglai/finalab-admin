@@ -1,0 +1,51 @@
+<div id="mline_derivedVar" th:fragment="mline_derivedVar">
+    <table id="derived_table" class="table " style="width:100%"></table>
+</div>
+<script th:inline="javascript" th:fragment="mline_derivedVar_js">
+
+    // var derivedPrefix = ctx + "serve/tradingDerivedVar/listForTrade";
+
+    $(function () {
+        var options = {
+            data: datas,
+            dataType:'json',
+            modalName: "衍生变量",
+            search: false,
+            showExport: false,
+            showRefresh: false,
+            showColumns: false,
+            showToggle: false,
+            showSearch: false,
+            pagination: false,
+            tableObj: $('#derived_table'),
+            columns: derivedVarForTrade()
+        };
+        $.table.init(options);
+    });
+
+    function derivedVarForTrade() {
+        var columns = [];
+
+        $.ajax({
+            url: ctx + "serve/derivedVar/fixColumns",
+            type: "post",
+            data: {
+                period: thePeriod,
+                caseId: course.caseId
+            },
+            async: false,
+            success: function (res) {
+                $.each(res, function (i, item) {
+                    columns.push({
+                        "field": item,
+                        "title": item,
+                        align: 'center',
+                        colspan: 1
+                    })
+                });
+            }
+        });
+
+        return columns;
+    }
+</script>

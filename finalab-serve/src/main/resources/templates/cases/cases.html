@@ -1,0 +1,177 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<style>
+	.upload{
+		font-size:10px;
+		float:right;
+		margin-top: 8px;
+		padding-left: 0px;
+		padding-right: 0px;
+		width: 52px;
+	}
+</style>
+<body class="gray-bg">
+
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list" >
+						<ul>
+							<li>
+								案例名称：<input type="text" name="caseName"/>
+							</li>
+
+							<li>
+								案例分类：<select name="caseType" th:with="type=${@dict.getType('case_type')}">
+								<option value="">所有</option>
+								<option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+										th:value="${dict.dictValue}"></option>
+							</select>
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+								<!--<button class="btn btn-warning btn-rounded btn-sm" onclick="test()">测试</button>-->
+								<!--<button class="btn btn-warning btn-rounded btn-sm" onclick="test1()">测试</button>-->
+
+							</li>
+						</ul>
+					</div>
+				</form>
+				<!--<button type="button" id="upload" onclick="javascript:upload()" class="btn btn-primary" style="font-size:10px;float:right;margin-top: 8px;padding-left: 0px;padding-right: 0px;width: 52px;" shiro:hasPermission="serve:cases:caseUpload">上传案例</button>-->
+				<!--<a href="javascript:test()">上传</a>-->
+			</div>
+
+	        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="upload()" shiro:hasPermission="serve:cases:caseUpload">
+					<i class="fa fa-plus"></i> 上传案例
+				</a>
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+
+        var editFlag = [[${@permission.hasPermi('serve:cases:edit')}]];
+        var startCaseFlag = [[${@permission.hasPermi('serve:cases:startCase')}]];
+        var removeFlag = [[${@permission.hasPermi('serve:cases:remove')}]];
+        var datas = [[${@dict.getType('case_type')}]];
+        var prefix = ctx + "serve/cases";
+
+        function upload() {
+            var url = ctx + 'serve/cases/caseUpload';
+            createMenuItem(url, "上传案例");
+        }
+
+        function test() {
+            var url = ctx + 'serve/cases/test';
+            createMenuItem(url, "测试交易页面");
+        }
+
+        function test1() {
+            var url = ctx + 'serve/cases/test1';
+            createMenuItem(url, "测试交易页面");
+        }
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "案例",
+				search: false,
+				showExport: false,
+				showRefresh: false,
+				showColumns: false,
+				showToggle: false,
+				showSearch: false,
+                sortName: 'id',
+                sortOrder: 'desc',
+                columns: [
+                {
+					field: 'id',
+                    title: '主键id',
+                    visible: false
+                },
+				{
+					field: 'caseIcon',
+					title: '&nbsp',
+					formatter: function (value, row, index) {
+					    var img = courseIcon(row);
+					    var clImg = '<a href="#" onclick="updateIcon(\'' + row.id + '\')">' + img + '</a>';
+						return clImg;
+					}
+				},
+				{
+					field : 'caseName',
+					title : '案例名称',
+					sortable: true
+				},
+				{
+					field : 'caseType',
+					title : '案例类型',
+					sortable: true,
+					formatter: function (value, row, index) {
+						return $.table.selectDictLabelNoStyle(datas, row.caseType);
+					}
+				},
+				{
+					field : 'caseDesc',
+					title : '案例描述',
+					sortable: true
+				},
+				{
+					field : 'createName',
+					title : '上传人',
+					sortable: true
+				},
+				{
+					field : 'courseNum',
+					title : '课件数',
+					sortable: true
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" onclick="javascript:openParaEdit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-success btn-xs ' + startCaseFlag + '" onclick="javascript:startCase(\'' + row.id + '\',\'' + row.caseName+'\')"><i class="fa fa-play"></i>开课</a>');
+						return actions.join(' ');
+		            }
+		        }]
+            };
+            $.table.init(options);
+            function courseIcon(row) {
+                return '<div class="image"><img class="case-icon-table" src=' + '/profile/caseIcon/' + row.caseIcon + '></div>';
+            }
+        });
+        function startCase(caseId, caseName) {
+            //TODO 此处调用后台启动案例
+            var url = prefix +'/run/'+ caseId;
+            createMenuItem( url,"案例课件开课");
+        }
+
+        function updateIcon(caseId) {
+            var url = prefix + "/caseIcon/" + caseId;
+            $.modal.open("修改案例图标", url);
+        }
+
+        function openParaEdit(caseId) {
+            console.log("123")
+			var url = ctx +'serve/caseParameters/parEdit/'+ caseId;
+            createMenuItem( url,"编辑案例参数");
+        }
+    </script>
+</body>
+</html>

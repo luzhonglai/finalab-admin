@@ -1,0 +1,110 @@
+<div class="panel-body" id="courseMarketNews_div" th:fragment="courseMarketNews_div">
+    <table id="bootstrap-table-courseMarketNews" data-mobile-responsive="true"></table>
+</div>
+<script th:inline="javascript" th:fragment="courseMarketNews_js">
+    var editFlag = [[${@permission.hasPermi('serve:courseMarketNews:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('serve:courseMarketNews:remove')}]];
+    var CMNprefix = ctx + "serve/courseMarketNews";
+    var courseVoId = [[${courseVo.id}]]
+
+    function CourseMarketNews() {
+        this.initPage = function () {
+            initCourseMarketNews();
+        }
+    }
+
+    function initCourseMarketNews() {
+        var options = {
+            url: CMNprefix + "/list/" + courseVoId,
+            createUrl: CMNprefix + "/add",
+            updateUrl: CMNprefix + "/edit/{id}",
+            removeUrl: CMNprefix + "/remove",
+            exportUrl: CMNprefix + "/export",
+            modalName: "课件市场新闻",
+            search: false,
+            showExport: false,
+            pagination: false,
+            showRefresh: false,
+            showColumns: false,
+            showToggle: false,
+            showSearch: false,
+            tableObj: $('#bootstrap-table-courseMarketNews'),
+            columns: [
+                {
+                    field : 'id',
+                    title : '',
+                    visible: false
+                },
+                {
+                    field : 'caseId',
+                    title : '',
+                    visible: false
+                },
+                {
+                    field : 'groupNum',
+                    title : '组号',
+                    sortable: false
+                },
+                {
+                    field : 'phaseNum',
+                    title : '阶段数字',
+                    sortable: false
+                },
+                {
+                    field : 'timeNum',
+                    title : '时间数',
+                    sortable: false
+                },
+                {
+                    field : 'sendAim',
+                    title : '发送目标',
+                    sortable: false
+                },
+                {
+                    field : 'isCompel',
+                    title : '是否强制',
+                    sortable: false
+                },
+                {
+                    field : 'action',
+                    title : '动作',
+                    sortable: false
+                },
+                {
+                    field : 'compelStockId',
+                    title : '强制标的',
+                    sortable: false
+                },
+                {
+                    field : 'newsTitle',
+                    title : '新闻标题',
+                    sortable: false
+                },
+                {
+                    field : 'content',
+                    title : '内容',
+                    sortable: false
+                },
+                {
+                    field : 'targetString',
+                    title : '替换文字',
+                    sortable: false
+                },
+                {
+                    field : 'courseId',
+                    title : '课件id',
+                    visible: false
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    };
+</script>

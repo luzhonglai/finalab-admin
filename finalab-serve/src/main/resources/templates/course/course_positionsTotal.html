@@ -1,0 +1,176 @@
+<div class="panel-body" id="course_positionsTotal_div" th:fragment="course_positionsTotal_div">
+    <table id="bootstrap-table-stockSpace" data-mobile-responsive="true"></table>
+</div>
+<script th:inline="javascript" th:fragment="course_positionsTotal_js">
+    var positionUrl = ctx + "serve/positionsTotal";
+    function course_positionsTotal() {
+        this.initPage = function () {
+            initCoursePoisitionTotal();
+        };
+
+    }
+    function initCoursePoisitionTotal() {
+        var options = {
+            url: positionUrl + "/listInCourse",
+            pageSize: 10,
+            pageNumber: 1,
+            pageList: [10, 20, 25],
+            queryParams: function(params){
+                var param = {
+                    courseId: courseId,
+                    pageOffset: params.offset,
+                    pageLimit: params.limit,
+                    sort: params.sort,
+                    order: params.order
+                }
+                return param;
+            },
+            createUrl: positionUrl + "/add",
+            updateUrl: positionUrl + "/edit/{id}",
+            removeUrl: positionUrl + "/remove",
+            exportUrl: positionUrl + "/export",
+            modalName: "持仓汇总",
+            search: false,
+            showExport: false,
+            showRefresh: true,
+            showColumns: false,
+            showToggle: false,
+            showSearch: false,
+            pagination: true,
+            tableObj: $('#bootstrap-table-stockSpace'),
+            columns: [
+                {
+                    field : 'id',
+                    title : '',
+                    visible: false
+                },
+                {
+                    field : 'createTime',
+                    title : '创建时间',
+                    sortable: true,
+                    visible: false
+
+                },
+                {
+                    field : 'modifyTime',
+                    title : '修改时间',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'thePeriod',
+                    title : '阶段数',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'loopNum',
+                    title : '第几次循环',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'instanceId',
+                    title : '',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'traderId',
+                    title : 'TraderId',
+                    sortable: true
+                },
+                {
+                    field : 'userName',
+                    title : '姓名',
+                    sortable: true
+                },
+                {
+                    field : 'traderName',
+                    title : '账号',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'stockId',
+                    title : '股票id',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'stockName',
+                    title : '交易标的',
+                    sortable: true
+                },
+                {
+                    field : 'nowQuantity',
+                    title : '持仓数量',
+                    sortable: true
+                },
+                {
+                    field : 'totalPrice',
+                    title : '成本价格',
+                    sortable: true,
+                    formatter: function(value, row, index) {
+                        var toFixedVal = 2;
+                        if (stockQuotedDecimals != null
+                            && stockQuotedDecimals != ''
+                            && stockQuotedDecimals[row.stockId] != '') {
+                            toFixedVal = stockQuotedDecimals[row.stockId];
+                        }
+                        return value.toFixed(toFixedVal);
+                    }
+                },
+                {
+                    field: 'price',
+                    title: '目前市场价',
+                    sortable: true,
+                    formatter: function(value, row, index) {
+                        if (value != null && typeof(value) != 'undefined' ) {
+                            return value.toFixed(2);
+                        }
+                    }
+
+                },
+                {
+                    field: 'latestMarketValue',
+                    title: '最新市值',
+                    sortable: false,
+                    formatter: function(value, row, index) {
+                        if (value != null && typeof(value) != 'undefined' ) {
+                            return value.toFixed(2);
+                        }
+                    }
+
+                },
+                {
+                    field: 'stockQuantity',
+                    title: '未实现盈利',
+                    sortable: true,
+                    visible: false
+
+                },
+                {
+                    field : 'totalQuantity',
+                    title : '毛仓位,|买入|+|卖出|',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    visible: false
+                }/*,
+                {
+                    title: '<btn  style="height:25px;width:42px;border-radius: 5px;font-size: 14px;padding: 1px 3px;" textSize="1dip" class="btn btn-danger btn-rounded btn-sm" onclick="$.table.refresh($(\'#bootstrap-table-stockSpace\'))">刷新</btn>',
+                    align: 'right',
+                    width:'0px',
+                    sortable: false,
+                    formatter: function () {
+                        return '';
+                    }
+                }*/]
+        };
+        $.table.init(options);
+    };
+</script>

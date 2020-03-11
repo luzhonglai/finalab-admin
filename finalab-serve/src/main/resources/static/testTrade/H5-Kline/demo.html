@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#B4E6FB">
+    <title>行情</title>
+</head>
+<style type="text/css">
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    .Kline-div {
+        position: fixed;
+        width: 100%;
+        bottom: 0rem;
+        top: 0;
+    }
+
+    .Kline-div .m-line {
+        height: 49%;
+        width: 100%;
+        margin-bottom: 10%;
+    }
+
+    .Kline-div .K-line {
+        height: 50%;
+        width: 100%;
+    }
+</style>
+<body>
+<div id="Kline-div" class="Kline-div" style="margin:  0 0 0 50px;">
+    <div id="m-line" class="m-line"></div>
+    <!-- <div id="k-content" class="K-line"></div>  -->
+</div>
+
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="js/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+<!--<script src="js/tmpData.js" type="text/javascript" charset="utf-8"></script>-->
+<!--<script src="js/kline.js" type="text/javascript" charset="utf-8"></script>-->
+<script>
+
+    var mChart = echarts.init(document.getElementById('m-line'));
+    // mChart.setOption(initMOption(mdata,'cn'));
+
+    // var kChart = echarts.init(document.getElementById('k-content'));
+    // kChart.setOption(initKOption(kdata));
+    var option = {
+        title: {
+            text: '交错正负轴标签',
+            subtext: 'From ExcelHome',
+            sublink: 'http://e.weibo.com/1341556070/AjwF2AgQm'
+        },
+        tooltip : {
+            trigger: 'axis',
+            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        grid: {
+            top: 80,
+            bottom: 30
+        },
+        xAxis: {
+            type : 'value',
+            position: 'top',
+            splitLine: {lineStyle:{type:'dashed'}},
+        },
+        yAxis: {
+            type : 'category',
+            axisLine: {show: false},
+            axisLabel: {show: false},
+            axisTick: {show: false},
+            splitLine: {show: false},
+            data : ['ten', 'nine', 'eight', 'seven', 'six', 'five', 'four', 'three', 'two', 'one']
+        },
+        series : [
+            {
+                name:'生活费',
+                type:'bar',
+                stack: '总量',
+                label: {
+                    normal: {
+                        show: true,
+                        formatter: '{b}'
+                    }
+                },
+                data:[
+                    {value: -0.07},
+                    {value: -0.09},
+                    0.2, 0.44,
+                    {value: -0.23},
+                    0.08,
+                    {value: -0.17},
+                    0.47,
+                    {value: -0.36},
+                    0.18
+                ]
+            }
+        ]
+    };
+
+    mChart.setOption(option);
+    // var mData = {"data": [], "yestclose": 33.01}
+    // var maxTime = 240;
+    // var countTime = 0;
+    // var timerId = setInterval(function () {
+    //     countTime += 1;
+    //     if (parseInt(countTime) == 241) {
+    //         clearInterval(timerId);
+    //     }
+    //
+    //     var data = [countTime, Math.random() * 200 + 300, Math.random() * 100 + 300, Math.round(Math.random() * 1000)]
+    //     mData.data.push(data);
+    //     mChart.setOption(option);
+    //     // mChart.setOption(initMOption(mData, 'cn'));
+    // }, 1000)
+</script>
+
+<!--<script language="javascript" type="text/javascript">-->
+    <!--var wsUri = "ws://localhost:8888/trend";-->
+    <!--var output;-->
+
+    <!--function init() {-->
+        <!--output = document.getElementById("output");-->
+        <!--testWebSocket();-->
+        <!--var map = new Map();-->
+        <!--map[1231] = 'fsfdf';-->
+        <!--map.set('aaa', 'aaaaa');-->
+        <!--console.log('================= ' + JSON.stringify(map));-->
+        <!--console.log('=============5555==== ' + map.size);-->
+
+    <!--}-->
+
+    <!--function testWebSocket() {-->
+        <!--websocket = new WebSocket(wsUri);-->
+        <!--websocket.onopen = function (evt) {-->
+            <!--onOpen(evt)-->
+        <!--};-->
+        <!--// websocket.onclose = function(evt) {-->
+        <!--//     onClose(evt)-->
+        <!--// };-->
+        <!--websocket.onmessage = function (evt) {-->
+            <!--onMessage(evt)-->
+        <!--};-->
+        <!--websocket.onerror = function (evt) {-->
+            <!--onError(evt)-->
+        <!--};-->
+    <!--}-->
+
+    <!--function onOpen(evt) {-->
+        <!--console.log(mChart);-->
+        <!--writeToScreen("CONNECTED");-->
+        <!--doSend('{"instanceId":"instanceId"}');-->
+    <!--}-->
+
+    <!--function onClose(evt) {-->
+        <!--writeToScreen("DISCONNECTED");-->
+    <!--}-->
+
+    <!--function onMessage(evt) {-->
+        <!--writeToScreen('response: ' + evt.data + '');-->
+        <!--// websocket.close();-->
+        <!--console.log(typeof(evt.data));-->
+        <!--rsData = eval('(' + evt.data + ')');-->
+        <!--mChart.setOption(initMOption(rsData, 'cn'));-->
+    <!--}-->
+
+    <!--function onError(evt) {-->
+        <!--writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);-->
+    <!--}-->
+
+    <!--function doSend(message) {-->
+        <!--writeToScreen("SENT: " + message);-->
+        <!--websocket.send(message);-->
+    <!--}-->
+
+    <!--function writeToScreen(message) {-->
+        <!--console.log(message);-->
+    <!--}-->
+
+    <!--window.addEventListener("load", init, false);-->
+<!--</script>-->
+</body>
+</html>

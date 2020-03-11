@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body >
+<input type="text" name="dfsfds"/>
+<script src="js/jquery.min.js" type="text/javascript"></script>
+
+
+<script language="JavaScript" type="text/javascript">
+    window.onbeforeunload = function() //author: meizz
+    {
+        var n = window.event.screenX - window.screenLeft;
+        var b = n > document.documentElement.scrollWidth-20;
+        if(b && window.event.clientY < 0 || window.event.altKey)
+        {
+            alert("是关闭而非刷新");
+            console.log('55555555');
+            window.event.returnValue = "121321323"; //这里可以放置你想做的操作代码
+        }else
+        {
+            console.log('5555566666555');
+            window.event.returnValue = false;
+
+//            alert("是刷新而非关闭");
+        }
+    }
+    window.onbeforeunload = function() //author: meizz
+    {
+        var n = window.event.screenX - window.screenLeft;
+        var b = n > document.documentElement.scrollWidth-20;
+        if(b && window.event.clientY < 0 || window.event.altKey)
+        {
+            alert("是关闭而非刷新");
+            window.event.returnValue = ""; //这里可以放置你想做的操作代码
+        }else
+        {
+            console.log('5555566666555');
+            alert("是刷新而非关闭");
+        }
+    }
+
+
+</script>
+
+</body>
+</html>

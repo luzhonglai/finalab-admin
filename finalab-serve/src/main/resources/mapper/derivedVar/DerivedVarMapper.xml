@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bytetcp.finalab.serve.derivedVar.mapper.DerivedVarMapper">
+    
+    <resultMap type="DerivedVar" id="DerivedVarResult">
+        <result property="id"    column="id"    />
+        <result property="caseId"    column="case_id"    />
+        <result property="varName"    column="var_name"    />
+        <result property="targetName"    column="target_name"    />
+        <result property="period"    column="period"    />
+        <result property="timeNum"    column="time_num"    />
+        <result property="varValue"    column="var_value"    />
+        <result property="groupNum"    column="group_num"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+	
+	<sql id="selectDerivedVarVo">
+        select id, case_id, var_name, target_name, period, time_num, var_value, group_num, create_time from derived_var
+    </sql>
+	
+    <select id="selectDerivedVarList" parameterType="DerivedVar" resultMap="DerivedVarResult">
+        <include refid="selectDerivedVarVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="caseId != null "> and case_id = #{caseId}</if>
+             <if test="varName != null  and varName != '' "> and var_name = #{varName}</if>
+             <if test="targetName != null  and targetName != '' "> and target_name = #{targetName}</if>
+             <if test="period != null "> and period = #{period}</if>
+             <if test="timeNum != null "> and time_num = #{timeNum}</if>
+             <if test="varValue != null "> and var_value = #{varValue}</if>
+             <if test="groupNum != null "> and group_num = #{groupNum}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+         </where>
+    </select>
+    
+    <select id="selectDerivedVarById" parameterType="Long" resultMap="DerivedVarResult">
+        <include refid="selectDerivedVarVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDerivedVar" parameterType="DerivedVar" useGeneratedKeys="true" keyProperty="id">
+        insert into derived_var
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="caseId != null  ">case_id,</if>
+			<if test="varName != null  and varName != ''  ">var_name,</if>
+			<if test="targetName != null  and targetName != ''  ">target_name,</if>
+			<if test="period != null  ">period,</if>
+			<if test="timeNum != null  ">time_num,</if>
+			<if test="varValue != null  ">var_value,</if>
+			<if test="groupNum != null  ">group_num,</if>
+			<if test="createTime != null  ">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="caseId != null  ">#{caseId},</if>
+			<if test="varName != null  and varName != ''  ">#{varName},</if>
+			<if test="targetName != null  and targetName != ''  ">#{targetName},</if>
+			<if test="period != null  ">#{period},</if>
+			<if test="timeNum != null  ">#{timeNum},</if>
+			<if test="varValue != null  ">#{varValue},</if>
+			<if test="groupNum != null  ">#{groupNum},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <insert id="insertDerivedVarList" useGeneratedKeys="true" keyProperty="id">
+        insert into derived_var
+        (case_id, var_name, target_name, period, time_num, var_value, group_num, create_time)
+        VALUES
+        <foreach collection="derivedVars" item="derivedVar"  separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{derivedVar.caseId},
+                #{derivedVar.varName},
+                #{derivedVar.targetName},
+                #{derivedVar.period},
+                #{derivedVar.timeNum},
+                #{derivedVar.varValue},
+                #{derivedVar.groupNum},
+                #{derivedVar.createTime}
+            </trim>
+        </foreach>
+    </insert>
+	 
+    <update id="updateDerivedVar" parameterType="DerivedVar">
+        update derived_var
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="caseId != null  ">case_id = #{caseId},</if>
+            <if test="varName != null  and varName != ''  ">var_name = #{varName},</if>
+            <if test="targetName != null  and targetName != ''  ">target_name = #{targetName},</if>
+            <if test="period != null  ">period = #{period},</if>
+            <if test="timeNum != null  ">time_num = #{timeNum},</if>
+            <if test="varValue != null  ">var_value = #{varValue},</if>
+            <if test="groupNum != null  ">group_num = #{groupNum},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteDerivedVarById" parameterType="Long">
+        delete from derived_var where id = #{id}
+    </delete>
+	
+    <delete id="deleteDerivedVarByIds" parameterType="String">
+        delete from derived_var where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="fixColumns"  parameterType="DerivedVar" resultType="java.lang.String">
+        select var_name from derived_var where period = #{period} and case_id = #{caseId}
+        group by var_name
+    </select>
+
+</mapper>

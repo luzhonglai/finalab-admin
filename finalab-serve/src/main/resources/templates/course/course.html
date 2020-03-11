@@ -1,0 +1,157 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            课件名称：<input type="text" name="courseName"/>
+                        </li>
+                        <li>
+                            状态：<select name="status" th:with="type=${@dict.getType('course_staus')}">
+                            <option value="">所有</option>
+                            <option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+                                    th:value="${dict.dictValue}"></option>
+                        </select>
+                        </li>
+
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table" data-mobile-responsive="true"></table>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('serve:courseCaseParamters:edit')}]];
+    var gotradFlag = [[${@permission.hasPermi('serve:course:gotrad')}]];
+    var lookCourse = [[${@permission.hasPermi('serve:course:control')}]];
+    var courseStudentMap = [[${courseStudentMap}]];
+    var prefix = ctx + "serve/course";
+    var datas = [[${@dict.getType('course_staus')}]];
+
+    $(function () {
+        var options = {
+            url: prefix + "/list",
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            modalName: "课件",
+            search: false,
+            showExport: false,
+            showRefresh: false,
+            showColumns: false,
+            showToggle: false,
+            showSearch: false,
+            sortName: 'id',
+            sortOrder: 'desc',
+            columns: [
+                {
+                    field: 'id',
+                    title: '主键id',
+                    visible: false
+                },
+                {
+                    field: 'caseIcon',
+                    title: '&nbsp',
+                    formatter: function (value, row, index) {
+                        return courseIcon(row);
+                    }
+                },
+                {
+                    field: 'courseName',
+                    title: '课件名称',
+                    sortable: true
+                },
+                {
+                    field: 'caseName',
+                    title: '案例名称',
+                    sortable: true,
+                },
+                {
+                    field: 'addNum',
+                    title: '参与人数',
+                    sortable: true
+                },
+                {
+                    field: 'teacherName',
+                    title: '授课人',
+                    sortable: true
+                },
+                {
+                    field: 'status',
+                    title: '状态',
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        return $.table.selectDictLabel(datas, value);
+                    }
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        var isSignUp = !$.common.isEmpty(courseStudentMap[row.id]);
+                        var isShowGoInto = ('hidden' != gotradFlag) && isSignUp;
+                        var goIntoFlag = isShowGoInto ? '' : 'hidden';
+                        actions.push('<a class="btn btn-success btn-xs ' + lookCourse + '" href="#" onclick="detail(\'' + row.id + '\')"><i class="fa fa-search"></i>查看</a>');
+                        actions.push('<button class="btn btn-success btn-xs '+editFlag+'" onclick="javascript:openParaEdit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</button> ');
+                        actions.push('<a class="btn btn-success btn-xs ' + goIntoFlag + '" href="#" onclick="intoCourse(\'' + row.id + '\')"><i class="fa "></i>进入</a>');
+                        return actions.join(' ');
+                    }
+                }]
+        };
+        $.table.init(options);
+
+        function courseIcon(row) {
+            return '<div class="image"><img class="case-icon-table" src=/profile/caseIcon/' + row.caseIcon + '></div>';
+        }
+    });
+
+    // 进入课件
+    function intoCourse(courseId, caseName) {
+        var url = prefix + "/transaction/" + courseId;
+        var checkUrl = prefix + '/instanceStatus';
+        var param = {courseId: courseId};
+        $.post(checkUrl, param, function (result) {
+            if (result.code == '0') {
+//                createMenuItem(url, "交易");
+                window.open(url, url);
+            } else {
+                $.modal.msgWarning('课件未启动或已停止');
+            }
+        });
+    }
+
+
+    //进入课件参数编辑
+    function openParaEdit(courseId) {
+        var url = ctx + 'serve/courseCaseParamters/parCourseEdit/' + courseId;
+        createMenuItem(url, "编辑课件参数");
+    }
+
+    //查看课件详情
+    function detail(courseId) {
+        var url = ctx + 'serve/course/' + courseId;
+        createMenuItem(url, "课件详情");
+    }
+
+</script>
+</body>
+</html>

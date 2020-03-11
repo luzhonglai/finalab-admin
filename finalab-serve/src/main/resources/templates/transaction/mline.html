@@ -1,0 +1,734 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<head th:include="include :: header"></head>
+<link href="/trade/css/main.css" rel="stylesheet"/>
+<style>
+    /*.lihidden{*/
+    /*width: 100%;*/
+    /*white-space: nowrap;*/
+    /*overflow: hidden;*/
+    /*text-overflow: ellipsis;*/
+    /*display: block;*/
+    /*float: right;*/
+    /*}*/
+
+    .tooltip-inner {
+        padding: 10px;
+        font-family: sans-serif;
+        text-align: left;
+        border: 3px solid rgba(19, 19, 19, 0.9);
+        background-color: rgba(10, 10, 10, 0.80);
+        /*opacity: 100;*/
+        /*transition: opacity 3s;*/
+    }
+
+    .tooltip.bottom .tooltip-arrow {
+        top: -5px;
+    }
+
+
+</style>
+<body>
+<div class=" container quotat">
+    <div class="row">
+        <div class="left-cont">
+            <div class="row info-cont">
+                <div class="left-cont">
+                    <ul id="targetList" class="list">
+                        <li class="tit">
+                            <span style="width: 50%;">标的名称</span>
+                            <span style="width: 25%;">最新价</span>
+                            <span style="width: 25%;">成交量</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-cont">
+                    <div class="tab-tit">
+                        <h3 id="stockName-1">NA</h3>
+                        <ul class="tab-sp">
+                            <li class="active">分时图</li>
+                            <li>K线图</li>
+                        </ul>
+                    </div>
+                    <div id="m-line" class="chart">
+                        <div class="ch_div" style="display: block;">
+                            分时图显示加载中...
+                        </div>
+                        <div class="ch_div">
+                            K线图显示加载中...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="right-cont list">
+            <div class="details">
+                <div class="tit"><h3 class="lihidden" id="stockName-2">NA</h3></div>
+                <ul id="storeHouse" class="opt">
+                    <li class="header">
+                        <span>最新成交价</span>
+                        <span>仓位</span>
+                        <span>购买价</span>
+                    </li>
+                    <li>
+                        <span class="green"></span>
+                        <span></span>
+                        <span class="red"></span>
+                    </li>
+                </ul>
+                <div class="j-opt" style="border:1px;">
+                    <h4>O：</h4>
+                    <input id="qk-order-O" type="text" readonly="readonly" class="form-control text"
+                           onkeyup="value=value.replace(/[^\d.]/g,'')">
+                    <h4>V：</h4>
+                    <input id="qk-order-V" type="text" readonly="readonly" class="form-control text no_r"
+                           onkeyup="value=value.replace(/[^\d.]/g,'')">
+                    <a class="downbtn" href="javascript:transaction.quickOrder.switchs()"><img id="qk-order"
+                                                                                               src="/trade/imgs/sd.png"
+                                                                                               class="gray" alt=""></a>
+                </div>
+                <div id="tempDiv">
+
+                </div>
+                <ul id="sell-list" class="list" style="border:0px;">
+                    <!--<li><span>卖七</span><span class="gray">ANOM</span><span class="green">51.8</span><span>2000</span></li>-->
+                </ul>
+                <ul id="buy-list" class="list">
+                    <!--<li><span>买一</span><span class="gray">ANOM</span><span class="red">51.8</span><span>2000</span></li>-->
+                </ul>
+            </div>
+        </div>
+        <div class="row news">
+            <div class="tit">
+                <h3>新闻</h3>
+            </div>
+            <ul class="one">
+                <li><a id="market-news" href="javascript:;">股票大宗交易：欢迎来到大宗交易模拟市场，案例开始</a></li>
+            </ul>
+            <ul id="user-news" hidden="hidden">
+                <li><a class="" href="javascript:;">
+                    <p hidden="hidden" id="new-origin-quantity"></p>
+                    <span id="news-stock-name"></span>准备以¥
+                    <span id="news-price"></span>
+                    <span id="trade-flag"></span>
+                    <span id="news-quantity"></span>支
+                    <span id="news-stockid"></span>股票，请问你是否接受订单？
+                    （<span id="news-timer"></span>S）
+                </a>
+                    <a id="news_place_order" class="btn" href="javascript:transaction.news.submit();">是</a>
+                </li>
+            </ul>
+        </div>
+        <div class="row tabslist">
+            <ul id="myTab" class="nav nav-tabs">
+                <li id="trade-order-tab" class="active">
+                    <a href="#trade" data-toggle="tab">交易下单</a>
+                </li>
+                <li id="program-order-tab">
+                    <a href="#order" data-toggle="tab">程序下单</a>
+                </li>
+                <li>
+                    <a href="#registered" data-toggle="tab">已挂单</a>
+                </li>
+            </ul>
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane fade in active" id="trade">
+                    <div class="tab-row">
+                        <h4>交易标的</h4>
+                        <p id="trade-title"></p>
+                    </div>
+                    <div class="tab-row">
+                        <h4>交易类型</h4>
+                        <div id="order-option" class="radiolist">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="ordertype" id="type1" value="Market_Order" checked>市场价
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="ordertype" id="type2" value="Limit_Order">委托单
+                                </label>
+                            </div>
+                        </div>
+                        <h4>数量</h4>
+                        <input id="tradeQuantity" type="text" class="form-control text"
+                               onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="单行输入">
+                        <i id="DisplayUnit"></i>
+                        <h4 id="priceText">金额</h4>
+                        <input id="tradePrice" type="text" class="form-control text"
+                               onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="单行输入">
+                        <span id="tradeButton">
+                                    <button id="tradeSell" type="button" class="btn btn-danger"
+                                            onclick="transaction.tradeOption.submitOrder('ASK')">卖出</button>
+                                    <button id="tradeBuy" type="button" class="btn btn-success"
+                                            onclick="transaction.tradeOption.submitOrder('BID')">买入</button>
+                                </span>
+                    </div>
+
+                </div>
+
+                <div class="tab-pane fade" id="order">
+                    <textarea id="auto_deal_code" style="width:60%;background-color: rgba(159,176,166,0.26)" cols="120"
+                              rows="18"></textarea>
+                    <textarea id="auto_deal_res" style="width:30%; background-color: rgba(128,145,135,0.19)" rows="18"
+                              wrap="off" readonly></textarea>
+
+                    <div class="operate">
+                        <button id="auto_start" type="button" class="btn btn-warning" onclick="startAutoDeal()">运行
+                        </button>
+                        <button id="auto_stop" type="button" class="btn btn-danger" onclick="closeAutoDeal()">停止
+                        </button>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="registered">
+                    <div th:include="entryOrder/mline_entry_order :: m_entry_order_list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 .col-md-12 .col-sm-12 .col-xs-12">
+            <div class="datalist tabslist">
+
+                <ul id="profitTab" class="nav nav-tabs">
+                    <li id="trade-positionsTotal-tab" class="active">
+                        <a href="#profitDeatilTab" data-toggle="tab">持仓盈亏明细<span id="z-profit">（总盈亏：0）</span></a>
+                    </li>
+                    <li id="trade-derived-tab" class="tab">
+                        <a href="#derivedVarTab" data-toggle="tab">衍生变量</a>
+                    </li>
+                </ul>
+
+                <div id="profitContent" class="tab-content">
+                    <div class="tab-pane fade in active" id="profitDeatilTab">
+                        <div th:include="positionsTotal/mline_positionsTotal :: mline_positionsTotal_div"></div>
+                    </div>
+
+                    <div class="tab-pane fade" id="derivedVarTab">
+                        <div th:include="transaction/mline_derivedVar :: mline_derivedVar"></div>
+                    </div>
+                    <!--<a class="btn btn-navbar" data-toggle="modal" data-target="#myModal5"><li>持仓走势图</li></a>-->
+
+                <!--<div th:replace="userStock/userHoldStock :: userStock_Constraint_div"></div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 .col-md-12 .col-sm-12 .col-xs-12">
+            <div class="datalist">
+                <div class="tit"><h3>平仓盈亏明细</h3>
+                    <p id="clearAction_Profit">（总盈亏：0）</p></div>
+
+                <div th:include="clearActionDetail/clear_action_detail :: m_clear_action_detail_div"></div>
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 .col-md-12 .col-sm-12 .col-xs-12">
+            <div class="datalist">
+                <div class="tit"><h3>交易明细</h3>
+                    <p><a onclick="dealDetail()">（全部详情>>）</a></p></div>
+                <!--<div th:include="transaction/instanceTardingTable :: instanceTrading_Constraint_div"></div>-->
+                <div th:include="userMoneyDetail/m_user_money_detail :: m_user_money_detail_div"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--<div th:include="userStock/userHoldStockChart :: user_hold_chart"></div>-->
+<div th:include="include :: footer"></div>
+<!--<div th:replace="transaction/instanceTardingTable :: instanceTrading_Constraint_js"></div>-->
+<div th:replace="positionsTotal/mline_positionsTotal :: mline_positionsTotal_js"></div>
+<div th:replace="entryOrder/mline_entry_order :: m_entry_order_list_js"></div>
+<div th:replace="clearActionDetail/clear_action_detail :: m_clear_action_detail_js"></div>
+<div th:replace="userMoneyDetail/m_user_money_detail :: m_user_money_detail_js"></div>
+<script src="/trade/js/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/trade/js/kline.js" type="text/javascript" charset="utf-8"></script>
+<script src="/trade/js/mline.js" type="text/javascript" charset="utf-8"></script>
+<div th:replace="userStock/userHoldStockChart :: user_hold_chart_js"></div>
+<div th:replace="transaction/autoDeal :: autoDeal_js"></div>
+<div th:replace="transaction/mline_derivedVar :: mline_derivedVar_js"></div>
+<script>
+    $(function () {
+        // 切换分时图和K线图
+        $(".right-cont .tab-tit ul li ").click(function () {
+            $(this).addClass("active").siblings().removeClass("active");
+            var index = $(this).index();
+            $(".right-cont .chart .ch_div").eq(index).show().siblings(".right-cont .chart .ch_div").hide();
+        })
+    })
+</script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var courseCasesParam = [[${courseCasesParam}]];
+    var stockMap = [[${stockMap}]];
+    var userId = [[${userId}]];
+    var course = [[${course}]];
+    /*]]>*/
+    var lastPositionsTotal = ctx + "serve/positionsTotal/refresh";
+    var allQuantityUrl = ctx + "serve/positionsTotal/allQuantity";
+    // var userStoreUrl = ctx + "serve/userStock/getUserStore";// 获取用户仓位信息url
+    var updateVarUrl = ctx + "serve/course/getUpdateVar";
+    var quickOrderUrl = ctx + "serve/course/quickOrder";//闪电下单url
+    var checkUrl = ctx + "serve/course/instanceStatus";
+    var cancelUrl = ctx + "serve/entryOrder/cancel";//下单url
+    var addUrl = ctx + "serve/userNews/mustAdd";//用户新闻加仓
+    var orderUrl = ctx + "serve/course/order";//下单url
+    var autoSocketUrl = [[${autoSocketUrl}]];
+    var updateVarMap = [[${updateVarMap}]];
+    var instanceId = [[${instanceId}]];
+    var wsUrl = [[${webSocketUrl}]];
+    var courseId = [[${courseId}]];
+    var userName = [[${userName}]];
+    var showDerived = [[${showDerived}]];
+    var thePeriod = 1; //阶段数
+    var loopNum = 1; //循环次数
+    var updateVars = [];
+    var websocket;
+    var groupNum;
+
+    var derivedMap = {};
+    var quantityMap = {};
+    var derivedTableData = {};
+
+    var stockAndOptionMatchMap = {};
+    var datas = {};
+    // var datas = {'rows':[{'TargetName':'q','Delta':'999'},{'TargetName':'w','Delta':'1024'}]};
+    function getUpdateVar() {
+        $.ajax({
+            url: updateVarUrl,
+            type: "post",
+            data: {courseId: courseId},
+            success: function (result) {
+                updateVars = result;
+            }
+        })
+    }
+
+    $(function () {
+        document.title = course.courseName;
+        //是否允许客户端显示BUYSELL_ENTRY窗口
+        // if ('1' != courseCasesParam.UI_BUYSELL_ENTRY.toLowerCase()) {
+        if (false) {
+            $('#trade-order-tab').remove();
+            $('#trade').remove();
+            $("#program-order-tab").addClass('active');
+            $('#order').addClass('active');
+            $('#order').addClass('in');
+        }
+        if (!showDerived) {
+            $('#trade-derived-tab').remove();
+        }
+
+        //websocket
+        websocket = new WebSocket(wsUrl);
+        websocket.onopen = function (evt) {
+            onOpen(evt)
+        };
+        websocket.onclose = function (evt) {
+            onClose(evt)
+        };
+        websocket.onmessage = function (evt) {
+            onMessage(evt)
+        };
+        websocket.onerror = function (evt) {
+            onError(evt)
+        };
+
+        //定时刷新右上角仓位
+        // window.setInterval(function () {
+        //     var stockId = transaction.priceMove.stockId;
+        //     if (tdCommon.notEmpty(stockId)) {
+        //         var param = {instanceId: instanceId, stockId: stockId, courseId: courseId};
+        //         //解析数据 刷新仓位
+        //         transaction.submit(userStoreUrl, JSON.stringify(param), function (result) {
+        //             if (result.code == 0) {
+        //                 var quote = stockMap[stockId].QuotedDecimals;
+        //                 var avgPrice = result.data.costPrice.toFixed(quote);
+        //                 var storeHouseData = {storeHouse: result.data.stockQuantity,
+        //                     avgBuyPrice: avgPrice};
+        //                 transaction.storeHouse.refresh(storeHouseData);
+        //             } else if (result.code == 501) {// 0 仓位
+        //                 var storeHouseData = {storeHouse: '--',
+        //                     avgBuyPrice: '--'};
+        //                 transaction.storeHouse.refresh(storeHouseData);
+        //             } else {
+        //                 console.log("获取仓位失败 ：" + result);
+        //             }
+        //         });
+        //     } else {
+        //         console.log('等待股票走势数据初始化，本次不获取用户仓位信息')
+        //     }
+        // }, 1000);
+    });
+
+
+    function sleep(ms, callback) {
+        setTimeout(callback, ms)
+    }
+
+    /**
+     * 初始化stocklist
+     * 初始化分时图
+     * 执行点击stock事件
+     * @param evt
+     */
+    function onOpen(evt) {
+        writeToScreen("websocket 已连接");
+        getUpdateVar();
+        var param = {
+            instanceId: instanceId
+        };
+        doSend(JSON.stringify(param));
+        var stockId = Object.keys(stockMap)[0];
+
+        transaction.priceMove.init({
+            data: [],
+            stockId: stockId,
+            stockName: stockMap[stockId].Description,
+            yestclose: getStartPrice(stockId)
+        });
+        console.log("onOpen 点击----- " + transaction.priceMove.stockId + '   ' + transaction.priceMove.stockName);
+        transaction.optionMatcher.doMatch();
+    }
+
+    /**
+     * 根据标的参数获取开盘价
+     */
+    function getStartPrice(stockId) {
+        var startPrice = 0;
+        var closePrice = stockMap[stockId].ClosePrice;
+        if (closePrice == 1) {
+            startPrice = stockMap[stockId].liquidationValue;
+            if ($.common.isEmpty(startPrice)) {
+                console.log('警告，标的id为 ' + stockId + '的 ClosePrice 字段为 '
+                    + closePrice + ' 表示读取清算表，但是清算表没有相关值，所以默认取 StartPrice 的值');
+                startPrice = stockMap[stockId].StartPrice;
+            }
+        } else if (closePrice == 0) {
+            startPrice = stockMap[stockId].StartPrice;
+        } else {
+            console.log('未get到开盘价 stockId ： ' + stockId);
+        }
+        return startPrice;
+    }
+
+    function onClose(evt) {
+        writeToScreen("DISCONNECTED");
+    }
+
+    var mlineDate = '';
+    var orderBookData = new Map(); //{t: {buy:'', sell:''}};
+    function onMessage(evt) {
+//        console.log('收到 ws 消息 -- ' + JSON.stringify(evt));
+        var msg = JSON.parse(evt.data);
+        loopNum = msg.loopNum;
+        groupNum = msg.groupNum;
+        var wsType = msg.type;
+        // orderBook("当前挂单"), mLine("分时图"), kLine("k线图"), stocksPrice("股票实时价格");
+        switch (wsType) {
+            case 'stocksPrice':
+//                    console.log('股票列表数据 ----' + JSON.stringify(msg));
+                covertToStocksNewPrice(msg);
+                periodListener(msg);
+                updateVarOnMsg(msg);
+                break;
+            case 'mLine':
+                // console.log('走势数据----' + JSON.stringify(msg));
+                derivedMap = msg.derived;
+                mlineDate = msg;//临时保存走势数据，便于走势数据结束后还可以切换股票
+                convertToMline(msg);
+                // 获取新闻
+                refreshNews(msg);
+                //刷新左侧的成交量
+                refreshTradeVal(msg);
+                break;
+            case 'orderBook':
+//                    console.log('挂单列表数据 ----' + JSON.stringify(msg));
+//                     console.log('挂单列表数据 ----');
+                var sell = msg.t.sell;
+                var stockId = getStockIdFromMap(sell);
+                // orderBookData[stockId] = msg;
+                orderBookData.set(stockId, msg);
+                convertToOrderBook(msg);
+                break;
+            case 'kLine':
+                break;
+            default:
+                console.log('未知数据类型' + wsType);
+        }
+        //计算衍生变量的值
+        if (showDerived) {
+            transaction.optionMatcher.calculated();
+        }
+
+    }
+
+    function periodListener(msg) {
+        var tempPeriod = thePeriod;
+        thePeriod = msg.thePeriod;
+        if (tempPeriod != thePeriod) {
+            var stockNewPriceArr = msg.t.stocks;
+            var stockName = '';
+            for (var key in stockNewPriceArr) {
+                var ele = stockNewPriceArr[key].stockName;
+                stockName += ('<p>' + ele + "</p>");
+            }
+            stockName.substr(0, stockName.length - 1);
+            $.modal.msgWarning("<p>" + stockName + "</p><p>进入第 " + thePeriod + " 阶段</p>");
+        }
+    }
+
+    function updateVarOnMsg(msg) {
+        var currentSec = msg.t.time;
+        for (var i = 0; i < updateVars.length; i++) {
+            var varEle = updateVars[i];
+            if (thePeriod == varEle.period && currentSec >= varEle.tick) {
+                switch (varEle.variable) {
+                    case 'IsTradeable': //1：允许交易 0：不允许交易
+                        stockMap[varEle.subType].IsTradeable = varEle.value;
+                        if (varEle.value == '1') {
+                            finalab.UnDisable($('#tradeSell'));
+                            finalab.UnDisable($('#tradeBuy'));
+                        } else {
+                            finalab.disable($('#tradeSell'));
+                            finalab.disable($('#tradeBuy'));
+                        }
+                        break;
+                }
+            }
+        }
+    }
+
+    function onError(evt) {
+        writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+    }
+
+    function doSend(message) {
+        writeToScreen("SENT: " + message);
+        websocket.send(message);
+    }
+
+    function writeToScreen(message) {
+        console.log(message);
+    }
+
+    /**
+     * 分时图数据刷新
+     */
+    function convertToMline(msg) {
+//            console.log('lllllll------- ' + JSON.stringify(msg));
+        var t = msg.t[transaction.priceMove.stockId];
+        var datas = [];
+        for (var i = 0; i < t.length; i++) {
+            //时间   当前价  均价   交易量
+            var data = [];
+            // if (t[i].flag == 0) {
+            //     datas.push([]);
+            //     continue;
+            // }
+            data[0] = t[i].time;
+            data[1] = t[i].price;
+            data[2] = t[i].avgPrice;
+            data[3] = t[i].curVol;
+            datas.push(data);
+        }
+        if (transaction.priceMove.isInit) {
+//            console.log('refresh 走势价格...' + datas);
+            transaction.priceMove.refresh(datas, true);
+        } else {
+            console.log('走势未初始...');
+        }
+        datas = [];//清空数组
+        //刷新左侧成交数量
+
+
+    }
+
+    /**
+     * 刷新左侧的成交量
+     */
+    function refreshTradeVal(msg) {
+        var data = msg.t;
+        var refreshDatas = [];
+        for (var key in data) {
+            var priceMoves = data[key];
+            var priceMove = priceMoves[priceMoves.length - 1];
+            // console.log('price move ------- ' + priceMove);
+            refreshDatas.push({stockId: key, vol: priceMove.curVol});
+        }
+        transaction.target.refresh(refreshDatas);
+        refreshDatas = [];
+
+    }
+
+    function covertToStocksNewPrice(msg) {
+
+        var stockNewPriceArr = msg.t.stocks;
+        countAndKeyMatcher(stockNewPriceArr);
+        if (transaction.target.isInit) {
+            transaction.target.refresh(stockNewPriceArr);
+        } else {
+            var targetDatas = [];
+            for (var key in stockNewPriceArr) {
+                var targetData = {
+                    stockId: stockNewPriceArr[key].stockId,
+                    title: stockNewPriceArr[key].stockName,
+                    price: '0',
+                    vol: 0
+                };
+                targetDatas.push(targetData);
+            }
+            transaction.target.init(targetDatas);
+            document.getElementById(targetDatas[0].stockId).click();
+            console.log('未初始化');
+        }
+    }
+
+    //ws新过来的数据，与上一次的左侧股票列表对比，先对比数量，再对比每一项。如果不一致，则删除旧的列表
+    function countAndKeyMatcher(stockNewPriceArr) {
+        var oldStockIds = [];
+        var i = 0;
+        for (var key in transaction.target.targetDataMap) {
+            oldStockIds[i] = key;
+            i++;
+        }
+        if (oldStockIds.length != stockNewPriceArr.length) {
+            removeTargetListLi(oldStockIds);
+            return;
+        } else {
+            for (var key in stockNewPriceArr) {
+                var ele = transaction.target.targetDataMap[stockNewPriceArr[0].stockId];
+                if (tdCommon.isEmpty(ele)) {
+                    removeTargetListLi(oldStockIds);
+                    return;
+                }
+            }
+        }
+
+    }
+
+    function removeTargetListLi(oldStockIds) {
+        if (oldStockIds.length == 0) {
+            return;
+        }
+        for (var i = 0; i < oldStockIds.length; i++) {
+            $('\'#' + oldStockIds[i] + 'li\'').remove();
+        }
+        transaction.target.isInit = false;
+    }
+
+    /**
+     * 刷新挂单列表
+     */
+    function convertToOrderBook(msg) {
+//            console.log('收到挂单列表数据 ----******---  ' + JSON.stringify(msg.t));
+        var sellMap = msg.t.sell;
+        var buyMap = msg.t.buy;
+        var stockId = getStockIdFromMap(buyMap);
+        if (transaction.priceMove.stockId != stockId) {
+            console.log('收到挂单列表数据，当前走势不是该股票，所以不刷新股票挂单列表 -- ' +
+                transaction.priceMove.stockId + '    ' + stockId);
+            return;//当前走势不是该股票，所以不刷新股票挂单列表
+        }
+        var sellArr = orderMap2List(sellMap);
+        var buyArr = orderMap2List(buyMap);
+        if (!transaction.tradeOrderList.isInit) {
+            transaction.tradeOrderList.init({sell: sellArr, buy: buyArr});
+        } else {
+            transaction.tradeOrderList.refreshSell(sellArr);
+            transaction.tradeOrderList.refreshBuy(buyArr);
+        }
+    }
+
+    function getStockIdFromMap(map) {
+        for (var key in map) {
+            return map[key][0].stockId;
+        }
+    }
+
+    function orderMap2List(map) {
+        var arr = [];
+        for (var key in map) {
+            var orderBooList = map[key];
+            //用户闪电下单->用户下单->第一笔订单
+            var orderBook = null;
+            for (var index in orderBooList) {
+                var _orderBook = orderBooList[index];
+                if (index == 0) {
+                    orderBook = _orderBook;
+                } else if (_orderBook.traderId == userId) {
+                    if (_orderBook.orderBolt) {
+                        orderBook = _orderBook;
+                        break;
+                    } else {
+                        orderBook = _orderBook;
+                    }
+                }
+            }
+            if (orderBook != null) {
+                arr.push(orderBook);
+            }
+        }
+        return arr;
+    }
+
+    function changeStock(instanceId, stockId) {
+        console.log("*****************切换股票**********************")
+
+        if (!$.common.isEmpty(mlineDate)) {
+//                console.log('切换时血染走势图====== '+ JSON.stringify(mlineDate));
+            convertToMline(mlineDate);
+        }
+        console.log('切换股票是 渲染挂单列表 map===' + JSON.stringify(orderBookData));
+        if (orderBookData.size > 0) {
+            var msg = orderBookData.get(transaction.priceMove.stockId);
+            console.log('切换股票是 渲染挂单列表 ==== ' + JSON.stringify(msg) + '  ' +
+                transaction.priceMove.stockId);
+            console.log('挂单map=====' + JSON.stringify(orderBookData));
+            convertToOrderBook(msg);
+        }
+    }
+
+    function refreshNews(msg) {
+        var url = '/serve/userNews/news';
+        var priceMoves = msg.t[transaction.priceMove.stockId];
+        var priceMove = priceMoves[priceMoves.length - 1];
+        var param = {timeNum: priceMove.time, courseId: courseId, thePeriod: thePeriod, groupNum: groupNum};
+        transaction.submit(url, JSON.stringify(param), function (result) {
+            console.log("获取新闻数据 --- " + JSON.stringify(result));
+            if (result.code == 0) {
+                if (tdCommon.notEmpty(result.userNews)) {
+                    transaction.news.onUserNews(result.userNews);
+                }
+                if (tdCommon.notEmpty(result.marketNews)) {
+                    transaction.news.onMarketNews(result.marketNews);
+                }
+            }
+        });
+    }
+
+    function testCurrentRefresh() {
+        var url = '/serve/userNews/userNews';
+        var param = {timeNum: 56, courseId: '67'};
+        transaction.submit(url, JSON.stringify(param), function (result) {
+            console.log(JSON.stringify(result));
+        });
+    }
+
+    function dealDetail() {
+        var dealDetailUrl = "/serve/userMoneyDetail/allDealDetail/" + courseId;
+        window.open(dealDetailUrl, dealDetailUrl);
+    }
+
+
+
+</script>
+<div th:replace="transaction/timer :: timer_js"></div>
+</body>
+</html>

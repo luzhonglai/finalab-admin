@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bytetcp.finalab.serve.courseMarketNews.mapper.CourseMarketNewsMapper">
+    
+    <resultMap type="CourseMarketNews" id="CourseMarketNewsResult">
+        <result property="id"    column="id"    />
+        <result property="caseId"    column="case_id"    />
+        <result property="phaseNum"    column="phase_num"    />
+        <result property="timeNum"    column="time_num"    />
+        <result property="sendAim"    column="send_aim"    />
+        <result property="newsTitle"    column="news_title"    />
+        <result property="content"    column="content"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="isCompel"    column="isCompel"    />
+        <result property="action"      column="action"/>
+        <result property="compelStockId"    column="compelStockId"    />
+        <result property="targetString"    column="targetString"    />
+        <result property="groupNum"    column="groupNum"    />
+    </resultMap>
+	
+	<sql id="selectCourseMarketNewsVo">
+        select id, case_id, phase_num, time_num, send_aim, news_title, content, course_id,isCompel,action,compelStockId,targetString,groupNum from course_market_news
+    </sql>
+	
+    <select id="selectCourseMarketNewsList" parameterType="CourseMarketNews" resultMap="CourseMarketNewsResult">
+        <include refid="selectCourseMarketNewsVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="caseId != null "> and case_id = #{caseId}</if>
+             <if test="phaseNum != null "> and phase_num = #{phaseNum}</if>
+             <if test="timeNum != null "> and time_num = #{timeNum}</if>
+             <if test="sendAim != null "> and send_aim = #{sendAim}</if>
+             <if test="newsTitle != null  and newsTitle != '' "> and news_title = #{newsTitle}</if>
+             <if test="content != null  and content != '' "> and content = #{content}</if>
+             <if test="courseId != null "> and course_id = #{courseId}</if>
+             <if test="isCompel != null  and isCompel != ''  "> and isCompel = #{isCompel}</if>
+             <if test="action != null and action != ''"> and action = #{action}</if>
+             <if test="compelStockId != null  and compelStockId != ''  "> and compelStockId = #{compelStockId}</if>
+             <if test="targetString != null  and targetString != ''  "> and targetString = #{targetString}</if>
+             <if test="groupNum != null  and groupNum != ''  "> and groupNum = #{groupNum}</if>
+         </where>
+    </select>
+    
+    <select id="selectCourseMarketNewsById" parameterType="Long" resultMap="CourseMarketNewsResult">
+        <include refid="selectCourseMarketNewsVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectCourseMarketNewsByTimeNum" resultMap="CourseMarketNewsResult">
+        <include refid="selectCourseMarketNewsVo"/>
+        <where>
+            <if test="courseId != null "> and course_id = #{courseId}</if>
+            <if test="timeNum != null "> and time_num = #{timeNum}</if>
+            <if test="thePeriod != null "> and phase_num = #{thePeriod}</if>
+            <if test="groupNum != null  and groupNum != ''  "> and groupNum = #{groupNum}</if>
+        </where>
+        order by time_num DESC limit 1
+    </select>
+        
+    <insert id="insertCourseMarketNews" parameterType="CourseMarketNews">
+        insert into course_market_news
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="caseId != null  ">case_id,</if>
+			<if test="phaseNum != null  ">phase_num,</if>
+			<if test="timeNum != null  ">time_num,</if>
+			<if test="sendAim != null  ">send_aim,</if>
+			<if test="newsTitle != null  and newsTitle != ''  ">news_title,</if>
+			<if test="content != null  and content != ''  ">content,</if>
+			<if test="courseId != null  ">course_id,</if>
+            <if test="isCompel != null  and isCompel != ''  ">isCompel,</if>
+            <if test="action != null and action != ''">action,</if>
+            <if test="compelStockId != null  and compelStockId != ''  ">compelStockId,</if>
+            <if test="targetString != null  and targetString != ''  ">targetString,</if>
+            <if test="groupNum != null  and groupNum != ''  ">groupNum,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="caseId != null  ">#{caseId},</if>
+			<if test="phaseNum != null  ">#{phaseNum},</if>
+			<if test="timeNum != null  ">#{timeNum},</if>
+			<if test="sendAim != null  ">#{sendAim},</if>
+			<if test="newsTitle != null  and newsTitle != ''  ">#{newsTitle},</if>
+			<if test="content != null  and content != ''  ">#{content},</if>
+			<if test="courseId != null  ">#{courseId},</if>
+            <if test="isCompel != null  and isCompel != ''  ">#{isCompel},</if>
+            <if test="action != null and action != ''">#{action},</if>
+            <if test="compelStockId != null  and compelStockId != ''  ">#{compelStockId},</if>
+            <if test="targetString != null  and targetString != ''  ">#{targetString},</if>
+            <if test="groupNum != null  and groupNum != ''  ">#{groupNum},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateCourseMarketNews" parameterType="CourseMarketNews">
+        update course_market_news
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="caseId != null  ">case_id = #{caseId},</if>
+            <if test="phaseNum != null  ">phase_num = #{phaseNum},</if>
+            <if test="timeNum != null  ">time_num = #{timeNum},</if>
+            <if test="sendAim != null  ">send_aim = #{sendAim},</if>
+            <if test="newsTitle != null  and newsTitle != ''  ">news_title = #{newsTitle},</if>
+            <if test="content != null  and content != ''  ">content = #{content},</if>
+            <if test="courseId != null  ">course_id = #{courseId},</if>
+            <if test="isCompel != null  and isCompel != ''  ">isCompel = #{isCompel},</if>
+            <if test="action != null and action != ''">action = #{action},</if>
+            <if test="compelStockId != null  and compelStockId != ''  ">compelStockId = #{compelStockId},</if>
+            <if test="targetString != null  and targetString != ''  ">targetString = #{targetString},</if>
+            <if test="groupNum != null  and groupNum != ''  ">groupNum = #{groupNum},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteCourseMarketNewsById" parameterType="Long">
+        delete from course_market_news where id = #{id}
+    </delete>
+	
+    <delete id="deleteCourseMarketNewsByIds" parameterType="String">
+        delete from course_market_news where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

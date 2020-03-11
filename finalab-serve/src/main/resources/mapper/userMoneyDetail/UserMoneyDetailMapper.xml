@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bytetcp.finalab.serve.userMoneyDetail.mapper.UserMoneyDetailMapper">
+    
+    <resultMap type="UserMoneyDetail" id="UserMoneyDetailResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="modifyTime"    column="modify_time"    />
+        <result property="thePeriod"    column="the_period"    />
+        <result property="loopNum"    column="loop_num"    />
+        <result property="timeLine"    column="time_line"    />
+        <result property="instanceId"    column="instance_id"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="stockId"    column="stock_id"    />
+        <result property="stockName"    column="stock_name"    />
+        <result property="dealPrice"    column="deal_price"    />
+        <result property="dealQuantity"    column="deal_quantity"    />
+        <result property="costPrice"    column="cost_price"    />
+        <result property="totalPrice"    column="total_price"    />
+        <result property="traderId"    column="trader_id"    />
+        <result property="traderName"    column="trader_name"    />
+        <result property="financialType"    column="financial_type"    />
+        <result property="actionName"    column="action_name"    />
+    </resultMap>
+
+    <resultMap id="UserMoneyInCourseDetailResult" type="UserMoneyDetailInCourse" extends="UserMoneyDetailResult">
+        <result property="transactionFee" column="transactionFee"/>
+        <result property="totalFine" column="totalFine"/>
+    </resultMap>
+	
+	<sql id="selectUserMoneyDetailVo">
+        select id, create_time, modify_time, the_period, loop_num, time_line, instance_id, course_id, stock_id, stock_name, deal_price, deal_quantity, cost_price, total_price, trader_id, trader_name, financial_type, action_name from user_money_detail
+    </sql>
+	
+    <select id="selectUserMoneyDetailList" parameterType="UserMoneyDetail" resultMap="UserMoneyDetailResult">
+        <include refid="selectUserMoneyDetailVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="modifyTime != null "> and modify_time = #{modifyTime}</if>
+             <if test="thePeriod != null "> and the_period = #{thePeriod}</if>
+             <if test="loopNum != null "> and loop_num = #{loopNum}</if>
+             <if test="timeLine != null "> and time_line = #{timeLine}</if>
+             <if test="instanceId != null  and instanceId != '' "> and instance_id = #{instanceId}</if>
+             <if test="courseId != null "> and course_id = #{courseId}</if>
+             <if test="stockId != null  and stockId != '' "> and stock_id = #{stockId}</if>
+             <if test="stockName != null  and stockName != '' "> and stock_name = #{stockName}</if>
+             <if test="dealPrice != null "> and deal_price = #{dealPrice}</if>
+             <if test="dealQuantity != null "> and deal_quantity = #{dealQuantity}</if>
+             <if test="costPrice != null "> and cost_price = #{costPrice}</if>
+             <if test="totalPrice != null "> and total_price = #{totalPrice}</if>
+             <if test="traderId != null "> and trader_id = #{traderId}</if>
+             <if test="traderName != null  and traderName != '' "> and trader_name = #{traderName}</if>
+             <if test="financialType != null  and financialType != '' "> and financial_type = #{financialType}</if>
+             <if test="actionName != null  and actionName != '' "> and action_name = #{actionName}</if>
+         </where>
+
+    </select>
+
+    <select id="getLastLoopDetail" parameterType="UserMoneyDetail" resultMap="UserMoneyDetailResult">
+        (<include refid="selectUserMoneyDetailVo"/>
+        <where>
+
+             <if test="instanceId != null  and instanceId != '' "> and instance_id = #{instanceId} and loop_num = (SELECT
+                 MAX(umd.`loop_num`)
+                 FROM user_money_detail umd
+                 WHERE umd.`instance_id` = #{instanceId})</if>
+             <if test="courseId != null "> and course_id = #{courseId}</if>
+             <if test="traderId != null "> and trader_id = #{traderId}</if>
+         </where>
+        order by id asc)
+    </select>
+    
+    <select id="selectUserMoneyDetailById" parameterType="Long" resultMap="UserMoneyDetailResult">
+        <include refid="selectUserMoneyDetailVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserMoneyDetail" parameterType="UserMoneyDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into user_money_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="createTime != null  ">create_time,</if>
+			<if test="modifyTime != null  ">modify_time,</if>
+			<if test="thePeriod != null  ">the_period,</if>
+			<if test="loopNum != null  ">loop_num,</if>
+			<if test="timeLine != null  ">time_line,</if>
+			<if test="instanceId != null  and instanceId != ''  ">instance_id,</if>
+			<if test="courseId != null  ">course_id,</if>
+			<if test="stockId != null  and stockId != ''  ">stock_id,</if>
+			<if test="stockName != null  and stockName != ''  ">stock_name,</if>
+			<if test="dealPrice != null  ">deal_price,</if>
+			<if test="dealQuantity != null  ">deal_quantity,</if>
+			<if test="costPrice != null  ">cost_price,</if>
+			<if test="totalPrice != null  ">total_price,</if>
+			<if test="traderId != null  ">trader_id,</if>
+			<if test="traderName != null  and traderName != ''  ">trader_name,</if>
+			<if test="financialType != null  and financialType != ''  ">financial_type,</if>
+			<if test="actionName != null  and actionName != ''  ">action_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="modifyTime != null  ">#{modifyTime},</if>
+			<if test="thePeriod != null  ">#{thePeriod},</if>
+			<if test="loopNum != null  ">#{loopNum},</if>
+			<if test="timeLine != null  ">#{timeLine},</if>
+			<if test="instanceId != null  and instanceId != ''  ">#{instanceId},</if>
+			<if test="courseId != null  ">#{courseId},</if>
+			<if test="stockId != null  and stockId != ''  ">#{stockId},</if>
+			<if test="stockName != null  and stockName != ''  ">#{stockName},</if>
+			<if test="dealPrice != null  ">#{dealPrice},</if>
+			<if test="dealQuantity != null  ">#{dealQuantity},</if>
+			<if test="costPrice != null  ">#{costPrice},</if>
+			<if test="totalPrice != null  ">#{totalPrice},</if>
+			<if test="traderId != null  ">#{traderId},</if>
+			<if test="traderName != null  and traderName != ''  ">#{traderName},</if>
+			<if test="financialType != null  and financialType != ''  ">#{financialType},</if>
+			<if test="actionName != null  and actionName != ''  ">#{actionName},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateUserMoneyDetail" parameterType="UserMoneyDetail">
+        update user_money_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="modifyTime != null  ">modify_time = #{modifyTime},</if>
+            <if test="thePeriod != null  ">the_period = #{thePeriod},</if>
+            <if test="loopNum != null  ">loop_num = #{loopNum},</if>
+            <if test="timeLine != null  ">time_line = #{timeLine},</if>
+            <if test="instanceId != null  and instanceId != ''  ">instance_id = #{instanceId},</if>
+            <if test="courseId != null  ">course_id = #{courseId},</if>
+            <if test="stockId != null  and stockId != ''  ">stock_id = #{stockId},</if>
+            <if test="stockName != null  and stockName != ''  ">stock_name = #{stockName},</if>
+            <if test="dealPrice != null  ">deal_price = #{dealPrice},</if>
+            <if test="dealQuantity != null  ">deal_quantity = #{dealQuantity},</if>
+            <if test="costPrice != null  ">cost_price = #{costPrice},</if>
+            <if test="totalPrice != null  ">total_price = #{totalPrice},</if>
+            <if test="traderId != null  ">trader_id = #{traderId},</if>
+            <if test="traderName != null  and traderName != ''  ">trader_name = #{traderName},</if>
+            <if test="financialType != null  and financialType != ''  ">financial_type = #{financialType},</if>
+            <if test="actionName != null  and actionName != ''  ">action_name = #{actionName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteUserMoneyDetailById" parameterType="Long">
+        delete from user_money_detail where id = #{id}
+    </delete>
+	
+    <delete id="deleteUserMoneyDetailByIds" parameterType="String">
+        delete from user_money_detail where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="profitInCourseDetail" parameterType="String" resultType="UserMoneyDetailInCourse">
+    SELECT
+        (SELECT u1.`total_price` FROM user_money_detail u1 WHERE u1.`id` = MAX(u.`id`)) AS totalPrice,
+        u.`trader_id` AS traderId,
+        su.`user_name` AS traderName,
+        SUM(
+          CASE
+            WHEN u.`action_name` = '交易费'
+            THEN u.`cost_price`
+            ELSE 0
+          END
+        ) AS 'transactionFee',
+        SUM(
+          CASE
+            WHEN u.`action_name` = '罚款'
+            THEN u.`cost_price`
+            ELSE 0
+          END
+        ) AS 'totalFine',
+        u.stock_id as stockId
+  FROM
+    user_money_detail u
+  LEFT JOIN sys_user su on u.trader_id = su.user_id
+  WHERE u.`instance_id` = #{instanceId}
+    AND u.`loop_num` = (SELECT
+                            MAX(umd.`loop_num`)
+                            FROM user_money_detail umd
+                            WHERE umd.`instance_id` = #{instanceId})
+  GROUP BY u.`trader_id`
+    </select>
+
+
+    <select id="unrealizedProfitandLoss"  parameterType="String"  resultType="UserMoneyDetailInCourse">
+    SELECT
+        p.`trader_id` as traderId,
+        SUM(p.`now_quantity` * m.`price` - p.`total_price`) as unrealizedProfitandLoss
+    FROM positions_total p
+    LEFT JOIN market_history m
+    ON m.`stock_id` = p.`stock_id`
+    AND m.`loop_num` = p.`loop_num`
+    AND m.`instance_id` = p.`instance_id`
+    WHERE p.`instance_id` = #{instanceId}
+    AND p.`loop_num` = (SELECT
+                        MAX(p1.loop_num)
+                        FROM positions_total p1
+                        WHERE p1.`instance_id` = #{instanceId})
+    GROUP BY p.`trader_id`
+    </select>
+
+</mapper>

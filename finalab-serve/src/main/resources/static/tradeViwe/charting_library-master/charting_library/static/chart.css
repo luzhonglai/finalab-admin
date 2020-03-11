@@ -1,0 +1,12 @@
+.group.space-single.header-group-fullscreen{
+  float: right
+}
+.group.space-single{float: left;}
+.group.space-single.header-group-properties,.group.space-single.header-group-indicators{float: none;}
+.group.space-single.header-group-indicators{display: none}
+.onchart-tv-logo.wrapper.expanded{display: none}
+.chart-page .header-chart-panel .group .button.selected{
+  background: #f2f6fa;
+  color: #357ce1;
+}
+.header-chart-panel .left .group{margin: 5px 0}

@@ -1,0 +1,107 @@
+<div class="panel-body" id="courseUserNews_div" th:fragment="courseUserNews_div">
+    <table id="bootstrap-table-courseUserNews" data-mobile-responsive="true"></table>
+</div>
+<script th:inline="javascript" th:fragment="courseUserNews_js">
+    var editFlag = [[${@permission.hasPermi('serve:courseUserNews:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('serve:courseUserNews:remove')}]];
+    var prefix = ctx + "serve/courseUserNews";
+    var courseVoId = [[${courseVo.id}]]
+
+    var CUNprefix = ctx + "serve/courseUserNews";
+
+    function CourseUserNewsTable(){
+        this.initPage = function (){
+            initCourseUserNews()
+        }
+    }
+
+    function initCourseUserNews () {
+        var options = {
+            url: CUNprefix + "/list/" + courseVoId,
+            createUrl: CUNprefix + "/add",
+            updateUrl: CUNprefix + "/edit/{id}",
+            removeUrl: CUNprefix + "/remove",
+            exportUrl: CUNprefix + "/export",
+            modalName: "课件用户新闻",
+            search: false,
+            showExport: false,
+            pageSize: 100,
+            showRefresh: false,
+            showColumns: false,
+            showToggle: false,
+            showSearch: false,
+            tableObj: $('#bootstrap-table-courseUserNews'),
+            columns: [
+                {
+                    field : 'id',
+                    title : '主键id',
+                    visible: false
+                },
+                {
+                    field : 'targetName',
+                    title : '标的名称',
+                    sortable: false
+                },
+                {
+                    field : 'phaseNum',
+                    title : '阶段数字',
+                    sortable: false
+                },
+                {
+                    field : 'timeNum',
+                    title : '时间数字',
+                    sortable: false
+                },
+                {
+                    field : 'number',
+                    title : '数量',
+                    sortable: false
+                },
+                {
+                    field : 'price',
+                    title : '价格',
+                    sortable: false
+                },
+                {
+                    field : 'tradeType',
+                    title : '买入/卖出',
+                    sortable: false
+                },
+                {
+                    field : 'aim',
+                    title : '目标',
+                    sortable: false
+                },
+                {
+                    field : 'continueTime',
+                    title : '持续时长',
+                    sortable: false
+                },
+                {
+                    field : 'caseId',
+                    title : '案例id',
+                    visible: false
+                },
+                {
+                    field : 'courseId',
+                    title : '课件id',
+                    visible: false
+                },
+                {
+                    field: 'groupNum',
+                    title: '组',
+                    sortable: false
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    };
+</script>

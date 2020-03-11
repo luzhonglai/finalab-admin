@@ -1,0 +1,105 @@
+<div class="panel-body" id="tardingMonitoring_div" th:fragment="tardingMonitoring_div">
+    <table id="bootstrap-table-tardingMonitoring" data-mobile-responsive="true"></table>
+</div>
+<script th:inline="javascript" th:fragment="tardingMonitoring_js">
+    var tardingMonitoringUrl = "/serve/caseParameters";
+    var ctrcourseId =  [[${courseVo.id}]];
+    var tradeMonitorIntervalId = '';
+
+    function tardingMonitoring() {
+        this.initPage = function () {
+            initTardingMonitoring();
+        };
+        this.intervalId = tradeMonitorIntervalId;
+    }
+
+    function initTardingMonitoring() {
+        var options = {
+            url: tardingMonitoringUrl + "/teacherList/" + ctrcourseId ,
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            search: false,
+            showExport: false,
+            showRefresh: false,
+            showColumns: false,
+            showToggle: false,
+            showSearch: false,
+            pagination: true,
+            pageSize: 100,
+            tableObj: $('#bootstrap-table-tardingMonitoring'),
+            columns: [
+                {
+                    field : 'id',
+                    title : '主键id',
+                    visible: false
+                },
+                {
+                    field : 'courseId',
+                    title : '课程id',
+                    visible: false
+                },
+                {
+                    field : 'instanceId',
+                    title : '实例id',
+                    visible: false
+                },
+                {
+                    field : 'userId',
+                    title : 'TraderID',
+                    sortable: true
+                },
+                {
+                    field : 'userName',
+                    title : '账号',
+                    sortable: true
+                },
+                {
+                    field : 'stockId',
+                    title : '股票代码',
+                    visible: false
+                },
+                {
+                    field : 'stockName',
+                    title : '交易标的',
+                    sortable: false
+                },
+                {
+                    field : 'stockQuantity',
+                    title : '毛仓位罚款',
+                    sortable: true
+                },
+                {
+                    field : 'costPrice',
+                    title : '净仓位罚款',
+                    sortable: true
+                },
+                {
+                    field : 'closePrice',
+                    title : '约束名称',
+                    sortable: true
+                },
+                {
+                    field : 'dealPrice',
+                    title : '合计罚款',
+                    sortable: true
+                },
+                {
+                    field : 'createTime',
+                    title : '创建时间',
+                    visible: false
+                },
+                {
+                    field : 'modifyTime',
+                    title : '修改时间',
+                    visible: false
+                }]
+        };
+        $.table.init(options);
+    };
+
+    // window.setInterval(function () {
+    //     $.table.refresh($('#bootstrap-table-tardingMonitoring'));
+    // }, 1000);
+</script>

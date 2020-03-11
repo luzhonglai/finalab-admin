@@ -1,0 +1,59 @@
+# 数据源配置
+spring:
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.cj.jdbc.Driver
+        druid:
+            # 主库数据源
+            master:
+                url: jdbc:mysql://rm-bp1g3d594a58dw50zxo.mysql.rds.aliyuncs.com:3306/finalab_admin?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                username: dsph
+                password: dsph@888
+            # 从库数据源
+            slave:
+                # 从数据源开关/默认关闭
+                enabled: false
+                url: 
+                username: 
+                password: 
+            # 初始连接数
+            initialSize: 5
+            # 最小连接池数量
+            minIdle: 10
+            # 最大连接池数量
+            maxActive: 20
+            # 配置获取连接等待超时的时间
+            maxWait: 60000
+            # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+            timeBetweenEvictionRunsMillis: 60000
+            # 配置一个连接在池中最小生存的时间，单位是毫秒
+            minEvictableIdleTimeMillis: 300000
+            # 配置一个连接在池中最大生存的时间，单位是毫秒
+            maxEvictableIdleTimeMillis: 900000
+            # 配置检测连接是否有效
+            validationQuery: SELECT 1 FROM DUAL
+            testWhileIdle: true
+            testOnBorrow: false
+            testOnReturn: false      
+            statViewServlet:
+                enabled: true
+                url-pattern: /monitor/druid/*
+            filter:
+                stat:
+                    # 慢SQL记录
+                    log-slow-sql: true
+                    slow-sql-millis: 1000
+                    merge-sql: true
+                wall:
+                    config:
+                        multi-statement-allow: true
+
+#交易端接口配置
+finalab.server.webSocketUrl: ws://140.143.20.58:8888/trend
+finalab.server.orderUrl: http://140.143.20.58:8888/order
+finalab.server.instanceUrl: http://140.143.20.58:8888/instance
+
+#admin端接口
+finalab.admin.userStoreUrl: http://140.143.20.58:9001/serve/course/userStore # 获取用户仓位信息
+finalab.admin.quickOrderUrl: http://140.143.20.58:9001/serve/course/quickOrder # 闪电下单url
+finalab.admin.orderUrl: http://140.143.20.58:9001/serve/course/order # 下单接口

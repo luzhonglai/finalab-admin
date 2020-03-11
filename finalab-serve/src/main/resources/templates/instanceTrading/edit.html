@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-instanceTrading-edit" th:object="${instanceTrading}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">课程id：</label>
+				<div class="col-sm-8">
+					<input id="courseId" name="courseId" th:field="*{courseId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">实例id：</label>
+				<div class="col-sm-8">
+					<input id="instanceId" name="instanceId" th:field="*{instanceId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">用户ID：</label>
+				<div class="col-sm-8">
+					<input id="userId" name="userId" th:field="*{userId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">用户昵称：</label>
+				<div class="col-sm-8">
+					<input id="userName" name="userName" th:field="*{userName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">股票代码：</label>
+				<div class="col-sm-8">
+					<input id="stockId" name="stockId" th:field="*{stockId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">股票名称：</label>
+				<div class="col-sm-8">
+					<input id="stockName" name="stockName" th:field="*{stockName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">交易类型, BID("买单"), ASK("卖单");：</label>
+				<div class="col-sm-8">
+					<input id="tradeType" name="tradeType" th:field="*{tradeType}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">Market_Order("市场单"), Limit_Order("限价单");：</label>
+				<div class="col-sm-8">
+					<input id="orderType" name="orderType" th:field="*{orderType}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">时间段：</label>
+				<div class="col-sm-8">
+					<input id="timeTine" name="timeTine" th:field="*{timeTine}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">成交数量：</label>
+				<div class="col-sm-8">
+					<input id="dealQuantity" name="dealQuantity" th:field="*{dealQuantity}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">成交价格：</label>
+				<div class="col-sm-8">
+					<input id="dealPrice" name="dealPrice" th:field="*{dealPrice}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">单笔成交总额：</label>
+				<div class="col-sm-8">
+					<input id="dealPriceTotal" name="dealPriceTotal" th:field="*{dealPriceTotal}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">累计成交总额：</label>
+				<div class="col-sm-8">
+					<input id="priceTotal" name="priceTotal" th:field="*{priceTotal}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">创建时间：</label>
+				<div class="col-sm-8">
+					<input id="createTime" name="createTime" th:field="*{createTime}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">修改时间：</label>
+				<div class="col-sm-8">
+					<input id="modifyTime" name="modifyTime" th:field="*{modifyTime}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "serve/instanceTrading";
+		$("#form-instanceTrading-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-instanceTrading-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

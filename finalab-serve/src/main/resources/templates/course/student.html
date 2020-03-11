@@ -1,0 +1,181 @@
+<div class="panel-body" id="student_div" th:fragment="course_student_div">
+    <div class="btn-group-sm hidden-xs" id="toolbar-student" role="group">
+        <a onclick="courseSignUp()"
+           th:class="${@permission.hasPermi('serve:courseStudent:signUp')} != hidden and !${showSignUp} and ${courseVo.allowIn} == 1 ?'btn btn-success':'hidden'"
+        >
+            <i class="fa fa-plus"></i> 报名
+        </a>
+        <a onclick="gotoTransactionPage()"
+           th:class="${@permission.hasPermi('serve:courseStudent:signOut')} != hidden and ${showSignUp} ?'btn btn-warning':'hidden'"
+
+        >
+        <i class="fa"></i> 进入课件
+        </a>
+
+        <a onclick="exitCourse()"
+           th:class="${@permission.hasPermi('serve:courseStudent:signOut')} != hidden and ${showSignUp} ?'btn btn-danger':'hidden'"
+        >
+            <i class="fa fa-minus"></i> 退出
+        </a>
+        <!--<a class="btn btn-warning btn-rounded btn-sm "-->
+        <!--onclick="$.table.refresh($('#bootstrap-table-student'))"><i class="fa fa-refresh"></i>&nbsp;刷新</a>-->
+    </div>
+    <table id="bootstrap-table-student" data-mobile-responsive="true"></table>
+</div>
+<script th:inline="javascript" th:fragment="course_student_js">
+    var editFlag = [[${@permission.hasPermi('serve:courseStudent:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('serve:courseStudent:remove')}]];
+
+    var startFlag = [[${@permission.hasPermi('serve:courseStudent:start')}]];
+    var suspendFlag = [[${@permission.hasPermi('serve:courseStudent:suspend')}]];
+    var stopFlag = [[${@permission.hasPermi('serve:courseStudent:stop')}]];
+    var loopFlag = [[${@permission.hasPermi('serve:courseStudent:loop')}]];
+    var signUp = [[${@permission.hasPermi('serve:courseStudent:signUp')}]];
+    var signOut = [[${@permission.hasPermi('serve:courseStudent:signOut')}]];
+    var prefix = ctx + "serve/courseStudent";
+    var signStatus = [[${@dict.getType('sign_up_status')}]];
+    var courseId = [[${courseVo.id}]];
+    var showSignUp = [[${showSignUp}]];
+
+    // $(function () {
+    //     //设置状态
+    //     initcourseStatus();
+    // });
+
+    $("#student_div").on('click', "button[name='refresh']", function () {
+        window.parent.$(".tabReload").click();
+    })
+
+    function Student() {
+        this.initPage = function () {
+            initStudent();
+        };
+    }
+
+    function initStudent() {
+        var options = {
+            url: prefix + "/list/" + courseId,
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            modalName: " 学生参与课件",
+            search: false,
+            showExport: false,
+            pagination: false,
+            showRefresh: true,
+            showColumns: false,
+            showToggle: false,
+            showSearch: false,
+            tableObj: $('#bootstrap-table-student'),
+            toolbarId: '#toolbar-student',
+            columns: [
+                {
+                    title: "序号",
+                    formatter: function (value, row, index) {
+                        return $.table.serialNumber(index);
+                    }
+                },
+                {
+                    field: 'id',
+                    title: '',
+                    visible: false
+                },
+                {
+                    field: 'courseId',
+                    title: '课程id',
+                    visible: false,
+                    sortable: false
+                },
+                {
+                    field: 'studentId',
+                    title: '学生id',
+                    visible: false,
+                    sortable: false
+                }, {
+                    field: 'userName',
+                    title: '学生姓名',
+                    visible: true,
+                    sortable: false
+                },
+                {
+                    field: 'addTime',
+                    title: '报名时间',
+                    sortable: false
+                },
+                {
+                    field: 'leaveTime',
+                    title: '退出时间',
+                    sortable: false
+                }, {
+                    field: 'signUp',
+                    title: '状态',
+                    sortable: false,
+                    formatter: function (value, row, index) {
+                        return $.table.selectDictLabel(signStatus, value);
+                    }
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    visible: removeFlag != 'hidden',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    }
+    ;
+
+    function courseSignUp() {
+        var signUpUrl = prefix + "/signUp"
+        $.post(signUpUrl, {courseId: courseId},
+                function (data, status) {
+                    if (data.code == 0) {
+                        window.parent.$(".tabReload").click();
+                    } else {
+                        $.modal.msgError(data.msg);
+                    }
+                });
+    }
+
+    function exitCourse() {
+        var exitCourseUrl = prefix + "/exitCourse"
+        $.post(exitCourseUrl,
+                {
+                    courseId: courseId
+                },
+                function (data, status) {
+                    if (data.code == 0) {
+                        window.parent.$(".tabReload").click();
+                    } else {
+                        $.modal.msgError('退出失败');
+                    }
+                });
+    }
+
+    //快捷进入行情页面的按钮
+    function gotoTransactionPage() {
+        var prefixStudent = ctx + "serve/course";
+        var url = prefixStudent + "/transaction/" + courseId;
+        var checkUrl = prefixStudent + '/instanceStatus';
+        var param = {courseId: courseId};
+        $.post(checkUrl, param, function (result) {
+            if (result.code == '0') {
+//                createMenuItem(url, "交易");
+                window.open(url, url);
+            } else {
+                $.modal.msgWarning('课件未启动或已停止');
+            }
+        });
+    }
+    // studentIntervalId = window.setInterval(function () {
+    //     $.table.refresh($('#bootstrap-table-student'));
+    // }, 1000);
+
+</script>
+</body>
+</html>

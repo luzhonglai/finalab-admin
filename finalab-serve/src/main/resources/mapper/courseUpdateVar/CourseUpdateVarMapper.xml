@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bytetcp.finalab.serve.courseUpdateVar.mapper.CourseUpdateVarMapper">
+    
+    <resultMap type="CourseUpdateVar" id="CourseUpdateVarResult">
+        <result property="id"    column="id"    />
+        <result property="period"    column="period"    />
+        <result property="tick"    column="tick"    />
+        <result property="type"    column="type"    />
+        <result property="subType"    column="sub_type"    />
+        <result property="variable"    column="variable"    />
+        <result property="value"    column="value"    />
+        <result property="caseId"    column="case_id"    />
+        <result property="courseId"    column="course_id"    />
+    </resultMap>
+	
+	<sql id="selectCourseUpdateVarVo">
+        select id, period, tick, type, sub_type, variable, value, case_id, course_id from course_update_var
+    </sql>
+	
+    <select id="selectCourseUpdateVarList" parameterType="CourseUpdateVar" resultMap="CourseUpdateVarResult">
+        <include refid="selectCourseUpdateVarVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="period != null "> and period = #{period}</if>
+             <if test="tick != null "> and tick = #{tick}</if>
+             <if test="type != null  and type != '' "> and type = #{type}</if>
+             <if test="subType != null  and subType != '' "> and sub_type = #{subType}</if>
+             <if test="variable != null  and variable != '' "> and variable = #{variable}</if>
+             <if test="value != null  and value != '' "> and value = #{value}</if>
+             <if test="caseId != null  and caseId != '' "> and case_id = #{caseId}</if>
+             <if test="courseId != null "> and course_id = #{courseId}</if>
+         </where>
+        order by tick desc
+    </select>
+    
+    <select id="selectCourseUpdateVarById" parameterType="Long" resultMap="CourseUpdateVarResult">
+        <include refid="selectCourseUpdateVarVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCourseUpdateVar" parameterType="CourseUpdateVar" useGeneratedKeys="true" keyProperty="id">
+        insert into course_update_var
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="period != null  ">period,</if>
+			<if test="tick != null  ">tick,</if>
+			<if test="type != null  and type != ''  ">type,</if>
+			<if test="subType != null  and subType != ''  ">sub_type,</if>
+			<if test="variable != null  and variable != ''  ">variable,</if>
+			<if test="value != null  and value != ''  ">value,</if>
+			<if test="caseId != null  and caseId != ''  ">case_id,</if>
+			<if test="courseId != null  ">course_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="period != null  ">#{period},</if>
+			<if test="tick != null  ">#{tick},</if>
+			<if test="type != null  and type != ''  ">#{type},</if>
+			<if test="subType != null  and subType != ''  ">#{subType},</if>
+			<if test="variable != null  and variable != ''  ">#{variable},</if>
+			<if test="value != null  and value != ''  ">#{value},</if>
+			<if test="caseId != null  and caseId != ''  ">#{caseId},</if>
+			<if test="courseId != null  ">#{courseId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateCourseUpdateVar" parameterType="CourseUpdateVar">
+        update course_update_var
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="period != null  ">period = #{period},</if>
+            <if test="tick != null  ">tick = #{tick},</if>
+            <if test="type != null  and type != ''  ">type = #{type},</if>
+            <if test="subType != null  and subType != ''  ">sub_type = #{subType},</if>
+            <if test="variable != null  and variable != ''  ">variable = #{variable},</if>
+            <if test="value != null  and value != ''  ">value = #{value},</if>
+            <if test="caseId != null  and caseId != ''  ">case_id = #{caseId},</if>
+            <if test="courseId != null  ">course_id = #{courseId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteCourseUpdateVarById" parameterType="Long">
+        delete from course_update_var where id = #{id}
+    </delete>
+	
+    <delete id="deleteCourseUpdateVarByIds" parameterType="String">
+        delete from course_update_var where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

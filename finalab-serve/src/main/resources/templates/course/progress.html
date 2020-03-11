@@ -1,0 +1,104 @@
+<div id="progress_div" th:fragment="progress_div">
+    <!--<div id="progress_base" class="progress progress-striped active">-->
+
+    <!--</div>-->
+    <div id="progressDiv" class="demo">
+            <div style="width:150%;">
+                <div class="progress_bar">
+                    <div class="pro-bar">
+                        <small class="progress_bar_title">
+                            <span id="currentPeriod"></span>
+                            <!--<span id="currentScale" class="progress_persent"></span>-->
+                        </small>
+                        <span id="progress_img" class="progress-bar-inner" style="background-color: #1abc9c;"
+                              ></span>
+                        <span id="currentPersent" class="progress_number"></span>
+                    </div>
+                </div>
+
+            </div>
+    </div>
+</div>
+<script th:inline="javascript" th:fragment="progress_js">
+
+    var instanceInfoUrl = [[${instanceInfoUrl}]];
+    var progressSocket = null;
+    var instanceIdUrl = ctx + "serve/course/instanceId";
+    var spaceString = "\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0";
+
+    var param = {courseId: courseId};
+
+    $(function() {
+        startProgress();
+    });
+
+    function startProgress() {
+        $("#currentPeriod").text("P:0/0" + spaceString  + " T:0/0 s");
+        progressSocket = new WebSocket(instanceInfoUrl);
+
+        progressSocket.onopen = function (event) {
+            openSocket(event);
+        }
+        progressSocket.onmessage = function (event) {
+            handleMsg(event);
+        }
+        progressSocket.onclose = function (event) {
+            closeSocket(event);
+        }
+        progressSocket.onerror = function (event) {
+            handleError(event);
+        }
+    }
+
+    function openSocket(event) {
+        $.ajax({
+            url:instanceIdUrl,
+            data: param,
+            async: false,
+            type: 'post',
+            success: function (result) {
+                var instanceId = {"instanceId": result};
+                progressSocket.send(JSON.stringify(instanceId));
+            }
+        });
+    }
+
+    function handleMsg(event) {
+        var instanceInfo = JSON.parse(event.data);
+        var periods = instanceInfo.t.periods;
+        var thePeriod = instanceInfo.t.thePeriod;
+        var timeLine = instanceInfo.t.timeLine;
+        var ticksPerPeriod = instanceInfo.t.ticksPerPeriod;
+        $("#currentPeriod").text("P:" + thePeriod + "/" + periods + spaceString  + " T:" + (timeLine) + "/" + ticksPerPeriod + " s");
+        // $("#currentScale").text();
+        var currentPersent = (((timeLine)/ticksPerPeriod)*100).toFixed(2);
+
+        $("#currentPersent").text(currentPersent + "%");
+        $("#progress_img").attr("style", "background-color: #1abc9c;width:" + currentPersent + "%;");
+        console.log("当前秒数：" + (timeLine) + "; 总时间长度：" + ticksPerPeriod);
+
+        if ((timeLine + 1) == ticksPerPeriod) { //时间到头
+            if (thePeriod == periods) {         //阶段到头
+                if ($("#cycleIn").attr('value') != '1') {//没有开启循环开启
+                    handleButtonStatus('STOP');
+                    changeCourseListStatus(2);
+                }
+            }
+        }
+    }
+
+    function closeSocket(event) {
+        $("#currentPeriod").text("P:0/0" + spaceString  + " T:0/0 s");
+        $("#progress_img").attr("style", "width:0%;");
+        $("#currentPersent").text("");
+    }
+    function handleError(event) {}
+
+    function stopSocket() {
+        if (progressSocket != null) {
+            progressSocket.close();
+            console.log("课程进度的WebSocket连接关闭");
+        }
+
+    }
+</script>

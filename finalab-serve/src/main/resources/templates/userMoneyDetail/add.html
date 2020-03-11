@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-userMoneyDetail-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">创建时间：</label>
+				<div class="col-sm-8">
+					<input id="createTime" name="createTime" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">修改时间：</label>
+				<div class="col-sm-8">
+					<input id="modifyTime" name="modifyTime" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">阶段数：</label>
+				<div class="col-sm-8">
+					<input id="thePeriod" name="thePeriod" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">第几次循环：</label>
+				<div class="col-sm-8">
+					<input id="loopNum" name="loopNum" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">一秒一秒的时间：</label>
+				<div class="col-sm-8">
+					<input id="timeLine" name="timeLine" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">：</label>
+				<div class="col-sm-8">
+					<input id="instanceId" name="instanceId" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">课件id：</label>
+				<div class="col-sm-8">
+					<input id="courseId" name="courseId" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">股票id：</label>
+				<div class="col-sm-8">
+					<input id="stockId" name="stockId" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">股票名称：</label>
+				<div class="col-sm-8">
+					<input id="stockName" name="stockName" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">成交价格：</label>
+				<div class="col-sm-8">
+					<input id="dealPrice" name="dealPrice" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">成交数量：</label>
+				<div class="col-sm-8">
+					<input id="dealQuantity" name="dealQuantity" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">资金流向，买是负，卖是正：</label>
+				<div class="col-sm-8">
+					<input id="costPrice" name="costPrice" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">总资金：</label>
+				<div class="col-sm-8">
+					<input id="totalPrice" name="totalPrice" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">交易人id,机器人是-1：</label>
+				<div class="col-sm-8">
+					<input id="traderId" name="traderId" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">交易人名字,机器人ANON：</label>
+				<div class="col-sm-8">
+					<input id="traderName" name="traderName" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">金融产品类型,股票（stock)，期货(future)，股指(index)，期权(option)，现汇（spot)：</label>
+				<div class="col-sm-8">
+					<input id="financialType" name="financialType" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">order_action 或者 ClearActionName：</label>
+				<div class="col-sm-8">
+					<input id="actionName" name="actionName" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "serve/userMoneyDetail"
+		$("#form-userMoneyDetail-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/add", $('#form-userMoneyDetail-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

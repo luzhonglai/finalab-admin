@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bytetcp.finalab.serve.coursePriceMove.mapper.CoursePriceMoveMapper">
+    
+    <resultMap type="CoursePriceMove" id="CoursePriceMoveResult">
+        <result property="id"    column="id"    />
+        <result property="caseId"    column="case_id"    />
+        <result property="groupNum"    column="group_num"    />
+        <result property="combinationName"    column="combination_name"    />
+        <result property="targetName"    column="target_name"    />
+        <result property="dateNum"    column="date_num"    />
+        <result property="price"    column="price"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="stage"    column="stage"    />
+    </resultMap>
+	
+	<sql id="selectCoursePriceMoveVo">
+        select id, case_id, combination_name, target_name, date_num, price, course_id,group_num, stage from course_price_move
+    </sql>
+	
+    <select id="selectCoursePriceMoveList" parameterType="CoursePriceMove" resultMap="CoursePriceMoveResult">
+        <include refid="selectCoursePriceMoveVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="caseId != null "> and case_id = #{caseId}</if>
+            <if test="groupNum != null "> and group_num = #{groupNum}</if>
+            <if test="combinationName != null  and combinationName != '' "> and combination_name = #{combinationName}</if>
+             <if test="targetName != null  and targetName != '' "> and target_name LIKE CONCAT('%',#{targetName},'%')</if>
+             <if test="dateNum != null "> and date_num = #{dateNum}</if>
+             <if test="price != null "> and price = #{price}</if>
+             <if test="courseId != null "> and course_id = #{courseId}</if>
+             <if test="stage != null "> and stage = #{stage}</if>
+         </where>
+    </select>
+    
+    <select id="selectCoursePriceMoveById" parameterType="Long" resultMap="CoursePriceMoveResult">
+        <include refid="selectCoursePriceMoveVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCoursePriceMove" parameterType="CoursePriceMove" useGeneratedKeys="true" keyProperty="id">
+        insert into course_price_move
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="caseId != null  ">case_id,</if>
+            <if test="groupNum != null  ">group_num,</if>
+            <if test="combinationName != null  and combinationName != ''  ">combination_name,</if>
+			<if test="targetName != null  and targetName != ''  ">target_name,</if>
+			<if test="dateNum != null  ">date_num,</if>
+			<if test="price != null  ">price,</if>
+			<if test="courseId != null  ">course_id,</if>
+			<if test="stage != null  ">stage,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="caseId != null  ">#{caseId},</if>
+            <if test="groupNum != null  ">#{groupNum},</if>
+            <if test="combinationName != null  and combinationName != ''  ">#{combinationName},</if>
+			<if test="targetName != null  and targetName != ''  ">#{targetName},</if>
+			<if test="dateNum != null  ">#{dateNum},</if>
+			<if test="price != null  ">#{price},</if>
+			<if test="courseId != null  ">#{courseId},</if>
+			<if test="stage != null  ">#{stage},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateCoursePriceMove" parameterType="CoursePriceMove">
+        update course_price_move
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="caseId != null  ">case_id = #{caseId},</if>
+            <if test="groupNum != null  ">group_num = #{groupNum},</if>
+            <if test="combinationName != null  and combinationName != ''  ">combination_name = #{combinationName},</if>
+            <if test="targetName != null  and targetName != ''  ">target_name = #{targetName},</if>
+            <if test="dateNum != null  ">date_num = #{dateNum},</if>
+            <if test="price != null  ">price = #{price},</if>
+            <if test="courseId != null  ">course_id = #{courseId},</if>
+            <if test="stage != null  ">stage = #{stage},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteCoursePriceMoveById" parameterType="Long">
+        delete from course_price_move where id = #{id}
+    </delete>
+	
+    <delete id="deleteCoursePriceMoveByIds" parameterType="String">
+        delete from course_price_move where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

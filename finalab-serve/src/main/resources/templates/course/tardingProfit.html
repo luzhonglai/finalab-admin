@@ -1,0 +1,103 @@
+<div class="panel-body" id="tardingProfit_div" th:fragment="tardingProfit_div">
+    <table id="bootstrap-table-tardingProfit" data-mobile-responsive="true"></table>
+</div>
+<script th:inline="javascript" th:fragment="tardingProfit_js">
+    var tardingProfitUrl = "/serve/userMoneyDetail";
+    var ctrcourseId =  [[${courseVo.id}]];
+
+    function tardingProfit() {
+        this.initPage = function () {
+            initTardingProfit();
+        }
+    }
+
+    function initTardingProfit() {
+        var options = {
+            url: tardingProfitUrl + "/profitInCourse",
+            queryParams: {
+              courseId:courseId
+            },
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            search: false,
+            showExport: false,
+            showRefresh: false,
+            showColumns: false,
+            showToggle: false,
+            showSearch: false,
+            pagination: true,
+            pageSize: 100,
+            tableObj: $('#bootstrap-table-tardingProfit'),
+            columns: [
+                {
+                    field : 'id',
+                    title : '主键id',
+                    visible: false
+                },
+                {
+                    field : 'courseId',
+                    title : '课程id',
+                    visible: false
+                },
+                {
+                    field : 'instanceId',
+                    title : '实例id',
+                    visible: false
+                },
+                {
+                    field : 'userId',
+                    title : 'TraderID',
+                    sortable: true
+                },
+                {
+                    field : 'userName',
+                    title : '账号',
+                    sortable: true
+                },
+                {
+                    field : 'stockId',
+                    title : '股票代码',
+                    visible: false
+                },
+                {
+                    field : 'stockName',
+                    title : '已实现盈亏',
+                    sortable: false
+                },
+                {
+                    field : 'stockQuantity',
+                    title : '未实现盈亏',
+                    sortable: true
+                },
+                {
+                    field : 'costPrice',
+                    title : '交易费',
+                    sortable: true
+                },
+                {
+                    field : 'closePrice',
+                    title : '总罚款',
+                    sortable: true
+                },
+                {
+                    field : 'dealPrice',
+                    title : '总盈亏',
+                    sortable: true
+                },
+                {
+                    field : 'createTime',
+                    title : '创建时间',
+                    visible: false
+                },
+                {
+                    field : 'modifyTime',
+                    title : '修改时间',
+                    visible: false
+                }]
+        };
+        $.table.init(options);
+    };
+
+</script>

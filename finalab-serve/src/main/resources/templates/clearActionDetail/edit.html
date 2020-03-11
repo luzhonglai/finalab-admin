@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-clearActionDetail-edit" th:object="${clearActionDetail}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">创建时间：</label>
+				<div class="col-sm-8">
+					<input id="createTime" name="createTime" th:field="*{createTime}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">修改时间：</label>
+				<div class="col-sm-8">
+					<input id="modifyTime" name="modifyTime" th:field="*{modifyTime}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">阶段数：</label>
+				<div class="col-sm-8">
+					<input id="thePeriod" name="thePeriod" th:field="*{thePeriod}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">第几次循环：</label>
+				<div class="col-sm-8">
+					<input id="loopNum" name="loopNum" th:field="*{loopNum}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">：</label>
+				<div class="col-sm-8">
+					<input id="instanceId" name="instanceId" th:field="*{instanceId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">一秒一秒的时间：</label>
+				<div class="col-sm-8">
+					<input id="timeLine" name="timeLine" th:field="*{timeLine}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">股票id：</label>
+				<div class="col-sm-8">
+					<input id="stockId" name="stockId" th:field="*{stockId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">股票名称：</label>
+				<div class="col-sm-8">
+					<input id="stockName" name="stockName" th:field="*{stockName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">平仓之前该股票成本价格，是总价：</label>
+				<div class="col-sm-8">
+					<input id="costAllPrice" name="costAllPrice" th:field="*{costAllPrice}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">平仓股票价格，总价：</label>
+				<div class="col-sm-8">
+					<input id="clearAllPrice" name="clearAllPrice" th:field="*{clearAllPrice}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">盈亏，cost_all_price-clear_all_price，保留符合，保留小数点和案例参数一致：</label>
+				<div class="col-sm-8">
+					<input id="profitLoss" name="profitLoss" th:field="*{profitLoss}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">平仓数量：</label>
+				<div class="col-sm-8">
+					<input id="clearQuantity" name="clearQuantity" th:field="*{clearQuantity}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">交易人id,机器人是-1：</label>
+				<div class="col-sm-8">
+					<input id="traderId" name="traderId" th:field="*{traderId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">交易人名字,机器人ANON：</label>
+				<div class="col-sm-8">
+					<input id="traderName" name="traderName" th:field="*{traderName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">交易类型, BID("买单"), ASK("卖单");：</label>
+				<div class="col-sm-8">
+					<input id="tradeType" name="tradeType" th:field="*{tradeType}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">金融产品类型,股票（stock)，期货(future)，股指(index)，期权(option)，现汇（spot)：</label>
+				<div class="col-sm-8">
+					<input id="financialType" name="financialType" th:field="*{financialType}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">BID("买单"), ASK("卖单"), CANCEL("取消"), CLOSE_OUT("平仓"),NIT_PEND("初始化挂单"), TREND_PEND("走势挂单"), REBOT_PEND("机器人挂单");：</label>
+				<div class="col-sm-8">
+					<input id="orderAction" name="orderAction" th:field="*{orderAction}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "serve/clearActionDetail";
+		$("#form-clearActionDetail-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-clearActionDetail-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

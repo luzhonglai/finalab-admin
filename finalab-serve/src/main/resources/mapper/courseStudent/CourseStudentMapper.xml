@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bytetcp.finalab.serve.courseStudent.mapper.CourseStudentMapper">
+    
+    <resultMap type="CourseStudent" id="CourseStudentResult">
+        <result property="id"    column="id"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="signUp"    column="sign_up"    />
+        <result property="onLine"    column="on_line"    />
+        <result property="addTime"    column="add_time"    />
+        <result property="leaveTime"    column="leave_time"    />
+    </resultMap>
+	
+	<sql id="selectCourseStudentVo">
+        select id, course_id, student_id, sign_up, on_line, add_time, leave_time from course_student
+    </sql>
+	
+    <select id="selectCourseStudentList" parameterType="CourseStudent" resultMap="CourseStudentResult">
+        <include refid="selectCourseStudentVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="courseId != null "> and course_id = #{courseId}</if>
+             <if test="studentId != null "> and student_id = #{studentId}</if>
+             <if test="signUp != null "> and sign_up = #{signUp}</if>
+             <if test="onLine != null "> and on_line = #{onLine}</if>
+             <if test="addTime != null "> and add_time = #{addTime}</if>
+             <if test="leaveTime != null "> and leave_time = #{leaveTime}</if>
+         </where>
+    </select>
+
+    <select id="selectCourseStudentListByCourseId" resultMap="CourseStudentResult">
+        SELECT
+            s.id,
+            s.course_id,
+            s.student_id,
+            u.user_name,
+            s.sign_up,
+            s.on_line,
+            s.add_time,
+            s.leave_time
+        FROM
+	      course_student s
+      INNER JOIN sys_user u ON u.user_id = s.student_id
+      WHERE
+	    s.course_id = #{courseId}
+    </select>
+    
+    <select id="selectCourseStudentById" parameterType="Long" resultMap="CourseStudentResult">
+        <include refid="selectCourseStudentVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="countStudent" resultType="java.lang.Integer">
+        SELECT  count(1) from course_student WHERE course_id = #{courseId}
+    </select>
+
+    <select id="countOnLineStudent" resultType="java.lang.Integer">
+        SELECT  count(1) from course_student WHERE course_id = #{courseId} AND sign_up = 1
+    </select>
+
+    <select id="selectCourseStudentByStudentIdAndCourseId" resultMap="CourseStudentResult">
+        <include refid="selectCourseStudentVo"/>
+        where course_id = #{courseId} AND  student_id = #{studentId}
+    </select>
+        
+    <insert id="insertCourseStudent" parameterType="CourseStudent" useGeneratedKeys="true" keyProperty="id">
+        insert into course_student
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="courseId != null  ">course_id,</if>
+			<if test="studentId != null  ">student_id,</if>
+			<if test="signUp != null  ">sign_up,</if>
+			<if test="onLine != null  ">on_line,</if>
+			<if test="addTime != null  ">add_time,</if>
+			<if test="leaveTime != null  ">leave_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="courseId != null  ">#{courseId},</if>
+			<if test="studentId != null  ">#{studentId},</if>
+			<if test="signUp != null  ">#{signUp},</if>
+			<if test="onLine != null  ">#{onLine},</if>
+			<if test="addTime != null  ">#{addTime},</if>
+			<if test="leaveTime != null  ">#{leaveTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateCourseStudent" parameterType="CourseStudent">
+        update course_student
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="courseId != null  ">course_id = #{courseId},</if>
+            <if test="studentId != null  ">student_id = #{studentId},</if>
+            <if test="signUp != null  ">sign_up = #{signUp},</if>
+            <if test="onLine != null  ">on_line = #{onLine},</if>
+            <if test="addTime != null  ">add_time = #{addTime},</if>
+            <if test="leaveTime != null  ">leave_time = #{leaveTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="updateCourseStudentByStudIdAndCourseId" parameterType="CourseStudent">
+        update course_student
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="courseId != null  ">course_id = #{courseId},</if>
+            <if test="studentId != null  ">student_id = #{studentId},</if>
+            <if test="signUp != null  ">sign_up = #{signUp},</if>
+            <if test="onLine != null  ">on_line = #{onLine},</if>
+            <if test="addTime != null  ">add_time = #{addTime},</if>
+            <if test="leaveTime != null  ">leave_time = #{leaveTime},</if>
+        </trim>
+        where course_id = #{courseId} and student_id = #{studentId}
+    </update>
+
+	<delete id="deleteCourseStudentById" parameterType="Long">
+        delete from course_student where id = #{id}
+    </delete>
+	
+    <delete id="deleteCourseStudentByIds" parameterType="String">
+        delete from course_student where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getStuIdByCourseId" parameterType="Long" resultMap="CourseStudentResult">
+        SELECT
+            s.student_id,
+            u.user_name
+        FROM
+	      course_student s
+      INNER JOIN sys_user u ON u.user_id = s.student_id
+      WHERE
+	    s.course_id = #{courseId}
+    </select>
+    
+</mapper>

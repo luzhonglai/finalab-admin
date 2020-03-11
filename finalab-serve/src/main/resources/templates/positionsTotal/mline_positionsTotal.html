@@ -1,0 +1,215 @@
+<div id="mline_positionsTotal" th:fragment="mline_positionsTotal_div">
+    <table id="positions_table" class="table table-condensed" style="font-size: 8px;"></table>
+</div>
+
+<script th:inline="javascript" th:fragment="mline_positionsTotal_js">
+    var positionUrl = ctx + "serve/positionsTotal";
+
+    $(function() {
+        var options = {
+            url: positionUrl + "/list",
+            queryParams: function(params){
+                var param = {
+                    instanceId: instanceId,
+                    traderId: userId,
+                    loopNum: loopNum,
+                    // thePeriod: thePeriod,
+                    pageOffset: params.offset,
+                    pageLimit: params.limit
+                }
+                return param;
+            },
+            createUrl: positionUrl + "/add",
+            updateUrl: positionUrl + "/edit/{id}",
+            removeUrl: positionUrl + "/remove",
+            exportUrl: positionUrl + "/export",
+            modalName: "持仓汇总",
+            search: false,
+            showExport: false,
+            showRefresh: false,
+            showColumns: false,
+            showToggle: false,
+            showSearch: false,
+            pagination: true,
+            //pageSize: 100,
+            tableObj: $('#positions_table'),
+            columns: [
+                {
+                    field : 'id',
+                    title : '',
+                    visible: false
+                },
+                {
+                    field : 'createTime',
+                    title : '创建时间',
+                    sortable: true,
+                    visible: false
+
+                },
+                {
+                    field : 'modifyTime',
+                    title : '修改时间',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'thePeriod',
+                    title : '阶段数',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'loopNum',
+                    title : '第几次循环',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'instanceId',
+                    title : '',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'stockId',
+                    title : '股票id',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'stockName',
+                    title : '股票名称',
+                    sortable: true
+                },
+                {
+                    field : 'nowQuantity',
+                    title : '持仓量',
+                    sortable: true
+                },
+                {
+                    field : 'totalPrice',
+                    title : '成本金额',
+                    sortable: true
+                },
+                {
+                    field : 'totalQuantity',
+                    title : '毛仓位,|买入|+|卖出|',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'traderId',
+                    title : '交易人id,机器人是-1',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'traderName',
+                    title : '交易人名字,机器人ANON',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    title: '目前市场价',
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        var newestPrice = getNewPrice(row.stockId);
+//                        console.log('目前市场价 **********  ' + JSON.stringify(stock))
+                        if (tdCommon.isEmpty(newestPrice)) {return '--'}
+                        var quote = stockMap[row.stockId].QuotedDecimals;
+                        return newestPrice.toFixed(quote);
+                    }
+
+                },{
+                    field: 'stockQuantity',
+                    title: '最新市值',
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        var newestPrice = getNewPrice(row.stockId);
+                        if (tdCommon.isEmpty(newestPrice)) {return '--'}
+
+                        var quote = stockMap[row.stockId].QuotedDecimals;
+                        var p = row.nowQuantity * newestPrice;
+                        return p.toFixed(quote);
+                    }
+
+                },{
+                    field: 'stockQuantity',
+                    title: '未实现盈利',
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        var newestPrice = getNewPrice(row.stockId);
+                        if (tdCommon.isEmpty(newestPrice)) {
+                            return '<span class="profit">--</span>'
+                        }
+
+                        var quote = stockMap[row.stockId].QuotedDecimals;
+                        var v =  row.nowQuantity * newestPrice + row.totalPrice;
+                        var color = Number(v) > 0 ? 'red' : 'green';
+                        return '<span class="profit" style="color: ' + color + '">' + v.toFixed(quote) + '</span>';
+                    }
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var financialType = stockMap[row.stockId].Type.toLowerCase();
+                        var param =
+                            {
+                                courseId: courseId,
+                                traderId: row.traderId,
+                                traderName: row.traderName,
+                                stockName: row.stockName,
+                                instanceId: row.instanceId,
+                                stockId: row.stockId,
+                                // tradeType: 'CLEAR',
+                                tradeType: row.nowQuantity > 0 ? 'ASK' : 'BID',
+                                orderAction: 'CLEAR_STORE',
+                                financialType: financialType
+                            }
+                        return '<a id=positions_table' + row.id + ' class="btn btn-success btn-xs" onclick="closePosition(' + JSON.stringify(param).replace(/\"/g, "'") + ',' + row.id + ')"><i class="fa"></i>一键平仓</a>';
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+
+
+    function closePosition(param,rowId) {
+        $('#positions_table' + rowId +'').attr('href','javascript:return false;')
+            .removeAttr('onclick')
+            .attr('style',"background-color: #e4e4e4")
+            .attr('disabled', 'false');
+        $.ajax({
+            url:'/serve/positionsTotal/closePosition',
+            data: param,
+            type:'POST',
+            async: false,
+            success: function(result) {
+                var msg = result.msg;
+                if (result.code != 0) {
+                    $.modal.msgError('<p>平仓失败</p>');
+                    return ;
+                }
+                $.modal.msgSuccess( '<p>平仓' + msg + '</p>');
+            },
+            error: function (result) {
+                $.modal.msgError('<p>平仓失败</p>');
+            }
+        });
+
+    };
+
+    function getNewPrice(stockId) {
+        if (tdCommon.isEmpty(mlineDate)) {
+            return 0;
+        }
+        var t = mlineDate.t[stockId];
+        var len = t.length;
+        var price = t[len-1].price;
+        return price;
+    }
+
+
+
+</script>

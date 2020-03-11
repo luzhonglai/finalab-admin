@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-courseTargetParam-edit" th:object="${courseTargetParam}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group" style="display: none">
+				<label class="col-sm-3 control-label">案例表的id：</label>
+				<div class="col-sm-8">
+					<input id="caseId" name="caseId" th:field="*{caseId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">参数名称：</label>
+				<div class="col-sm-8">
+					<input id="paramName" name="paramName" th:field="*{paramName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">标的名称：</label>
+				<div class="col-sm-8">
+					<input id="targetName" name="targetName" th:field="*{targetName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">标的类型：</label>
+				<div class="col-sm-8">
+					<select id="targetType" class="form-control" name="targetType" th:with="type=${@dict.getType('case_type')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+								th:value="${dict.dictValue}"
+								th:field="*{targetType}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">取值：</label>
+				<div class="col-sm-8">
+					<input id="targetValue" name="targetValue" th:field="*{targetValue}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">说明：</label>
+				<div class="col-sm-8">
+					<input id="description" name="description" th:field="*{description}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group" style="display: none">
+				<label class="col-sm-3 control-label">课件id：</label>
+				<div class="col-sm-8">
+					<input id="courseId" name="courseId" th:field="*{courseId}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+
+		var prefix = ctx + "serve/courseTargetParam";
+		$("#form-courseTargetParam-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-courseTargetParam-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

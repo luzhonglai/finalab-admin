@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bytetcp.finalab.serve.course.mapper.InstanceTradingMapper">
+    
+    <resultMap type="InstanceTrading" id="InstanceTradingResult">
+        <result property="id"    column="id"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="instanceId"    column="instance_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="stockId"    column="stock_id"    />
+        <result property="stockName"    column="stock_name"    />
+        <result property="tradeType"    column="trade_type"    />
+        <result property="orderType"    column="order_type"    />
+        <result property="timeTine"    column="time_tine"    />
+        <result property="dealQuantity"    column="deal_quantity"    />
+        <result property="dealPrice"    column="deal_price"    />
+        <result property="dealPriceTotal"    column="deal_price_total"    />
+        <result property="priceTotal"    column="price_total"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="modifyTime"    column="modify_time"    />
+    </resultMap>
+	
+	<sql id="selectInstanceTradingVo">
+        select id, course_id, instance_id, user_id, user_name, stock_id, stock_name, trade_type, order_type, time_tine, deal_quantity, deal_price, deal_price_total, price_total, create_time, modify_time from instance_trading
+    </sql>
+	
+    <select id="selectInstanceTradingList" parameterType="InstanceTrading" resultMap="InstanceTradingResult">
+        <include refid="selectInstanceTradingVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="courseId != null "> and course_id = #{courseId}</if>
+             <if test="instanceId != null  and instanceId != '' "> and instance_id = #{instanceId}</if>
+             <if test="userId != null "> and user_id = #{userId}</if>
+             <if test="userName != null  and userName != '' "> and user_name = #{userName}</if>
+             <if test="stockId != null  and stockId != '' "> and stock_id = #{stockId}</if>
+             <if test="stockName != null  and stockName != '' "> and stock_name = #{stockName}</if>
+             <if test="tradeType != null  and tradeType != '' "> and trade_type = #{tradeType}</if>
+             <if test="orderType != null  and orderType != '' "> and order_type = #{orderType}</if>
+             <if test="timeTine != null "> and time_tine = #{timeTine}</if>
+             <if test="dealQuantity != null "> and deal_quantity = #{dealQuantity}</if>
+             <if test="dealPrice != null "> and deal_price = #{dealPrice}</if>
+             <if test="dealPriceTotal != null "> and deal_price_total = #{dealPriceTotal}</if>
+             <if test="priceTotal != null "> and price_total = #{priceTotal}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="modifyTime != null "> and modify_time = #{modifyTime}</if>
+         </where>
+        ORDER BY id DESC
+    </select>
+    
+    <select id="selectInstanceTradingById" parameterType="Long" resultMap="InstanceTradingResult">
+        <include refid="selectInstanceTradingVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertInstanceTrading" parameterType="InstanceTrading" useGeneratedKeys="true" keyProperty="id">
+        insert into instance_trading
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="courseId != null  ">course_id,</if>
+			<if test="instanceId != null  and instanceId != ''  ">instance_id,</if>
+			<if test="userId != null  ">user_id,</if>
+			<if test="userName != null  and userName != ''  ">user_name,</if>
+			<if test="stockId != null  and stockId != ''  ">stock_id,</if>
+			<if test="stockName != null  and stockName != ''  ">stock_name,</if>
+			<if test="tradeType != null  and tradeType != ''  ">trade_type,</if>
+			<if test="orderType != null  and orderType != ''  ">order_type,</if>
+			<if test="timeTine != null  ">time_tine,</if>
+			<if test="dealQuantity != null  ">deal_quantity,</if>
+			<if test="dealPrice != null  ">deal_price,</if>
+			<if test="dealPriceTotal != null  ">deal_price_total,</if>
+			<if test="priceTotal != null  ">price_total,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="modifyTime != null  ">modify_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="courseId != null  ">#{courseId},</if>
+			<if test="instanceId != null  and instanceId != ''  ">#{instanceId},</if>
+			<if test="userId != null  ">#{userId},</if>
+			<if test="userName != null  and userName != ''  ">#{userName},</if>
+			<if test="stockId != null  and stockId != ''  ">#{stockId},</if>
+			<if test="stockName != null  and stockName != ''  ">#{stockName},</if>
+			<if test="tradeType != null  and tradeType != ''  ">#{tradeType},</if>
+			<if test="orderType != null  and orderType != ''  ">#{orderType},</if>
+			<if test="timeTine != null  ">#{timeTine},</if>
+			<if test="dealQuantity != null  ">#{dealQuantity},</if>
+			<if test="dealPrice != null  ">#{dealPrice},</if>
+			<if test="dealPriceTotal != null  ">#{dealPriceTotal},</if>
+			<if test="priceTotal != null  ">#{priceTotal},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="modifyTime != null  ">#{modifyTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateInstanceTrading" parameterType="InstanceTrading">
+        update instance_trading
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="courseId != null  ">course_id = #{courseId},</if>
+            <if test="instanceId != null  and instanceId != ''  ">instance_id = #{instanceId},</if>
+            <if test="userId != null  ">user_id = #{userId},</if>
+            <if test="userName != null  and userName != ''  ">user_name = #{userName},</if>
+            <if test="stockId != null  and stockId != ''  ">stock_id = #{stockId},</if>
+            <if test="stockName != null  and stockName != ''  ">stock_name = #{stockName},</if>
+            <if test="tradeType != null  and tradeType != ''  ">trade_type = #{tradeType},</if>
+            <if test="orderType != null  and orderType != ''  ">order_type = #{orderType},</if>
+            <if test="timeTine != null  ">time_tine = #{timeTine},</if>
+            <if test="dealQuantity != null  ">deal_quantity = #{dealQuantity},</if>
+            <if test="dealPrice != null  ">deal_price = #{dealPrice},</if>
+            <if test="dealPriceTotal != null  ">deal_price_total = #{dealPriceTotal},</if>
+            <if test="priceTotal != null  ">price_total = #{priceTotal},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="modifyTime != null  ">modify_time = #{modifyTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteInstanceTradingById" parameterType="Long">
+        delete from instance_trading where id = #{id}
+    </delete>
+	
+    <delete id="deleteInstanceTradingByIds" parameterType="String">
+        delete from instance_trading where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

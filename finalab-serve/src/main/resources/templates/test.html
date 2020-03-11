@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org"
+>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<script src="/cases/js/jquery.min.js"></script>
+<body>
+<li>
+    <span>上       传：</span>
+    <span class="input">
+        <input type="file" id="upfile" name="upfile" placeholder=""/>
+    </span>
+    <button onclick="importExp();">导入</button>
+    <span>格式：.xlsx</span>
+</li>
+<div th:include="include::footer"></div>
+<script>
+
+    function importExps() {
+        var formData = new FormData();
+        var name = $("#upfile").val();
+        formData.append("file",$("#upfile")[0].files[0]);
+        formData.append("name",name);
+        $.ajax({
+            url : 'importExcel',
+            type : 'POST',
+            async : false,
+            data : formData,
+            // 告诉jQuery不要去处理发送的数据
+            processData : false,
+            // 告诉jQuery不要去设置Content-Type请求头
+            contentType : false,
+            beforeSend:function(){
+                console.log("正在进行，请稍候");
+            },
+            success : function(responseStr) {
+
+                if(responseStr.code==0){
+                    $.modal.msgSuccess("导入成功");
+                }else{
+                    $.modal.msgError("导入失败");
+                }
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link rel="stylesheet" href="/cases/css/step.css">
+
+<body class="gray-bg">
+
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <h4><b>案例上传</b></h4>
+        </div>
+
+        <div class="col-sm-12 select-table table-striped" style="margin-top:2px;">
+            <div class="steps"></div>
+            <div id="caseInfo">
+
+                <div class="form-group" style="text-align: center">
+                    <label for="caseName" class="control-label"><b>案例名称：</b></label>
+                    <input type="text" class="control-inline" id="caseName"
+                           name="caseName" placeholder="请输入案例名称.." style="height:30px;width:194px">
+                </div>
+
+                <div class="form-group" style="text-align: center">
+                    <input id="lefile" type="file" onchange="xmTanUploadImg(this, 'lefile', 'photoCover')" style="display:none">
+                    <div class="input-append">
+                        <label for="photoCover" class="control-label"><b>案例图标：</b></label>
+                        <img id="photoCover" src="/img/browser.png" style="height:30px;width: 30px">
+                        <button type="button" class="btn btn-default" onclick="$('input[id=lefile]').click();"
+                                style="height:30px;width: 160px">选择图标
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group" style="text-align: center">
+                    <label for="caseTypeName" class="control-label"><b>案例分类：</b></label>
+                    <select id="caseTypeName" name="caseType" th:with="type=${@dict.getType('case_type')}"
+                            style="height:30px;width: 194px">
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+                                th:value="${dict.dictValue}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="text-align: center">
+                    <input id="pdfFile" type="file" onchange="" style="display:none">
+                    <div class="input-append">
+                        <label for="pdfButton" class="control-label"><b>描述文件：</b></label>
+                        <button id="pdfButton" type="button" class="btn btn-default" onclick="$('input[id=pdfFile]').click();"
+                                style="height:30px;width:194px">选择pdf文件
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group" style="text-align: center">
+                    <label for="caseDescId" class="control-label"><b>案例描述：</b></label>
+                    <input type="text" class="control-inline" id="caseDescId"
+                           name="caseDesc" placeholder="请输入案例描述.." style="height:30px;width:194px">
+                </div>
+
+                <div class="form-group" style="text-align: center">
+                    <button onClick="subCase()" class="btn btn-success">下一步</button>
+                    </br></br>
+                    <!--<button onClick="testNext()" class="btn btn-primary">测试下一步</button>-->
+                    <!--<button onClick="previousStep()">上一步</button>-->
+                </div>
+            </div>
+
+            <!--第二步excel导入-->
+            <div id="excelImport" style="text-align:-moz-left;" hidden="hidden">
+                <div class="form-group" style="margin: auto">
+                    <div id="fileDiv">
+                        <input id="excelFile" type="file" style="display:none">
+                    </div>
+                    <input id="caseId" type="text" value="" hidden="hidden">
+                    <div class="input-append" style="text-align: center">
+                        <button id="Cover" type="button" class="btn" onclick="$('input[id=excelFile]').click();"
+                                style="margin: auto ;height:90px;width: 240px">选择文件
+                        </button>
+                        </br></br>
+                        <button type="button" class="btn btn-success" onclick="importExp()">下一步
+                        </button>
+                        </br></br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br/>
+
+<div th:include="include :: footer"></div>
+<script src="/cases/js/step.js"></script>
+<script src="/cases/js/common.js"></script>
+<script th:inline="javascript">
+    //判断是否为Excel文件 并回写Excel文件名
+    $('input[id=excelFile]').change(function () {
+        var str = $(this).val()
+        var pos = str.lastIndexOf("\\");//查找最后一个\的位置
+        var fileName = str.substring(pos + 1); //截取最后一个\位置到字符长度，也就是截取文件名
+        var extPos = fileName.lastIndexOf(".");
+        if (fileName.substring(extPos + 1) != 'xlsx') {
+            $('#excelFile').val('');
+            $.modal.alertError("请选择Excel文件");
+            $('#Cover').text('重新选择文件');
+            return;
+        }
+        $('#Cover').text(fileName);
+    });
+    //回写pdf名称
+    $('input[id=pdfFile]').change(function () {
+        var str = $(this).val()
+        var pos = str.lastIndexOf("\\");//查找最后一个\的位置
+        var fileName = str.substring(pos + 1); //截取最后一个\位置到字符长度，也就是截取文件名
+        var extPos = fileName.lastIndexOf(".");
+        if (fileName.substring(extPos + 1) != 'pdf') {
+            $('#pdfFile').val('');
+            $.modal.alertError("请选择pdf文件");
+            $('#pdfButton').text('重新选择pdf文件');
+            return;
+        }
+        $('#pdfButton').text(fileName);
+    });
+
+    //TODO 测试下一步按钮
+    function testNext() {
+//        $('#caseId').val(50);
+//        nextStep();
+//        hiddenFirst();
+        closeTabById("/serve/cases/caseUpload");
+//        closeCurrentTab();
+    }
+    //关闭指定选项卡
+    function closeTabById(tabId) {
+        var topWindow = $(window.parent.document);
+        $('.menuTabs .page-tabs-content', topWindow).find("a[data-id='" + tabId + "'] i").trigger("click");
+    }
+
+    var prefix = ctx + "serve/cases";
+    var showStep = [[${showStep}]];// 页面初始化的第几部标志
+    // 该页面来源，例如：点击‘1-上传案例’、‘2-编辑’、‘3-编辑页面的上传’等
+    var sourceFrom = [[${sourceFrom}]]
+    var uploadCaseId = [[${caseId}]];
+    $(function () {
+        initStep();
+        //showStep 为 1 是直接展示页面
+        //showStep 为 2 时需要直接到第二部展示
+        if (showStep == 2) {
+            $('#caseId').val(uploadCaseId);
+            nextStep();
+            hiddenFirst();
+        }
+    });
+
+
+    //1. 第一步 提交案例基本信息
+    function subCase() {
+        //案例名校验
+        var name = $("#caseName").val();
+        if (name == "") {
+            $.modal.msgWarning('案例名不能为空！');
+            return false;
+        }
+        var formData = new FormData();
+
+        var caseTypeName = $("#caseTypeName").val();
+        var caseDesc = $("#caseDescId").val();
+        //加入formData中
+        var path = $("#lefile").val();
+        if (path.length > 0) {
+            //构建案例图标参数
+            formData.append("file", $("#lefile")[0].files[0]);
+        }
+        var pdfPath = $("#pdfFile").val();
+        if (pdfPath.length > 0) {
+            formData.append("pdfFile", $("#pdfFile")[0].files[0]);
+        }
+
+        formData.append("caseName", name);
+        formData.append("caseType", caseTypeName);
+        formData.append("caseDesc", caseDesc);
+        $.modal.loading('正在导入，请稍候...');
+        //提交
+        $.ajax({
+            url: prefix + "/addCaseImg",
+            type: "POST",
+            data: formData,
+            processData: false,  // 不处理数据
+            contentType: false,   // 不设置内容类型
+            beforeSend: function () {
+                console.log("正在进行，请稍候");
+            },
+            success: function (data) {
+                $.modal.closeLoading();
+                if (data.code == 0) {
+                    $('#caseId').val(data.caseId);
+                    nextStep();
+                    hiddenFirst();
+                } else {
+                    $.modal.msgError(data.msg);
+                }
+            }
+        });
+    }
+
+
+
+    function initStep() {
+        $(".steps").step({
+            stepNames: ['填写基本信息', '上传文件', '编辑提交'],
+            initStep: 1
+        })
+    }
+
+    function previousStep() {
+        $(".steps").step("previous");
+
+    }
+
+    function nextStep() {
+        $(".steps").step("next");
+
+    }
+
+    function hiddenFirst() {
+        $("#caseInfo").hide();
+        $("#excelImport").show();
+    }
+
+    function gotoStep(step) {
+        $(".steps").step("goto", step)
+    }
+
+    /** 刷新指定选项卡 */
+    function refreshItemById (tabId){
+        var topWindow = $(window.parent.document);
+        var target = $('.RuoYi_iframe[data-id="' + tabId + '"]', topWindow);
+        var url = target.attr('src');
+        target.attr('src', url).ready();
+    }
+
+    //2 第二步 Excel 导入
+    function importExp() {
+        var formData = new FormData();
+        var caseId = $('#caseId').val();
+        var name = $("#excelFile").val();
+        if (name == '') {
+            $.modal.msgWarning('请选择文件')
+            return;
+        }
+        formData.append("file", $("#excelFile")[0].files[0]);
+        formData.append("name", name);
+        formData.append("caseId", caseId);
+        $.modal.loading('正在导入，请稍候...');
+        $.ajax({
+            url: prefix + '/importExcel',
+            type: 'POST',
+//            async: false,
+            data: formData,
+            // 告诉jQuery不要去处理发送的数据
+            processData: false,
+            // 告诉jQuery不要去设置Content-Type请求头
+            contentType: false,
+            beforeSend: function () {
+                console.log("正在进行，请稍候");
+            },
+            success: function (responseStr) {
+                $.modal.closeLoading();
+                if (responseStr.code == 0) {
+                    //此处需要跳转案例参数编辑页面
+//                    $.modal.msgSuccess(responseStr.msg);
+                    var caseIdResp = responseStr.caseId;
+                    var url = ctx + 'serve/caseParameters/parEdit/' + caseIdResp;
+                    refreshItemById("/serve/cases");
+                    //由于在点编辑按钮如果为上传案例参数会展示上传页面，上传成功后又会到编辑页面，此处特殊处理
+                    if (sourceFrom == 1) {
+                        createMenuItem(url, "案例参数编辑");
+                        closeTabById("/serve/cases/caseUpload");
+                    } else if (sourceFrom == 2){
+                        refreshItem();
+                    } else if (sourceFrom == 3){
+                        createMenuItem(url, "案例参数编辑");
+                        var tabId = ctx + "serve/caseParameters/reload/" + uploadCaseId
+                        closeTabById(tabId);
+                    }
+
+                } else {
+                    $.modal.msgError(responseStr.msg);
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

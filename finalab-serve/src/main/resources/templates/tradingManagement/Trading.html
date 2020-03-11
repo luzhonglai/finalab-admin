@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org"
+>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<style>
+    .ed{ border:1px solid #e7c3c3}
+    div{
+        background: #ffffff;
+    }
+</style>
+<body>
+<div>
+    <div  class="row ed" >
+        <div class="col-sm-9" >
+            <div class="row ed">
+                <div class="col-sm-3 ed" style="height:400px;">
+                    <div th:replace="tradingManagement/TargetInfo :: TargetInfo_div"></div>
+                </div>
+                <div class="col-sm-9 ed" style="height:400px;">
+                    <div th:replace="tradingManagement/TimeChart :: TimeChart_div"></div>
+                </div>
+            </div>
+            <div class="row ed">
+                <div class="col-sm-12" style="height: border-box">
+                    <p>新闻区</p>
+                </div>
+            </div>
+            <div class="row ed">
+                <div class="col-sm-12" style="height: border-box">
+                    <p>下单区</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3 ed" style="height: 600px">
+            <p>挂单区</p>
+            <p>哈哈</p>
+            <p>挂单区</p>
+            <p>哈哈</p>
+            <p>挂单区</p>
+            <p>哈哈</p>
+            <p>挂单区</p>
+            <p>哈哈</p>
+            <p>挂单区</p>
+            <p>哈哈</p>
+            <p>挂单区</p>
+            <p>哈哈</p>
+            <p>挂单区</p>
+            <p>哈哈</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <p>交易明细</p>
+        </div>
+    </div>
+    <div class="row ed">
+        <div class="col-sm-12">
+            <p>盈亏明细</p>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<div th:replace="tradingManagement/TargetInfo :: TargetInfo_js"></div>
+<script th:inline="javascript">
+
+
+</script>
+</body>

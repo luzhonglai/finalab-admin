@@ -1,0 +1,183 @@
+<div id="instanceTrading_Constraint_div" th:fragment="userStock_Constraint_div">
+    <table id="bootstrap-table-userStock" class="table table-condensed" style="font-size: 8px;"></table>
+</div>
+
+<!--<div th:include="include :: footer"></div>-->
+<script th:inline="javascript" th:fragment="userStock_Constraint_js">
+    var editFlag = [[${@permission.hasPermi('serve:userStock:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('serve:userStock:remove')}]];
+    var prefix = ctx + "serve/userStock";
+
+    $(function () {
+        var options = {
+            url: prefix + "/list/" + instanceId,
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            modalName: "用户持仓明细",
+            search: false,
+            showExport: false,
+            showRefresh: false,
+            showColumns: false,
+            showToggle: false,
+            showSearch: false,
+            pagination: true,
+            showFooter: false,
+            smartDisplay:false,
+            pageSize: 10,
+            tableObj: $('#bootstrap-table-userStock'),
+            columns: [
+                {
+                    field: 'id',
+                    title: '',
+                    visible: false
+                },
+                {
+                    field: 'courseId',
+                    title: '课程id',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'instanceId',
+                    title: '实例id',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'userId',
+                    title: '用户ID',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'userName',
+                    title: '用户昵称',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'stockId',
+                    title: '股票代码',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'stockName',
+                    title: '交易标的',
+                    sortable: false
+                },
+                {
+                    field: 'stockQuantity',
+                    title: '持仓数量',
+                    sortable: true
+                },
+                {
+                    field: 'costPrice',
+                    title: '成本金额',
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        var quote = stockMap[row.stockId].QuotedDecimals;
+                        return value.toFixed(quote);
+                    }
+                },
+                {
+                    title: '目前市场价',
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        var stock = transaction.target.targetDataMap[row.stockId];
+//                        console.log('目前市场价 **********  ' + JSON.stringify(stock))
+                        if (tdCommon.isEmpty(stock)) {return '--'}
+                        var newestPrice = stock.price;
+                        var quote = stockMap[row.stockId].QuotedDecimals;
+                        return newestPrice.toFixed(quote);
+                    }
+        
+                },{
+                    field: 'stockQuantity',
+                    title: '最新市值',
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        var stock = transaction.target.targetDataMap[row.stockId];
+                        if (tdCommon.isEmpty(stock)) {return '--'}
+                        var newestPrice = stock.price;
+                        var quote = stockMap[row.stockId].QuotedDecimals;
+                        var p = value * newestPrice;
+                        return p.toFixed(quote);
+                    }
+
+                },{
+                    field: 'stockQuantity',
+                    title: '未实现盈利',
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        var stock = transaction.target.targetDataMap[row.stockId];
+                        if (tdCommon.isEmpty(stock)) {
+                            return '<span class="profit">--</span>'
+                        }
+                        var newestPrice = stock.price;
+                        var quote = stockMap[row.stockId].QuotedDecimals;
+                        var v =  (newestPrice - row.costPrice) * value;
+                        var color = Number(v) > 0 ? 'red' : 'green';
+                        return '<span class="profit" style="color: ' + color + '">' + v.toFixed(quote) + '</span>';
+                    }
+                },
+                {
+                    field: 'closePrice',
+                    title: '清算金额',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'dealPrice',
+                    title: '最新成交价',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'profit',
+                    title: '已实现盈利',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'isClose',
+                    title: '是否平仓：1：已平仓；0：未平仓',
+                    sortable: false,
+                    visible: false
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        debugger;
+                        actions.push('<a class="btn btn-success btn-xs ' + '' + '" href="javascript:closeOption(\'' + row + '\')"><i class="fa"></i>一键平仓</a> ');
+//                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+    function closeOption(row) {
+        console.log('一键平仓操作...');
+        debugger;
+        var dealPrice = transaction.target.targetDataMap[row.stockId];
+        if(!tdCommon.isEmpty(dealPrice)) {
+
+        }
+
+
+    }
+    // window.setInterval(function () {
+    //     $.table.refresh($('#bootstrap-table-userStock'));
+    //     var count = 0;
+    //     $('.profit').each(function (index, element) {
+    //         var text = $(element).text();
+    //         count = count + Number(text);
+    //     });
+    //     $('#z-profit').text('（总盈亏：' + count + '）');
+    // }, 1000);
+</script>

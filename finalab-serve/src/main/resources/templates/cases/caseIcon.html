@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<title>案例图标修改</title>
+<link th:href="@{/ajax/libs/cropbox/cropbox.css}" rel="stylesheet"/>
+<body class="white-bg">
+
+<div class="container" style="margin: 8% auto; text-align: center;">
+    <input id="caseIconId" hidden="hidden" th:type="file" name="file" onchange="xmTanUploadImg(this, 'caseIconId', 'caseIconImg')"/>
+    <br/><img id="caseIconImg" onclick="$('input[id=caseIconId]').click();" src="" style="height: 150px; width: 150px" />
+    <p>点击片可以跟换图标哦</p>
+
+</div>
+<div th:include="include::footer"></div>
+<script th:src="@{/ajax/libs/cropbox/cropbox.js}"></script>
+<script src="/cases/js/common.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var icon = '/profile/caseIcon/' + '[[${case.caseIcon}]]';
+        $('#caseIconImg').attr("src", icon);
+    });
+
+    function updateIcon(src) {
+        if (window.parent.$("#caseIconId").length > 0) {
+            var $img = window.parent.$("#caseIconId");
+            $img.attr("src", '/profile/caseIcon/' + src);
+        }
+    }
+
+    function submitHandler() {
+        var caseId = '[[${case.id}]]';
+        var caseIconName = $('#caseIconId').val();
+        if (caseIconName == '') {
+            $.modal.msgWarning('请选择案例图标');
+        }
+        var imgformdata = new FormData();
+        imgformdata.append("file", $("#caseIconId")[0].files[0]);
+        imgformdata.append("caseId", caseId);
+        $.ajax({
+            url: ctx + "serve/cases/updateCaseIcon",
+            data: imgformdata,
+            type: "post",
+            processData: false,
+            contentType: false,
+            success: function (result) {
+                $.operate.successCallback(result);
+                updateIcon(result.caseIcon);
+            }
+        })
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<div id="m_entry_order_list" th:fragment="m_entry_order_list">
+
+    <table id="entry_order_table" class="table table-condensed" style="font-size: 8px;"></table>
+</div>
+
+<script th:inline="javascript" th:fragment="m_entry_order_list_js">
+    var entryOrderPrefix = ctx + "serve/entryOrder";
+
+    $(function () {
+        var entryOrderOptions = {
+            url: entryOrderPrefix + "/list",
+            queryParams: function(params){
+                var param = {
+                    instanceId: instanceId,
+                    courseId: courseId,
+                    traderId: userId,
+                    loopNum: loopNum,
+                    // thePeriod: thePeriod,
+                    pageOffset: params.offset,
+                    pageLimit: params.limit
+                }
+                console.log(params.toString());
+                return param;
+            },
+            createUrl: entryOrderPrefix + "/add",
+            updateUrl: entryOrderPrefix + "/edit/{id}",
+            removeUrl: entryOrderPrefix + "/remove",
+            exportUrl: entryOrderPrefix + "/export",
+            modalName: "挂单",
+            search: false,
+            showRefresh: false,
+            showColumns: false,
+            showToggle: false,
+            showSearch: false,
+            showExport: false,
+            pagination: true,
+            pageSize: 100,
+            tableObj: $('#entry_order_table'),
+            columns: [
+                /* {
+                 checkbox: true
+             },*/
+                {
+                    field: 'id',
+                    title: '',
+                    visible: false
+                },
+                {
+                    field: 'stockId',
+                    title: '股票id',
+                    sortable: true,
+                    show: false
+                },
+                {
+                    field: 'stockName',
+                    title: '标的',
+                    sortable: true
+
+                },
+                {
+                    field: 'timeLine',
+                    title: '委托时间',
+                    sortable: true
+                },
+                {
+                    field: 'tradeType',
+                    title: '买卖标记',
+                    sortable: true
+                },
+                {
+                    field: 'quantity',
+                    title: '委托数量',
+                    sortable: true
+                },
+                {
+                    field: 'price',
+                    title: '委托价格',
+                    sortable: true
+                },
+                {
+                    field: 'createTime',
+                    title: '创建时间',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'modifyTime',
+                    title: '修改时间',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'thePeriod',
+                    title: '阶段数',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'loopNum',
+                    title: '第几次循环',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'orderBookId',
+                    title: '订单id',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'instanceId',
+                    title: '实例id',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'courseId',
+                    title: '课件id',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'orderTime',
+                    title: 'linux时间戳',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'traderId',
+                    title: '交易人id,机器人是-1',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'traderName',
+                    title: '交易人名字,机器人ANON',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'orderType',
+                    title: 'Market_Order("市场单"), Limit_Order("限价单");',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'financialType',
+                    title: '金融产品类型,股票（stock)，期货(future)，股指(index)，期权(option)，现汇（spot)',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: 'orderAction',
+                    title: 'BID("买单"), ASK("卖单"), CANCEL("取消"), CLOSE_OUT("平仓"),NIT_PEND("初始化挂单"), TREND_PEND("走势挂单"), REBOT_PEND("机器人挂单");',
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        return "<a class='btn btn-xs' style='border: 1px #cad7e0 solid;' onclick='orderCancelOne(" + JSON.stringify(row) + ")'><i class='fa'></i>撤单</a> ";
+
+                    }
+                },
+                {
+                    title: '<a id="cancelAll" class="btn btn-xs" style="border: 1px #cad7e0 solid;" onclick="orderCancelAll(\'CANCEL_ALL\')"><li class="fa">一键撤单</li></a>'
+
+                }]
+        };
+
+        $.table.init(entryOrderOptions);
+    });
+
+    //一键撤单
+    function orderCancelAll(param) {
+        var param = {courseId: courseId};
+        $.post(checkUrl, param, function (result) {
+            if (result.code != '0') {
+                $.modal.msgWarning('课件未启动或已停止');
+            }
+        });
+
+        var cencelAll = entryOrderObject(null, null, null, "CANCEL", "Limit_Order", "CANCEL_ALL", null, null);
+        $("#cancelAll").attr('style',"background-color: #b4b4b44").attr('disabled', 'false');
+        $("#cancelAll").removeAttr('onclick');
+        submitCancel('一键撤单', cencelAll);
+    };
+
+    //单个撤单
+    function orderCancelOne(row) {
+        var cencel = entryOrderObject(
+            row.orderBookId, row.price, row.quantity, "CANCEL", "Limit_Order", "CANCEL", row.stockId, row.stockName);
+        submitCancel('撤单', cencel);
+    };
+
+    //定义订单对象
+    function entryOrderObject(orderBookId, price, quantity, tradeType, orderType, orderAction, stockId, stockName){
+        var entryOrder = new Map;
+        entryOrder['orderBookId'] = orderBookId;
+        entryOrder['price'] = price;
+        entryOrder['quantity'] = quantity;
+        entryOrder['tradeType'] = tradeType.substr(0,1) == '买' ? 'BID' : 'ASK';
+        entryOrder['orderType'] = orderType;
+        entryOrder['orderAction'] = orderAction;
+        entryOrder['stockId'] = stockId;
+        entryOrder['stockName'] = stockName;
+        entryOrder['instanceId'] = instanceId;
+        entryOrder['courseId'] = courseId;
+        entryOrder['financialType'] = stockMap[transaction.priceMove.stockId].Type.toLowerCase();
+        return entryOrder;
+    };
+
+    function submitCancel(msg, obj) {
+        transaction.submit(cancelUrl, JSON.stringify(obj), function(result){
+            if (result.code == 0) {
+                $.modal.msgSuccess( '<p>' + msg + '-成功</p>');
+            } else {
+                $.modal.msgError( '<p>' + msg + '-失败</p>');
+            }
+        });
+    }
+
+</script>

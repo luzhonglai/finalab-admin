@@ -1,0 +1,79 @@
+
+server:
+  # 服务端口
+  port: 8889
+# 数据源配置
+spring:
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.cj.jdbc.Driver
+        druid:
+            # 主库数据源
+            master:
+                url: jdbc:mysql://localhost:3306/finalab?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                username: root
+                password: root
+            # 从库数据源
+            slave:
+                # 从数据源开关/默认关闭
+                enabled: false
+                url: 
+                username: 
+                password: 
+            # 初始连接数
+            initialSize: 5
+            # 最小连接池数量
+            minIdle: 10
+            # 最大连接池数量
+            maxActive: 20
+            # 配置获取连接等待超时的时间
+            maxWait: 60000
+            # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+            timeBetweenEvictionRunsMillis: 60000
+            # 配置一个连接在池中最小生存的时间，单位是毫秒
+            minEvictableIdleTimeMillis: 300000
+            # 配置一个连接在池中最大生存的时间，单位是毫秒
+            maxEvictableIdleTimeMillis: 900000
+            # 配置检测连接是否有效
+            validationQuery: SELECT 1 FROM DUAL
+            testWhileIdle: true
+            testOnBorrow: false
+            testOnReturn: false      
+            statViewServlet:
+                enabled: true
+                url-pattern: /monitor/druid/*
+            filter:
+                stat:
+                    # 慢SQL记录
+                    log-slow-sql: true
+                    slow-sql-millis: 1000
+                    merge-sql: true
+                wall:
+                    config:
+                        multi-statement-allow: true
+
+#交易端接口配置
+#finalab.server.webSocketUrl: ws://c090ea8c.ngrok.io/trend
+#finalab.server.orderUrl: http://c090ea8c.ngrok.io/order
+#finalab.server.cancelUrl: http://c090ea8c.ngrok.io/cancel
+#finalab.server.instanceUrl: http://c090ea8c.ngrok.io/instance
+#finalab.server.closePosition: http://c090ea8c.ngrok.io/position/close
+
+finalab.server.webSocketUrl: ws://finalab.nkpro.cn:8888/trend
+finalab.server.autoSocketUrl: ws://finalab.nkpro.cn:8888/auto
+finalab.server.orderUrl: http://finalab.nkpro.cn:8888/order
+finalab.server.cancelUrl: http://finalab.nkpro.cn:8888/cancel
+finalab.server.instanceUrl: http://finalab.nkpro.cn:8888/instance
+finalab.server.closePosition: http://finalab.nkpro.cn:8888/position/close
+finalab.server.scaleIn: http://finalab.nkpro.cn:8888/position/mustadd
+finalab.server.instanceInfo: ws://finalab.nkpro.cn:8888/instanceInfo
+
+#admin端接口
+finalab.admin.userStoreUrl: http://finalab.nkpro.cn/serve/course/userStore # 获取用户仓位信息
+finalab.admin.quickOrderUrl: http://finalab.nkpro.cn/serve/course/quickOrder # 闪电下单url
+finalab.admin.orderUrl: http://finalab.nkpro.cn/serve/course/order # 下单接口
+
+#最大运行课件数量
+finalab.admin.maxRunning: 10
+#判断当前用户是否为老师角色，预置角色
+default.role.teacher: teacher

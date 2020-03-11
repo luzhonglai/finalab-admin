@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bytetcp.finalab.serve.caseParameters.mapper.CaseParametersMapper">
+    
+    <resultMap type="CaseParameters" id="CaseParametersResult">
+        <result property="caseParamId"    column="case_param_id"    />
+        <result property="caseId"    column="case_id"    />
+        <result property="paraName"    column="para_name"    />
+        <result property="paraValue"    column="para_value"    />
+        <result property="paraDesc"    column="para_desc"    />
+        <result property="paraTypeId"    column="para_type_id"    />
+    </resultMap>
+	
+	<sql id="selectCaseParametersVo">
+        select case_param_id, case_id, para_name, para_value, para_desc, para_type_id from case_parameters
+    </sql>
+	
+    <select id="selectCaseParametersList" parameterType="CaseParameters" resultMap="CaseParametersResult">
+        <include refid="selectCaseParametersVo"/>
+        <where>  
+            <if test="caseParamId != null "> and case_param_id = #{caseParamId}</if>
+             <if test="caseId != null "> and case_id = #{caseId}</if>
+             <if test="paraName != null  and paraName != '' "> and para_name = #{paraName}</if>
+             <if test="paraValue != null  and paraValue != '' "> and para_value = #{paraValue}</if>
+             <if test="paraDesc != null  and paraDesc != '' "> and para_desc = #{paraDesc}</if>
+             <if test="paraTypeId != null  and paraTypeId != '' "> and para_type_id = #{paraTypeId}</if>
+         </where>
+    </select>
+    
+    <select id="selectCaseParametersById" parameterType="Long" resultMap="CaseParametersResult">
+        <include refid="selectCaseParametersVo"/>
+        where case_param_id = #{caseParamId}
+    </select>
+        
+    <insert id="insertCaseParameters" parameterType="CaseParameters">
+        insert into case_parameters
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="caseParamId != null  ">case_param_id,</if>
+			<if test="caseId != null  ">case_id,</if>
+			<if test="paraName != null  and paraName != ''  ">para_name,</if>
+			<if test="paraValue != null  and paraValue != ''  ">para_value,</if>
+			<if test="paraDesc != null  and paraDesc != ''  ">para_desc,</if>
+			<if test="paraTypeId != null  and paraTypeId != ''  ">para_type_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="caseParamId != null  ">#{caseParamId},</if>
+			<if test="caseId != null  ">#{caseId},</if>
+			<if test="paraName != null  and paraName != ''  ">#{paraName},</if>
+			<if test="paraValue != null  and paraValue != ''  ">#{paraValue},</if>
+			<if test="paraDesc != null  and paraDesc != ''  ">#{paraDesc},</if>
+			<if test="paraTypeId != null  and paraTypeId != ''  ">#{paraTypeId},</if>
+         </trim>
+    </insert>
+
+    <insert id="insertCaseParametersList" useGeneratedKeys="true" keyProperty="caseParamId">
+        insert into case_parameters
+          (case_id, para_name, para_value, para_desc, para_type_id)
+        VALUES
+        <foreach collection="caseParameters" item="caseParameter"  separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{caseParameter.caseId},
+                #{caseParameter.paraName},
+                #{caseParameter.paraValue},
+                #{caseParameter.paraDesc},
+                #{caseParameter.paraTypeId}
+            </trim>
+        </foreach>
+    </insert>
+
+    <update id="updateCaseParameters" parameterType="CaseParameters">
+        update case_parameters
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="caseId != null  ">case_id = #{caseId},</if>
+            <if test="paraName != null  and paraName != ''  ">para_name = #{paraName},</if>
+            <if test="paraValue != null  and paraValue != ''  ">para_value = #{paraValue},</if>
+            <if test="paraDesc != null  and paraDesc != ''  ">para_desc = #{paraDesc},</if>
+            <if test="paraTypeId != null  and paraTypeId != ''  ">para_type_id = #{paraTypeId},</if>
+        </trim>
+        where case_param_id = #{caseParamId}
+    </update>
+
+	<delete id="deleteCaseParametersById" parameterType="Long">
+        delete from case_parameters where case_param_id = #{caseParamId}
+    </delete>
+
+
+    <delete id="deleteCaseParametersByIds" parameterType="String">
+        delete from case_parameters where case_param_id in 
+        <foreach item="caseParamId" collection="array" open="(" separator="," close=")">
+            #{caseParamId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteCaseParametersByCaseId" parameterType="Long">
+        delete from case_parameters where case_id = #{caseId}
+    </delete>
+
+    <delete id="deleteCasePriceMoveByCaseId" parameterType="Long">
+        delete from price_move where case_id = #{caseId}
+    </delete>
+
+    <delete id="deleteCaseLiquidationByCaseId" parameterType="Long">
+        DELETE from liquidation where case_id = #{caseId}
+    </delete>
+
+    <delete id="deleteCaseMarketNewsByCaseId" parameterType="Long">
+      DELETE from market_news where case_id = #{caseId}
+    </delete>
+
+    <delete id="deleteCaseTargetParamByCaseId" parameterType="Long">
+        DELETE from target_param where case_id = #{caseId}
+    </delete>
+
+    <delete id="deleteCaseTradingConstraintByCaseId" parameterType="Long">
+        DELETE from trading_constraint where case_id = #{caseId}
+    </delete>
+
+    <delete id="deleteCaseUserNewsByCaseId" parameterType="Long">
+        DELETE from user_news where case_id = #{caseId}
+    </delete>
+    
+</mapper>
