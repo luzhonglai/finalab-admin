@@ -2,6 +2,8 @@
 server:
   # 服务端口
   port: 8889
+  tomcat:
+    basedir: /nk/spring-applications/finalab/tmp
 # 数据源配置
 spring:
     datasource:
