@@ -134,13 +134,13 @@ public class FileUploadUtils
     public static final String extractFilename(MultipartFile file, String extension)
     {
         String filename = file.getOriginalFilename();
-        filename = DateUtils.datePath() + "/" + encodingFilename(filename) + extension;
+        filename = DateUtils.dateTime() + encodingFilename(filename) + extension;
         return filename;
     }
 
     private static final File getAbsoluteFile(String uploadDir, String filename) throws IOException
     {
-        File desc = new File(File.separator + filename);
+        File desc = new File(filename);
 
         if (!desc.getParentFile().exists())
         {
