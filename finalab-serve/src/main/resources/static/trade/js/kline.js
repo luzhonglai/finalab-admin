@@ -5,7 +5,7 @@ var downColor="#1aaa00";//跌颜色
 
 // ma  颜色
 var ma5Color = "#FF0000";
-var ma10Color = "#ff777d";
+var ma10Color = "#2c1cff";
 var ma20Color = "#ffab42";
 var ma30Color = "#00940b";
 
@@ -820,4 +820,3 @@ function initKOption(cdata){
  
 
 
- 

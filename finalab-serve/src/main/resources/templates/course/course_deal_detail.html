@@ -14,7 +14,7 @@
                             <input type="hidden" id="course_deal_detail" name="courseId" th:value="*{courseVo.id}"/>
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="refreshTable()"><i
-                                        class="fa fa-search"></i>&nbsp;搜索</a>
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
                                 <a class="btn btn-warning btn-rounded btn-sm"
                                    onclick="$.form.reset('deal_detail_from')"><i class="fa fa-refresh"></i>&nbsp;重置</a>
                                 <a class="btn btn-warning btn-rounded btn-sm" onclick="exportExcel()" >
@@ -193,7 +193,7 @@
                     sortable: true,
                     visible: false
                 }
-                ]
+            ]
         };
         $.table.init(tranDetailOptions);
 

@@ -53,28 +53,37 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectPositionsDetailListForCourse" parameterType="PositionsDetail" resultMap="PositionsDetailResult">
-        SELECT
-            pd.id,
-            pd.create_time,
-            pd.modify_time,
-            pd.the_period,
-            pd.loop_num,
-            pd.time_line,
-            pd.instance_id,
-            pd.stock_id,
-            pd.stock_name,
-            pd.deal_price,
-            pd.deal_quantity,
-            pd.position_quantity,
-            pd.trader_id,
-            pd.trader_name,
-            pd.trade_type,
-            pd.financial_type,
-            pd.order_action,
-            su.user_name
-        FROM
-            positions_detail pd
-        left join sys_user su on su.user_id = pd.trader_id
+      select umd.id,
+      umd.create_time,
+      umd.modify_time,
+      umd.the_period,
+      umd.loop_num,
+      umd.time_line,
+      umd.instance_id,
+      umd.course_id,
+      umd.stock_id,
+      umd.stock_name,
+      case when umd.action_name = '交易费' then
+      umd.cost_price
+      else
+      umd.deal_price
+      end deal_price,
+
+      case
+      when umd.deal_quantity &lt; 0 then
+      -umd.deal_quantity
+      else
+      umd.deal_quantity
+      end
+      deal_quantity,
+      umd.cost_price,
+      umd.total_price,
+      umd.trader_id,
+      umd.trader_name,
+      umd.financial_type,
+      umd.action_name as 'trade_type'
+      from user_money_detail umd
+      left join sys_user su on su.user_id = umd.trader_id
         <where>
              <if test="timeLine != null "> and time_line = #{timeLine}</if>
              <if test="instanceId != null  and instanceId != '' "> and instance_id = #{instanceId}</if>

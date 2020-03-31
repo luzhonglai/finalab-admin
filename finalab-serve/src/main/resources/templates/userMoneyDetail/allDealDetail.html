@@ -125,10 +125,32 @@
                     title : '交易标的',
                     sortable: true,
                     formatter : function (value, row, index) {
-                        return value + '-' + row.actionName;
+                        return value;
+                    }
+                },{
+                    field : 'dealQuantity',
+                    title : '成交数量',
+                    sortable: true
+                },{
+                    field : 'costPrice',
+                    title : '单笔资金流向',
+                    sortable: true,
+                    formatter: function(value, row, index) {
+                        if (value != null && typeof(value) != 'undefined' ) {
+                            return value.toFixed(2);
+                        }
                     }
                 },
                 {
+                    field : 'totalPrice',
+                    title : '累计资金流向',
+                    sortable: true,
+                    formatter: function(value, row, index) {
+                        if (value != null && typeof(value) != 'undefined' ) {
+                            return value.toFixed(2);
+                        }
+                    }
+                }, {
                     field : 'actionName',
                     title : '交易类型',
                     sortable: true,
@@ -149,33 +171,8 @@
 
                 },
                 {
-                    field : 'dealQuantity',
-                    title : '成交数量',
-                    sortable: true
-                },
-                {
                     field : 'dealPrice',
                     title : '成交价格',
-                    sortable: true,
-                    formatter: function(value, row, index) {
-                        if (value != null && typeof(value) != 'undefined' ) {
-                            return value.toFixed(2);
-                        }
-                    }
-                },
-                {
-                    field : 'costPrice',
-                    title : '单笔成交总额',
-                    sortable: true,
-                    formatter: function(value, row, index) {
-                        if (value != null && typeof(value) != 'undefined' ) {
-                            return value.toFixed(2);
-                        }
-                    }
-                },
-                {
-                    field : 'totalPrice',
-                    title : '累计成交总额',
                     sortable: true,
                     formatter: function(value, row, index) {
                         if (value != null && typeof(value) != 'undefined' ) {

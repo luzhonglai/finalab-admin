@@ -31,8 +31,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectUserMoneyDetailVo">
-        select id, create_time, modify_time, the_period, loop_num, time_line, instance_id, course_id, stock_id, stock_name, deal_price, deal_quantity, cost_price, total_price, trader_id, trader_name, financial_type, action_name from user_money_detail
-    </sql>
+    select id,
+    create_time,
+    modify_time,
+    the_period,
+    loop_num,
+    time_line,
+    instance_id,
+    course_id,
+    stock_id,
+    stock_name,
+    deal_price,
+    case
+    when deal_quantity &lt; 0 then
+    -deal_quantity
+    else
+    deal_quantity
+    end
+    deal_quantity,
+    cost_price,
+    total_price,
+    trader_id,
+    trader_name,
+    financial_type,
+    action_name
+    from user_money_detail
+
+  </sql>
 	
     <select id="selectUserMoneyDetailList" parameterType="UserMoneyDetail" resultMap="UserMoneyDetailResult">
         <include refid="selectUserMoneyDetailVo"/>
