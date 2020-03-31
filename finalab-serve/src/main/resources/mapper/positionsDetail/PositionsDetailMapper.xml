@@ -63,19 +63,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
       umd.course_id,
       umd.stock_id,
       umd.stock_name,
-      case when umd.action_name = '交易费' then
-      umd.cost_price
+      case
+      when umd.action_name = '交易费' then
+      umd.cost_price / (select max(deal_quantity)
+      from user_money_detail a
+      where a.instance_id = umd.instance_id
+      and a.time_line = umd.time_line
+      )
       else
       umd.deal_price
       end deal_price,
 
       case
-      when umd.deal_quantity &lt; 0 then
-      -umd.deal_quantity
+      when umd.action_name = '交易费' then
+      (select max(deal_quantity)
+      from user_money_detail a
+      where a.instance_id = umd.instance_id
+      and a.time_line = umd.time_line
+      )
       else
       umd.deal_quantity
-      end
-      deal_quantity,
+      end deal_quantity,
       umd.cost_price,
       umd.total_price,
       umd.trader_id,
