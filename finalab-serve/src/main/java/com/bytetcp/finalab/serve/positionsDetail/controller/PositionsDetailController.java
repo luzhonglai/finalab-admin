@@ -78,7 +78,6 @@ public class PositionsDetailController extends BaseController {
             divPage(pageOffset, pageLimit, sort, order);
             list = positionsDetailService.selectPositionsDetailListForCourse(positionsDetail);
         }
-
         return getDataTable(list);
     }
 

@@ -133,8 +133,11 @@
                             && stockQuotedDecimals[row.stockId] != '') {
                             toFixedVal = stockQuotedDecimals[row.stockId];
                         }
-
-                        return (row.dealPrice * row.dealQuantity).toFixed(toFixedVal);
+                        if(row.tradeType =='买单'){
+                            return (-row.dealPrice * row.dealQuantity).toFixed(toFixedVal);
+                        }else {
+                            return (row.dealPrice * row.dealQuantity).toFixed(toFixedVal);
+                        }
                     }
                 },
                 {

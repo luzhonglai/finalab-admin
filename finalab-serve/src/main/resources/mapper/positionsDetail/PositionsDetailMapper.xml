@@ -98,6 +98,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="traderName != null  and traderName != '' "> and trader_name like concat('%',#{traderName},'%')</if>
              and loop_num = (select MAX(loop_num) from positions_detail p where p.instance_id = #{instanceId})
          </where>
+      order by umd.id desc
     </select>
     
     <select id="selectPositionsDetailById" parameterType="Long" resultMap="PositionsDetailResult">
