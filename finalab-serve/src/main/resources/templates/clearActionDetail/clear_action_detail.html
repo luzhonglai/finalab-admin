@@ -186,7 +186,7 @@
             dataType: 'json',
             type: 'post',
             success: function(result) {
-                $("#clearAction_Profit").text('（总盈亏：' + result + '）');
+                $("#clearAction_Profit").text('（总盈亏：' + result.toFixed(2) + '）');
             }
         });
     }

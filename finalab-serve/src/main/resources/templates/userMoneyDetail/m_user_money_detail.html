@@ -88,7 +88,7 @@
                 {
                     field : 'stockName',
                     title : '交易标的',
-                    sortable: true,
+                  //  sortable: true,
 					formatter : function (value, row, index) {
                         return value;
 					}
@@ -96,11 +96,11 @@
 							{
 								field : 'dealQuantity',
 								title : '成交数量',
-								sortable: true
+								//sortable: true
 							},{
 								field : 'costPrice',
 								title : '单笔资金流向',
-								sortable: true,
+								//sortable: true,
 								formatter: function(value, row, index) {
 									if (value != null && typeof(value) != 'undefined' ) {
 										return value.toFixed(2);
@@ -110,7 +110,7 @@
 							{
 								field : 'totalPrice',
 								title : '累计资金流向',
-								sortable: true,
+								//sortable: true,
 								formatter: function(value, row, index) {
 									if (value != null && typeof(value) != 'undefined' ) {
 										return value.toFixed(2);
@@ -120,7 +120,7 @@
                 {
                     field : 'actionName',
                     title : '交易类型',
-                    sortable: true,
+                   // sortable: true,
                     formatter:function (value, row, index) {
                         return value == '买单' || value == '卖单' ? value.substr(0,1) : 'NA';
                     }
@@ -128,7 +128,7 @@
                 {
                     field : 'timeLine',
                     title : '成交时间（秒）',
-                    sortable: true
+                   // sortable: true
                 },
                 {
                     field : 'financialType',
@@ -141,7 +141,7 @@
                 {
                     field : 'dealPrice',
                     title : '成交价格',
-                    sortable: true,
+                   // sortable: true,
 										formatter: function(value, row, index) {
 											if (value != null && typeof(value) != 'undefined' ) {
 												return value.toFixed(2);
@@ -163,7 +163,7 @@
                 {
                     field : 'thePeriod',
                     title : '阶段数',
-                    sortable: true,
+                  //  sortable: true,
                     visible: true
                 },
                 {
