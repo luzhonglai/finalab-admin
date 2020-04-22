@@ -39,7 +39,10 @@ public class PositionsTotalServiceImpl implements IPositionsTotalService {
     public List<PositionsTotal> selectPositionsTotalList(PositionsTotal positionsTotal) {
         return positionsTotalMapper.selectPositionsTotalListWithoutZero(positionsTotal);
     }
-
+    @Override
+    public List<PositionsTotal> selectPositionsTotalListNew(PositionsTotal positionsTotal) {
+        return positionsTotalMapper.selectPositionsTotalListWithoutZeroNew(positionsTotal);
+    }
     /**
      * 查询持仓汇总
      */

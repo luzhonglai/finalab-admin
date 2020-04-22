@@ -195,7 +195,7 @@
 
                 <ul id="profitTab" class="nav nav-tabs">
                     <li id="trade-positionsTotal-tab" class="active">
-                        <a href="#profitDeatilTab" data-toggle="tab">持仓盈亏明细<span id="z-profit">（总盈亏：0）</span></a>
+                        <a href="#profitDeatilTab" data-toggle="tab">盈亏明细<span id="z-profit">（总盈亏：0）</span></a>
                     </li>
                     <li id="trade-derived-tab" class="tab">
                         <a href="#derivedVarTab" data-toggle="tab">衍生变量</a>
@@ -244,7 +244,7 @@
 <!--<div th:replace="transaction/instanceTardingTable :: instanceTrading_Constraint_js"></div>-->
 <div th:replace="positionsTotal/mline_positionsTotal :: mline_positionsTotal_js"></div>
 <div th:replace="entryOrder/mline_entry_order :: m_entry_order_list_js"></div>
-<div th:replace="clearActionDetail/clear_action_detail :: m_clear_action_detail_js"></div>
+<!--<div th:replace="clearActionDetail/clear_action_detail :: m_clear_action_detail_js"></div>--><!--平仓盈亏明细-->
 <div th:replace="userMoneyDetail/m_user_money_detail :: m_user_money_detail_js"></div>
 <script src="/trade/js/echarts.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="/trade/js/kline.js" type="text/javascript" charset="utf-8"></script>

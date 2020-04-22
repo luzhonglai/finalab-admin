@@ -176,6 +176,28 @@ public class PositionsTotal implements Serializable {
         return traderName;
     }
 
+
+
+
+
+    public Integer getSellQuantity() {
+        return sellQuantity;
+    }
+
+    public void setSellQuantity(Integer sellQuantity) {
+        this.sellQuantity = sellQuantity;
+    }
+
+    public BigDecimal getSellPrice() {
+        return sellPrice;
+    }
+
+    public void setSellPrice(BigDecimal sellPrice) {
+        this.sellPrice = sellPrice;
+    }
+
+    private BigDecimal sellPrice;
+    private Integer sellQuantity;
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("id", getId())
@@ -191,6 +213,8 @@ public class PositionsTotal implements Serializable {
                 .append("nowQuantity", getNowQuantity())
                 .append("traderId", getTraderId())
                 .append("traderName", getTraderName())
+                .append("sellPrice", getSellPrice())
+                .append("sellQuantity", getSellQuantity())
                 .toString();
     }
 }

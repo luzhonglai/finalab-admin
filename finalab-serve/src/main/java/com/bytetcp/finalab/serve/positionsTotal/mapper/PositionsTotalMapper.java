@@ -23,12 +23,18 @@ public interface PositionsTotalMapper {
      */
     List<PositionsTotal> selectPositionsTotalList(PositionsTotal positionsTotal);
 
+    List<PositionsTotal> selectPositionsTotalListNew(PositionsTotal positionsTotal);
+
+
     /***
      * 过滤掉持仓量为0的
      * @param positionsTotal
      * @return
      */
     List<PositionsTotal> selectPositionsTotalListWithoutZero(PositionsTotal positionsTotal);
+
+    List<PositionsTotal> selectPositionsTotalListWithoutZeroNew(PositionsTotal positionsTotal);
+
 
     /**
      * 新增持仓汇总

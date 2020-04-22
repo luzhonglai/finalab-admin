@@ -23,6 +23,9 @@ public interface IPositionsTotalService {
      */
     List<PositionsTotal> selectPositionsTotalList(PositionsTotal positionsTotal);
 
+    List<PositionsTotal> selectPositionsTotalListNew(PositionsTotal positionsTotal);
+
+
     List<PositionsTotal> selectPositionsTotalOrigin(PositionsTotal positionsTotal);
 
     /**

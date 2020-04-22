@@ -78,7 +78,8 @@ public class PositionsTotalController extends BaseController {
     @ResponseBody
     public TableDataInfo list(PositionsTotal positionsTotal, Integer pageOffset, Integer pageLimit) {
         PageHelper.offsetPage(pageOffset, pageLimit);
-        List<PositionsTotal> list = positionsTotalService.selectPositionsTotalList(positionsTotal);
+        //List<PositionsTotal> list = positionsTotalService.selectPositionsTotalList(positionsTotal);
+        List<PositionsTotal> list = positionsTotalService.selectPositionsTotalListNew(positionsTotal);
         return getDataTable(list);
     }
 

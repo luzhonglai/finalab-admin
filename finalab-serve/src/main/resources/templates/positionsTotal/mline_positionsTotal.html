@@ -144,7 +144,22 @@
                         }
 
                         var quote = stockMap[row.stockId].QuotedDecimals;
-                        var v =  row.nowQuantity * newestPrice + row.totalPrice;
+                        var v =  row.nowQuantity * newestPrice-row.totalPrice ;//未实现盈利=最新市值-成本价格
+                        var color = Number(v) > 0 ? 'red' : 'green';
+                        return '<span class="profit" style="color: ' + color + '">' + v.toFixed(quote) + '</span>';
+                    }
+                },{
+                    field: 'profit',
+                    title: '已实现盈利',
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        var newestPrice = getNewPrice(row.stockId);
+                        if (tdCommon.isEmpty(newestPrice)) {
+                            return '<span class="profit">--</span>'
+                        }
+
+                        var quote = stockMap[row.stockId].QuotedDecimals;
+                        var v =  row.sellPrice-row.sellQuantity*(row.totalPrice/row.nowQuantity);
                         var color = Number(v) > 0 ? 'red' : 'green';
                         return '<span class="profit" style="color: ' + color + '">' + v.toFixed(quote) + '</span>';
                     }

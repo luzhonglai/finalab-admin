@@ -18,8 +18,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="nowQuantity"    column="now_quantity"    />
         <result property="traderId"    column="trader_id"    />
         <result property="traderName"    column="trader_name"    />
-
-
+        <result property="sellPrice"    column="sellPrice"    />
+        <result property="sellQuantity"    column="sellquantity"    />
     </resultMap>
 
     <resultMap type="PositionsTotalInCourse" id="PositionsTotalInCourseResult" extends="PositionsTotalResult">
@@ -108,6 +108,40 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </where>
     </select>
 
+
+  <sql id="selectPositionsTotalVoNew" >
+    select (select sum(cost_price)
+        from user_money_detail
+        where instance_id = pt.instance_id
+          and action_name = '卖单'
+         ) as 'sellprice',
+       (select sum(deal_quantity)
+        from user_money_detail
+        where instance_id = pt.instance_id
+          and action_name = '卖单'
+          ) as 'sellquantity',
+          pt.id, pt.create_time, pt.modify_time, pt.the_period, pt.loop_num, pt.instance_id,
+          pt.stock_id, pt.stock_name, pt.total_price, pt.total_quantity, pt.now_quantity, pt.trader_id, pt.trader_name from positions_total pt
+    </sql>
+  <select id="selectPositionsTotalListNew" parameterType="PositionsTotal" resultMap="PositionsTotalResult">
+    <include refid="selectPositionsTotalVoNew"/>
+    <where>
+      <if test="id != null "> and pt.id = #{id}</if>
+      <if test="createTime != null "> and pt.create_time = #{createTime}</if>
+      <if test="modifyTime != null "> and pt.modify_time = #{modifyTime}</if>
+      <if test="thePeriod != null "> and pt.the_period = #{thePeriod}</if>
+      <if test="loopNum != null "> and pt.loop_num = #{loopNum}</if>
+      <if test="instanceId != null  and instanceId != '' "> and pt.instance_id = #{instanceId}</if>
+      <if test="stockId != null  and stockId != '' "> and pt.stock_id = #{stockId}</if>
+      <if test="stockName != null  and stockName != '' "> and pt.stock_name = #{stockName}</if>
+      <if test="totalPrice != null "> and pt.total_price = #{totalPrice}</if>
+      <if test="totalQuantity != null "> and pt.total_quantity = #{totalQuantity}</if>
+      <if test="nowQuantity != null "> and pt.now_quantity = #{nowQuantity}</if>
+      <if test="traderId != null "> and pt.trader_id = #{traderId}</if>
+      <if test="traderName != null  and traderName != '' "> and pt.trader_name = #{traderName}</if>
+    </where>
+  </select>
+
     <select id="selectPositionsTotalListWithoutZero" parameterType="PositionsTotal" resultMap="PositionsTotalResult">
         <include refid="selectPositionsTotalVo"/>
         <where>
@@ -127,6 +161,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
          </where>
     </select>
+
+  <select id="selectPositionsTotalListWithoutZeroNew" parameterType="PositionsTotal" resultMap="PositionsTotalResult">
+    <include refid="selectPositionsTotalVoNew"/>
+    <where>
+      <if test="id != null "> and pt.id = #{id}</if>
+      <if test="createTime != null "> and pt.create_time = #{createTime}</if>
+      <if test="modifyTime != null "> and pt.modify_time = #{modifyTime}</if>
+      <if test="thePeriod != null "> and pt.the_period = #{thePeriod}</if>
+      <if test="loopNum != null "> and pt.loop_num = #{loopNum}</if>
+      <if test="instanceId != null  and instanceId != '' "> and pt.instance_id = #{instanceId}</if>
+      <if test="stockId != null  and stockId != '' "> and pt.stock_id = #{stockId}</if>
+      <if test="stockName != null  and stockName != '' "> and pt.stock_name = #{stockName}</if>
+      <if test="totalPrice != null "> and pt.total_price = #{totalPrice}</if>
+      <if test="totalQuantity != null "> and pt.total_quantity = #{totalQuantity}</if>
+      <if test="nowQuantity != null "> and pt.now_quantity = #{nowQuantity} </if>
+      <if test="traderId != null "> and pt.trader_id = #{traderId}</if>
+      <if test="traderName != null  and traderName != '' "> and pt.trader_name = #{traderName}</if>
+
+    </where>
+  </select>
     
     <select id="selectPositionsTotalById" parameterType="Long" resultMap="PositionsTotalResult">
         <include refid="selectPositionsTotalVo"/>

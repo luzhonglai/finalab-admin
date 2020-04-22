@@ -430,7 +430,7 @@ public class CourseController extends BaseController {
         String userName = getSysUser().getLoginName();
         order.setTraderId(userId);
         order.setTraderName(userName);
-
+        logger.info(order.getPrice()+"闪电下单价格");
         if (order.getTradeType() == TradeType.ASK) {
             CourseTargetParam param = new CourseTargetParam();
             param.setCourseId(order.getCourseId());
@@ -486,6 +486,7 @@ public class CourseController extends BaseController {
         model.put("autoSocketUrl", autoSocketUrl);
         model.put("userStoreUrl", userStoreUrl);
         model.put("quickOrderUrl", quickOrderUrl);
+        logger.info("quickOrderUrl"+quickOrderUrl);
         model.put("orderUrl", orderUrl);
         model.put("userId", getUserId());
         model.put("userName", getSysUser().getUserName());
