@@ -705,7 +705,7 @@
             if (result.code == 0) {
                 if (tdCommon.notEmpty(result.userNews)) {
                     //当WebSocket暂停了实时通讯超过2秒，关闭新闻倒计时；
-                    transaction.news.isNewsTimer = ture;
+                    transaction.news.isNewsTimer = true;
                     setTimeout(() => {
                         transaction.news.isNewsTimer = false;
                     }, 2000);
