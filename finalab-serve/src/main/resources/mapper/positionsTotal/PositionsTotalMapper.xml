@@ -20,6 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="traderName"    column="trader_name"    />
         <result property="sellPrice"    column="sellPrice"    />
         <result property="sellQuantity"    column="sellquantity"    />
+        <result property="Cost"    column="cost"    />
     </resultMap>
 
     <resultMap type="PositionsTotalInCourse" id="PositionsTotalInCourseResult" extends="PositionsTotalResult">
@@ -110,16 +111,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
   <sql id="selectPositionsTotalVoNew" >
-    select (select sum(cost_price)
+    select (select IFNULL(sum(cost_price),0)
         from user_money_detail
         where instance_id = pt.instance_id
           and action_name = '卖单'
          ) as 'sellprice',
-       (select sum(deal_quantity)
+       (select IFNULL(sum(deal_quantity),0)
         from user_money_detail
         where instance_id = pt.instance_id
           and action_name = '卖单'
           ) as 'sellquantity',
+        (select ABS(IFNULL(sum(cost_price) / sum(deal_quantity), 0))
+        from user_money_detail
+        where instance_id = pt.instance_id
+        and time_line &lt;= (select max(time_line)
+        from user_money_detail
+        where instance_id = pt.instance_id
+        and action_name = '卖单')
+        and action_name = '买单'
+        ) as 'cost',
           pt.id, pt.create_time, pt.modify_time, pt.the_period, pt.loop_num, pt.instance_id,
           pt.stock_id, pt.stock_name, pt.total_price, pt.total_quantity, pt.now_quantity, pt.trader_id, pt.trader_name from positions_total pt
     </sql>

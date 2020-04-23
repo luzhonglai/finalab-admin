@@ -198,6 +198,17 @@ public class PositionsTotal implements Serializable {
 
     private BigDecimal sellPrice;
     private Integer sellQuantity;
+
+    public BigDecimal getCost() {
+        return Cost;
+    }
+
+    public void setCost(BigDecimal cost) {
+        Cost = cost;
+    }
+
+    private BigDecimal Cost;
+
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("id", getId())
@@ -215,6 +226,7 @@ public class PositionsTotal implements Serializable {
                 .append("traderName", getTraderName())
                 .append("sellPrice", getSellPrice())
                 .append("sellQuantity", getSellQuantity())
+                .append("Cost", getCost())
                 .toString();
     }
 }

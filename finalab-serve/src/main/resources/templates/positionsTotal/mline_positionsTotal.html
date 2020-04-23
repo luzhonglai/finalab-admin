@@ -153,13 +153,8 @@
                     title: '已实现盈利',
                     sortable: true,
                     formatter: function (value, row, index) {
-                        var newestPrice = getNewPrice(row.stockId);
-                        if (tdCommon.isEmpty(newestPrice)) {
-                            return '<span class="profit">--</span>'
-                        }
-
                         var quote = stockMap[row.stockId].QuotedDecimals;
-                        var v =  row.sellPrice-row.sellQuantity*(row.totalPrice/row.nowQuantity);
+                        var v =  row.sellPrice-row.sellQuantity*row.cost;
                         var color = Number(v) > 0 ? 'red' : 'green';
                         return '<span class="profit" style="color: ' + color + '">' + v.toFixed(quote) + '</span>';
                     }
