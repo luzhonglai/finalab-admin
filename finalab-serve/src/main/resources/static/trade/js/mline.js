@@ -511,13 +511,14 @@ var transaction = {
             $('#trade-flag').text(Number(newsData.quantity) < 0 ? '卖出' : '买入');
             $('#news-quantity').text(Math.abs(newsData.quantity));
             $('#news-stockid').text(newsData.stockId);
-            $('#news-timer').text(transaction.news.timeCount);
+            $('#news-timer').text('('+transaction.news.timeCount+'S)');
             $('#user-news').show();
-            var isNewsTimer = transaction.news.isNewsTimer;
             transaction.news.timer = window.setInterval(function () {
                 transaction.news.timeCount--;
-                if(isNewsTimer){
-                    $('#news-timer').text(transaction.news.timeCount);
+                if(transaction.news.isNewsTimer){
+                    $('#news-timer').text('('+transaction.news.timeCount+'S)');
+                }else{
+                    $('#news-timer').text('');
                 }
                 if (transaction.news.timeCount <= 0) {
                     $('#user-news').hide();
