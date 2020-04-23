@@ -449,7 +449,8 @@
                 refreshTradeVal(msg);
                 break;
             case 'orderBook':
-//                    console.log('挂单列表数据 ----' + JSON.stringify(msg));
+                   console.log('挂单列表数据 ----');
+                   console.log(msg)
 //                     console.log('挂单列表数据 ----');
                 var sell = msg.t.sell;
                 var stockId = getStockIdFromMap(sell);
@@ -466,7 +467,6 @@
         if (showDerived) {
             transaction.optionMatcher.calculated();
         }
-
     }
 
     function periodListener(msg) {
@@ -704,6 +704,11 @@
             console.log("获取新闻数据 --- " + JSON.stringify(result));
             if (result.code == 0) {
                 if (tdCommon.notEmpty(result.userNews)) {
+                    //当WebSocket暂停了实时通讯超过2秒，关闭新闻倒计时；
+                    transaction.news.isNewsTimer = ture;
+                    setTimeout(() => {
+                        transaction.news.isNewsTimer = false;
+                    }, 2000);
                     transaction.news.onUserNews(result.userNews);
                 }
                 if (tdCommon.notEmpty(result.marketNews)) {
