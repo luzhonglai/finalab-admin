@@ -513,20 +513,8 @@ var transaction = {
             $('#news-stockid').text(newsData.stockId);
             $('#news-timer').text('('+transaction.news.timeCount+'S)');
             $('#user-news').show();
-            transaction.news.timer = window.setInterval(function () {
-                transaction.news.timeCount--;
-                if(transaction.news.isNewsTimer){
-                    $('#news-timer').text('('+transaction.news.timeCount+'S)');
-                }else{
-                    $('#news-timer').text('');
-                }
-                if (transaction.news.timeCount <= 0) {
-                    $('#user-news').hide();
-                    transaction.news.priceOrderSwitch(true);
-                    window.clearInterval(transaction.news.timer);
-                }
+            transaction.news.onTimer()
 
-            }, 1000);
         },
         //控制新闻下单 “是” 按钮置灰动作，防止用户重复下单
         priceOrderSwitch: function(act) {
@@ -539,6 +527,21 @@ var transaction = {
                     .attr('style',"background-color: #e4e4e4")
                     .attr('disabled', 'true');
             }
+        },
+        onTimer: function(){
+            transaction.news.timer = window.setInterval(function () {
+                if(!transaction.news.isNewsTimer) {
+                    window.clearInterval(transaction.news.timer);
+                }
+                transaction.news.timeCount--;
+                $('#news-timer').text('(' + transaction.news.timeCount + 'S)');
+                if (transaction.news.timeCount <= 0) {
+                    $('#user-news').hide();
+                    transaction.news.priceOrderSwitch(true);
+                    window.clearInterval(transaction.news.timer);
+                }
+
+            }, 1000);
         }
 
     },

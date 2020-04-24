@@ -648,7 +648,7 @@
 
     function getStockIdFromMap(map) {
         for (var key in map) {
-            return map[key][0].stockId;
+            return map[key][0].stockId || '';
         }
     }
 
@@ -702,14 +702,18 @@
         var priceMove = priceMoves[priceMoves.length - 1];
         var param = {timeNum: priceMove.time, courseId: courseId, thePeriod: thePeriod, groupNum: groupNum};
         //当WebSocket暂停了实时通讯超过2秒，关闭新闻倒计时；
-         // 每次调用调用清除标记
+        //每次调用调用清除标记
         if(isNews != -1){
             window.clearTimeout(isNews)
+        }
+        if(!transaction.news.isNewsTimer){
+            transaction.news.onTimer()
         }
         transaction.news.isNewsTimer = true;
         isNews = setTimeout(() => {
             transaction.news.isNewsTimer = false;
-        }, 2000);
+            console.log('关闭了定时器啊')
+        }, 1000);
         transaction.submit(url, JSON.stringify(param), function (result) {
             if (result.code == 0) {
                 if (tdCommon.notEmpty(result.userNews)) {
