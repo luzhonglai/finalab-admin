@@ -115,7 +115,7 @@
                     <span id="trade-flag"></span>
                     <span id="news-quantity"></span>支
                     <span id="news-stockid"></span>股票，请问你是否接受订单？
-                    （<span id="news-timer"></span>S）
+                    <span id="news-timer"></span>
                 </a>
                     <a id="news_place_order" class="btn" href="javascript:transaction.news.submit();">是</a>
                 </li>
@@ -449,7 +449,8 @@
                 refreshTradeVal(msg);
                 break;
             case 'orderBook':
-//                    console.log('挂单列表数据 ----' + JSON.stringify(msg));
+                //    console.log('挂单列表数据 ----');
+                //    console.log(msg)
 //                     console.log('挂单列表数据 ----');
                 var sell = msg.t.sell;
                 var stockId = getStockIdFromMap(sell);
@@ -466,7 +467,6 @@
         if (showDerived) {
             transaction.optionMatcher.calculated();
         }
-
     }
 
     function periodListener(msg) {
@@ -632,8 +632,8 @@
         var buyMap = msg.t.buy;
         var stockId = getStockIdFromMap(buyMap);
         if (transaction.priceMove.stockId != stockId) {
-            console.log('收到挂单列表数据，当前走势不是该股票，所以不刷新股票挂单列表 -- ' +
-                transaction.priceMove.stockId + '    ' + stockId);
+            // console.log('收到挂单列表数据，当前走势不是该股票，所以不刷新股票挂单列表 -- ' +
+            //     transaction.priceMove.stockId + '    ' + stockId);
             return;//当前走势不是该股票，所以不刷新股票挂单列表
         }
         var sellArr = orderMap2List(sellMap);
@@ -648,7 +648,7 @@
 
     function getStockIdFromMap(map) {
         for (var key in map) {
-            return map[key][0].stockId;
+            return map[key][0].stockId || '';
         }
     }
 
@@ -679,29 +679,42 @@
     }
 
     function changeStock(instanceId, stockId) {
-        console.log("*****************切换股票**********************")
+        // console.log("*****************切换股票**********************")
 
         if (!$.common.isEmpty(mlineDate)) {
 //                console.log('切换时血染走势图====== '+ JSON.stringify(mlineDate));
             convertToMline(mlineDate);
         }
-        console.log('切换股票是 渲染挂单列表 map===' + JSON.stringify(orderBookData));
+        // console.log('切换股票是 渲染挂单列表 map===' + JSON.stringify(orderBookData));
         if (orderBookData.size > 0) {
             var msg = orderBookData.get(transaction.priceMove.stockId);
-            console.log('切换股票是 渲染挂单列表 ==== ' + JSON.stringify(msg) + '  ' +
-                transaction.priceMove.stockId);
-            console.log('挂单map=====' + JSON.stringify(orderBookData));
+            // console.log('切换股票是 渲染挂单列表 ==== ' + JSON.stringify(msg) + '  ' +
+                // transaction.priceMove.stockId);
+            // console.log('挂单map=====' + JSON.stringify(orderBookData));
             convertToOrderBook(msg);
         }
     }
-
+    // 新闻标示记号
+    var isNews = -1;
     function refreshNews(msg) {
         var url = '/serve/userNews/news';
         var priceMoves = msg.t[transaction.priceMove.stockId];
         var priceMove = priceMoves[priceMoves.length - 1];
         var param = {timeNum: priceMove.time, courseId: courseId, thePeriod: thePeriod, groupNum: groupNum};
+        //当WebSocket暂停了实时通讯超过2秒，关闭新闻倒计时；
+        //每次调用调用清除标记
+        if(isNews != -1){
+            window.clearTimeout(isNews)
+        }
+        if(!transaction.news.isNewsTimer){
+            transaction.news.onTimer()
+        }
+        transaction.news.isNewsTimer = true;
+        isNews = setTimeout(() => {
+            transaction.news.isNewsTimer = false;
+            console.log('关闭了定时器啊')
+        }, 1000);
         transaction.submit(url, JSON.stringify(param), function (result) {
-            console.log("获取新闻数据 --- " + JSON.stringify(result));
             if (result.code == 0) {
                 if (tdCommon.notEmpty(result.userNews)) {
                     transaction.news.onUserNews(result.userNews);

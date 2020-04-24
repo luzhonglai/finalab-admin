@@ -474,6 +474,7 @@ var transaction = {
     news: {
         timer: -1,
         timeCount: 0,
+        isNewsTimer: true, // 新闻倒计时开关
         submit: function () {
             transaction.news.priceOrderSwitch(false);
 
@@ -506,23 +507,14 @@ var transaction = {
             transaction.news.timeCount = newsData.timeout;
             $('#new-origin-quantity').text(Number(newsData.quantity));
             $('#news-stock-name').text(stockMap[newsData.stockId].Description);
-            $('#news-price').text(newsData.price);
+            $('#news-price').text(newsData.price.toFixed(2));
             $('#trade-flag').text(Number(newsData.quantity) < 0 ? '卖出' : '买入');
             $('#news-quantity').text(Math.abs(newsData.quantity));
             $('#news-stockid').text(newsData.stockId);
-            $('#news-timer').text(transaction.news.timeCount);
-            console.log('用户新闻展示时间（s）------  ' + transaction.news.timeCount);
+            $('#news-timer').text('('+transaction.news.timeCount+'S)');
             $('#user-news').show();
-            transaction.news.timer = window.setInterval(function () {
-                transaction.news.timeCount--;
-                // console.log('定时器 ----------' + transaction.news.timeCount)
-                $('#news-timer').text(transaction.news.timeCount);
-                if (transaction.news.timeCount <= 0) {
-                    $('#user-news').hide();
-                    transaction.news.priceOrderSwitch(true);
-                    window.clearInterval(transaction.news.timer);
-                }
-            }, 1000);
+            transaction.news.onTimer()
+
         },
         //控制新闻下单 “是” 按钮置灰动作，防止用户重复下单
         priceOrderSwitch: function(act) {
@@ -535,6 +527,21 @@ var transaction = {
                     .attr('style',"background-color: #e4e4e4")
                     .attr('disabled', 'true');
             }
+        },
+        onTimer: function(){
+            transaction.news.timer = window.setInterval(function () {
+                if(!transaction.news.isNewsTimer) {
+                    window.clearInterval(transaction.news.timer);
+                }
+                transaction.news.timeCount--;
+                $('#news-timer').text('(' + transaction.news.timeCount + 'S)');
+                if (transaction.news.timeCount <= 0) {
+                    $('#user-news').hide();
+                    transaction.news.priceOrderSwitch(true);
+                    window.clearInterval(transaction.news.timer);
+                }
+
+            }, 1000);
         }
 
     },
