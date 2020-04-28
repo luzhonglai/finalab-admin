@@ -285,7 +285,7 @@
     var wsUrl = [[${webSocketUrl}]];
     var courseId = [[${courseId}]];
     var userName = [[${userName}]];
-    var showDerived = [[${showDerived}]];
+    var showDerived = [[${showDerived}]]; //计算衍生变量的值
     var thePeriod = 1; //阶段数
     var loopNum = 1; //循环次数
     var updateVars = [];
@@ -295,10 +295,8 @@
     var derivedMap = {};
     var quantityMap = {};
     var derivedTableData = {};
-
     var stockAndOptionMatchMap = {};
     var datas = {};
-    // var datas = {'rows':[{'TargetName':'q','Delta':'999'},{'TargetName':'w','Delta':'1024'}]};
     function getUpdateVar() {
         $.ajax({
             url: updateVarUrl,
@@ -393,7 +391,7 @@
             stockName: stockMap[stockId].Description,
             yestclose: getStartPrice(stockId)
         });
-        console.log("onOpen 点击----- " + transaction.priceMove.stockId + '   ' + transaction.priceMove.stockName);
+        // console.log("onOpen 点击----- " + transaction.priceMove.stockId + '   ' + transaction.priceMove.stockName);
         transaction.optionMatcher.doMatch();
     }
 
@@ -425,12 +423,11 @@
     var mlineDate = '';
     var orderBookData = new Map(); //{t: {buy:'', sell:''}};
     function onMessage(evt) {
-//        console.log('收到 ws 消息 -- ' + JSON.stringify(evt));
         var msg = JSON.parse(evt.data);
         loopNum = msg.loopNum;
         groupNum = msg.groupNum;
         var wsType = msg.type;
-        // orderBook("当前挂单"), mLine("分时图"), kLine("k线图"), stocksPrice("股票实时价格");
+        //orderBook("当前挂单"), mLine("分时图"), kLine("k线图"), stocksPrice("股票实时价格");
         switch (wsType) {
             case 'stocksPrice':
 //                    console.log('股票列表数据 ----' + JSON.stringify(msg));
@@ -441,7 +438,9 @@
             case 'mLine':
                 // console.log('走势数据----' + JSON.stringify(msg));
                 derivedMap = msg.derived;
-                mlineDate = msg;//临时保存走势数据，便于走势数据结束后还可以切换股票
+                console.log(msg)
+                //临时保存走势数据，便于走势数据结束后还可以切换股票
+                mlineDate = msg;
                 convertToMline(msg);
                 // 获取新闻
                 refreshNews(msg);
@@ -450,8 +449,6 @@
                 break;
             case 'orderBook':
                 //    console.log('挂单列表数据 ----');
-                //    console.log(msg)
-//                     console.log('挂单列表数据 ----');
                 var sell = msg.t.sell;
                 var stockId = getStockIdFromMap(sell);
                 // orderBookData[stockId] = msg;
@@ -463,9 +460,10 @@
             default:
                 console.log('未知数据类型' + wsType);
         }
+
         //计算衍生变量的值
-        if (showDerived) {
-            transaction.optionMatcher.calculated();
+        if (showDerived && wsType == 'derivedvar') {
+            transaction.optionMatcher.calculated(msg);
         }
     }
 
@@ -522,7 +520,6 @@
      * 分时图数据刷新
      */
     function convertToMline(msg) {
-//            console.log('lllllll------- ' + JSON.stringify(msg));
         var t = msg.t[transaction.priceMove.stockId];
         var datas = [];
         for (var i = 0; i < t.length; i++) {
@@ -539,14 +536,13 @@
             datas.push(data);
         }
         if (transaction.priceMove.isInit) {
-//            console.log('refresh 走势价格...' + datas);
+           // console.log('refresh 走势价格...' + datas);
             transaction.priceMove.refresh(datas, true);
         } else {
             console.log('走势未初始...');
         }
         datas = [];//清空数组
         //刷新左侧成交数量
-
 
     }
 
@@ -712,7 +708,6 @@
         transaction.news.isNewsTimer = true;
         isNews = setTimeout(() => {
             transaction.news.isNewsTimer = false;
-            console.log('关闭了定时器啊')
         }, 1000);
         transaction.submit(url, JSON.stringify(param), function (result) {
             if (result.code == 0) {
