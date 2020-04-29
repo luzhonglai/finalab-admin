@@ -16,16 +16,37 @@
             showColumns: false,
             showToggle: false,
             showSearch: false,
-            pagination: false,
+            pagination: true,
+            pageSize: 100,
             tableObj: $('#derived_table'),
-            columns: derivedVarForTrade()
+            columns: [
+                {
+                    field: 'TargetName',
+                    title: 'TargetName',
+                    sortable: true,
+                },{
+                    field: 'Delta',
+                    title: 'Delta',
+                    sortable: true,
+
+
+                },{
+                    field: 'stockQuantity',
+                    title: 'gamma',
+                    sortable: true,
+
+                },{
+                    field: 'profit',
+                    title: 'theta',
+                    sortable: true,
+                }
+                ]
         };
         $.table.init(options);
     });
 
     function derivedVarForTrade() {
         var columns = [];
-
         $.ajax({
             url: ctx + "serve/derivedVar/fixColumns",
             type: "post",

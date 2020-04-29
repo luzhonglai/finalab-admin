@@ -653,45 +653,32 @@ var transaction = {
     //首先，遍历stockMap[]，将每个股票对应的期权取到，放到一个set中
     optionMatcher: {
         doMatch: function () {
-            $.each(stockMap, function (index, item) {
-                if (item.Type.toLowerCase() == 'stock') {
-                    var curStockId = item.Ticker;
-                    transaction.optionMatcher.findMatcher(curStockId);
-                }
-            });
-        },
-        //根据这个stockId 查找 对应的 期权,存入列表
-        findMatcher: function (stockId) {
             var options = [];
-            $.each(stockMap, function (i, item) {
-                if (item.Ticker.startsWith(stockId) && item.Type.toLowerCase() == 'option') {
-                    options.push(item.Ticker);
+            //将股票和期票存下来 stock 和 option
+            $.each(stockMap, function (index, item) {
+                if (item.Type.toLowerCase() == 'stock'|| item.Type.toLowerCase() == 'option') {
+                    var curStockId = item.Ticker;
+                    options.push(curStockId);
                 }
             });
-            stockAndOptionMatchMap[stockId] = options;
+            stockAndOptionMatchMap = options;
         },
-
-        calculated: function () {
+        calculated: function (msg) {
             var derivedList = [];
+            var stockMap = msg.t.stocks;// 股票 期权数据
+            if (typeof(stockMap) == 'undefined') stockMap = [];
             $.each(stockMap, function (i, item) {
                 var derObj = {};
-                let stockId = item.Ticker;
-                let optionSet = stockAndOptionMatchMap[stockId];
-                if (typeof(optionSet) == 'undefined') optionSet = [];
-                $.each(optionSet, function(i, optionId){
-                    derObj['TargetName'] = optionId;
-                    for (let derivedParam in derivedMap[optionId]) {
-                        let stockQuantity = typeof(quantityMap[stockId]) == 'undefined' ? 0 : quantityMap[stockId];
-                        let optionQuantity = typeof(quantityMap[optionId]) == 'undefined' ? 0 : quantityMap[optionId];
-                        let derivedNum = stockQuantity * 1 + optionQuantity * 100 * derivedMap[optionId][derivedParam] * 1;
-                        let quotedDecimals = stockMap[stockId].QuotedDecimals;
-                        let derivedNumToFixed = derivedNum.toFixed(quotedDecimals);
-                        derObj[derivedParam] = derivedNumToFixed;
-                    }
+                var stockId = item.stockName;
+                var delta = item.price;
+                if(stockAndOptionMatchMap.includes(stockId)){
+                    derObj['TargetName'] = stockId;
+                    derObj['Delta'] = delta;
                     derivedList.push(derObj);
-                });
+                }
             });
             datas['rows'] = derivedList;
+
         }
 
     },
