@@ -665,24 +665,25 @@ var transaction = {
         },
         calculated: function (msg) {
             var derivedList = [];
-            var stockMap = msg.t.stocks;// 股票 期权数据
+            var stockMap = msg.t.stocks;
             if (typeof(stockMap) == 'undefined') stockMap = [];
             $.each(stockMap, function (i, item) {
                 var derObj = {};
-                var stockId = item.stockName;
-                var delta = item.price;
+                var stockId = item.stockId;
+                var price = item.price;
+                var stockName = item.stockName;
+                var newPrice = (price*100);
                 if(stockAndOptionMatchMap.includes(stockId)){
                     derObj['TargetName'] = stockId;
-                    derObj['Delta'] = delta;
+                    derObj[stockName] = newPrice;
                     derivedList.push(derObj);
                 }
             });
             datas['rows'] = derivedList;
-
         }
 
     },
-
+!!！！
     tradable: {
         istradable: function() {
             let isTradeable = stockMap[transaction.priceMove.stockId].IsTradeable;
