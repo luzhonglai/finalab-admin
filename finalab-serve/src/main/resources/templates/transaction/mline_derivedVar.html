@@ -17,30 +17,34 @@
             showToggle: false,
             showSearch: false,
             pagination: true,
-            pageSize: 100,
+            pageSize: 10,
+            pageNumber: 1,
             tableObj: $('#derived_table'),
             columns: [
                 {
                     field: 'TargetName',
-                    title: 'TargetName',
-                    sortable: true,
+                    title: "TargetName",
+                    align : "left",
+                    width:150,
                 },{
                     field: 'Delta',
                     title: 'Delta',
-                    sortable: true,
-
-
-                },{
-                    field: 'stockQuantity',
-                    title: 'gamma',
-                    sortable: true,
+                    align : "left",
+                    width:150
 
                 },{
-                    field: 'profit',
-                    title: 'theta',
-                    sortable: true,
+                    field: 'Gamma',
+                    title: 'Gamma',
+                    align : "left",
+                    width:150
+
+                },{
+                    field: 'Theta',
+                    title: 'Theta',
+                    align : "left",
+                    width:150
                 }
-                ]
+            ]
         };
         $.table.init(options);
     });
