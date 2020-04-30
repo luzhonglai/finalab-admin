@@ -111,6 +111,13 @@
     @keyframes animate-positive{
         0% { width: 0%; }
     }
+    select:focus,select:active,select:hover{
+        outline:none;
+    }
+    select:{
+        outline:none;
+    }
+
 </style>
 <head th:include="include :: header"></head>
 <body class="gray-bg">
@@ -159,22 +166,27 @@
 
                             <li style="margin-top: 110px;margin-right: 100px;margin:auto 0 auto 20%;height: 75px;">
 
-                                    <div th:include="course/progress :: progress_div"></div>
+                                <div th:include="course/progress :: progress_div"></div>
 
                                 <div>
-                                <button id="startInstance" type="button"
-                                        th:class="${@permission.hasPermi('serve:courseStudent:start')} == hidden?'hidden':'btn btn-primary btn-primary btn-sm'"
-                                        onclick="startOrStop('START')"><i class="fa fa-step-forward"></i>&nbsp;启动
-                                </button>
-                                <input id="suspendInstanceInput" type="text" hidden value="SUSPEND"/>
-                                <button id="suspendInstance" type="button"
-                                        th:class="${@permission.hasPermi('serve:courseStudent:suspend')} == hidden?'hidden':'btn btn-warning btn-primary btn-sm'"
-                                        onclick='suspendOrResume()'><i class="fa fa-pause"></i>&nbsp;暂停
-                                </button>
-                                <button id="stopInstance" type="button"
-                                        th:class="${@permission.hasPermi('serve:courseStudent:stop')} == hidden?'hidden':'btn btn-danger btn-primary btn-sm'"
-                                        onclick='startOrStop("STOP")'><i class="fa fa-stop"></i>&nbsp;停止
-                                </button>
+                                    <button id="startInstance" type="button"
+                                            th:class="${@permission.hasPermi('serve:courseStudent:start')} == hidden?'hidden':'btn btn-primary btn-primary btn-sm'"
+                                            onclick="startOrStop('START')"><i class="fa fa-step-forward"></i>&nbsp;启动
+                                    </button>
+                                    <input id="suspendInstanceInput" type="text" hidden value="SUSPEND"/>
+                                    <button id="suspendInstance" type="button"
+                                            th:class="${@permission.hasPermi('serve:courseStudent:suspend')} == hidden?'hidden':'btn btn-warning btn-primary btn-sm'"
+                                            onclick='suspendOrResume()'><i class="fa fa-pause"></i>&nbsp;暂停
+                                    </button>
+                                    <button id="stopInstance" type="button"
+                                            th:class="${@permission.hasPermi('serve:courseStudent:stop')} == hidden?'hidden':'btn btn-danger btn-primary btn-sm'"
+                                            onclick='startOrStop("STOP")'><i class="fa fa-stop"></i>&nbsp;停止
+                                    </button>
+                                    <select name="city" class="btn btn-warning btn-primary btn-sm" style="width:65px;background: #f8ac59;">
+                                        <option value="010" selected>正常</option>
+                                        <option value="021"  >一倍速</option>
+                                        <option value="0571" >二倍速</option>
+                                    </select>
                                 </div>
                             </li>
 
@@ -388,26 +400,7 @@
     function changeCourseStatus(status) {
         $.modal.loading("请稍后...");
         var url = ctx + "serve/course/op/" + courseId;
-        // $.ajax({
-        //     type: 'post',
-        //     url: url,
-        //     data: {"status": status},
-        //     contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-        //     cache: false,
-        //     timeout: 10000,
-        //     success: function (result) {
-        //         $.modal.closeLoading();
-        //         if (result.code != 0) {
-        //             $.modal.msgError('操作失败');
-        //         } else {
-        //             handleButtonStatus(status);
-        //             changeCourseListStatus(result.data.status);
-        //         }
-        //     },
-        //     error: function (message) {
-        //         console.log('调用服务端异常 url - ' + url + ' param - ' + data + 'message - ' + message);
-        //     }
-        // });
+
         $.post(url + "?status=" + status, function (result) {
             $.modal.closeLoading();
             if (result.code != 0) {
@@ -496,6 +489,14 @@
         $.registTable(new userMoneyDetail());
         // $.registTable(new tardingMonitoring());
         $.registTable(new profitRanking());
+
+        $("select").on('change',function(){
+            if($(this).val() !== "" ) {
+                $(this).css({border: '#fff'}); //选中后颜色
+            } else {
+                $(this).css({border: '#fff'}); //默认颜色
+            }
+        });
     })
 </script>
 </body>
