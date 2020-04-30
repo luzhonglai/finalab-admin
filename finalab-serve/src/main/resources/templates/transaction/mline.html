@@ -291,7 +291,6 @@
     var updateVars = [];
     var websocket;
     var groupNum;
-
     var derivedMap = {};
     var quantityMap = {};
     var derivedTableData = {};
@@ -307,7 +306,6 @@
             }
         })
     }
-
     $(function () {
         document.title = course.courseName;
         //是否允许客户端显示BUYSELL_ENTRY窗口
@@ -460,8 +458,7 @@
             default:
                 console.log('未知数据类型' + wsType);
         }
-
-        //计算衍生变量的值
+        //衍生变量
         if (showDerived && wsType == 'derivedvar') {
             transaction.optionMatcher.calculated(msg);
         }
@@ -559,12 +556,9 @@
             refreshDatas.push({stockId: key, vol: priceMove.curVol});
         }
         transaction.target.refresh(refreshDatas);
-        refreshDatas = [];
-
     }
 
     function covertToStocksNewPrice(msg) {
-
         var stockNewPriceArr = msg.t.stocks;
         countAndKeyMatcher(stockNewPriceArr);
         if (transaction.target.isInit) {
