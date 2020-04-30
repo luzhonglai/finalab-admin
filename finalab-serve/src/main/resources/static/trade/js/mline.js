@@ -683,7 +683,6 @@ var transaction = {
         }
 
     },
-!!！！
     tradable: {
         istradable: function() {
             let isTradeable = stockMap[transaction.priceMove.stockId].IsTradeable;
