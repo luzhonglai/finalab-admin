@@ -198,7 +198,7 @@
                         <a href="#profitDeatilTab" data-toggle="tab">盈亏明细<span id="z-profit">（总盈亏：0）</span></a>
                     </li>
                     <li id="trade-derived-tab" class="tab">
-                        <a href="#derivedVarTab" data-toggle="tab">衍生变量</a>
+                        <a href="#derivedVarTab" data-toggle="tab">期权变量</a>
                     </li>
                 </ul>
 
@@ -430,7 +430,7 @@
             case 'stocksPrice':
 //                    console.log('股票列表数据 ----' + JSON.stringify(msg));
                 covertToStocksNewPrice(msg);
-                periodListener(msg);
+                // periodListenesor(msg);
                 updateVarOnMsg(msg);
                 break;
             case 'mLine':
@@ -522,10 +522,6 @@
         for (var i = 0; i < t.length; i++) {
             //时间   当前价  均价   交易量
             var data = [];
-            // if (t[i].flag == 0) {
-            //     datas.push([]);
-            //     continue;
-            // }
             data[0] = t[i].time;
             data[1] = t[i].price;
             data[2] = t[i].avgPrice;
@@ -533,7 +529,6 @@
             datas.push(data);
         }
         if (transaction.priceMove.isInit) {
-           // console.log('refresh 走势价格...' + datas);
             transaction.priceMove.refresh(datas, true);
         } else {
             console.log('走势未初始...');
