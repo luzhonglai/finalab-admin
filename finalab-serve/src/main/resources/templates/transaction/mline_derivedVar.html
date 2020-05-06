@@ -8,6 +8,18 @@
     $(function () {
         var options = {
             data: datas,
+            // queryParams: function(params){
+            //     console.log(params)
+            //     var param = {
+            //         instanceId: instanceId,
+            //         traderId: userId,
+            //         loopNum: loopNum,
+            //         // thePeriod: thePeriod,
+            //         pageOffset: params.offset,
+            //         pageLimit: params.limit
+            //     }
+            //     return param;
+            // },
             dataType:'json',
             modalName: "衍生变量",
             search: false,
@@ -16,8 +28,8 @@
             showColumns: false,
             showToggle: false,
             showSearch: false,
-            pagination: true,
-            pageSize: 10,
+            pagination: false,
+            pageSize: 8,
             pageNumber: 1,
             tableObj: $('#derived_table'),
             columns: [
@@ -30,19 +42,35 @@
                     field: 'Delta',
                     title: 'Delta',
                     align : "left",
-                    width:150
-
+                    width:150,
+                    formatter: function (value, row, index) {
+                        if (value)
+                            return value;
+                        else
+                            return 0;
+                    }
                 },{
                     field: 'Gamma',
                     title: 'Gamma',
                     align : "left",
-                    width:150
-
+                    width:150,
+                    formatter: function (value, row, index) {
+                        if (value)
+                            return value;
+                        else
+                            return 0;
+                    }
                 },{
                     field: 'Theta',
                     title: 'Theta',
                     align : "left",
-                    width:150
+                    width:150,
+                    formatter: function (value, row, index) {
+                        if (value)
+                            return value;
+                        else
+                            return 0;
+                    }
                 }
             ]
         };
