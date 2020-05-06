@@ -437,13 +437,18 @@
                 // console.log('走势数据----' + JSON.stringify(msg));
                 derivedMap = msg.derived;
                 console.log(msg)
-                //临时保存走势数据，便于走势数据结束后还可以切换股票
+                // 临时保存走势数据，便于走势数据结束后还可以切换股票
                 mlineDate = msg;
                 convertToMline(msg);
                 // 获取新闻
                 refreshNews(msg);
-                //刷新左侧的成交量
+                // 刷新左侧的成交量
                 refreshTradeVal(msg);
+
+                //衍生变量的表格数据
+                if (showDerived) {
+                    refreshDerived(msg);
+                }
                 break;
             case 'orderBook':
                 //    console.log('挂单列表数据 ----');
@@ -458,10 +463,7 @@
             default:
                 console.log('未知数据类型' + wsType);
         }
-        //衍生变量
-        if (showDerived && wsType == 'derivedvar') {
-            transaction.optionMatcher.calculated(msg);
-        }
+
     }
 
     function periodListener(msg) {
@@ -549,8 +551,29 @@
             var priceMove = priceMoves[priceMoves.length - 1];
             // console.log('price move ------- ' + priceMove);
             refreshDatas.push({stockId: key, vol: priceMove.curVol});
+
         }
+
         transaction.target.refresh(refreshDatas);
+    }
+
+    /**
+     * 刷新衍生变量的表格
+     */
+    function refreshDerived(msg) {
+        var data = msg.t;
+        var refreshDerived = Object.keys(data).map(function(key, i) {
+            var optionMoves = data[key];
+            var options = optionMoves[optionMoves.length - 1];
+            return {
+                stockId: key,
+                deriveName: options.deriveName,
+                price: options.dvprice,
+                vol: options.vol,
+            }
+        },[])
+        transaction.optionMatcher.calculated(refreshDerived)
+
     }
 
     function covertToStocksNewPrice(msg) {
