@@ -654,7 +654,7 @@ var transaction = {
     optionMatcher: {
         doMatch: function () {
             var options = [];
-            //将股票和期票存下来 stock 和 option
+            //收集股票和期票存下来 stock 和 option
             $.each(stockMap, function (index, item) {
                 if (item.Type.toLowerCase() == 'stock'|| item.Type.toLowerCase() == 'option') {
                     var curStockId = item.Ticker;
@@ -670,20 +670,32 @@ var transaction = {
             $.each(stockMap, function (i, item) {
                 var derObj = {};
                 var stockId = item.stockId;
-                var price = item.price;
-                var stockName = item.stockName;
-                var newPrice = (price*100).toFixed(2);
+                var stockName = item.stockName == 'DeltaStock' ? 'Delta' : item.stockName;
+                var base = stockName == 'Delta' ? 1 : 100;
+                var newPrice = (item.price * base);
                 if(stockAndOptionMatchMap.includes(stockId)){
                     derObj['TargetName'] = stockId;
                     derObj[stockName] = newPrice;
                     derivedList.push(derObj);
                 }
             });
+            //总计数据
+            var totalStock = derivedList.reduce(function(init,item){
+                var Delta = init.Delta + item.Delta;
+                var Gamma = init.Gamma+item.Gamma || 0;
+                var Theta = init.Theta+item.Theta || 0;
+                return {
+                    TargetName: '总计',
+                    Delta: Delta,
+                    Gamma: Gamma,
+                    Theta: Theta
+                };
+            })
+            // 总计股票数据和
+            derivedList.push(totalStock)
             datas['rows'] = derivedList;
         }
-
     },
-
     tradable: {
         istradable: function() {
             let isTradeable = stockMap[transaction.priceMove.stockId].IsTradeable;
