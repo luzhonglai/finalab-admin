@@ -571,7 +571,7 @@
                 price: options.dvprice,
                 vol: options.curVol,
             }
-        },[])
+        },[]).reverse()
         transaction.optionMatcher.calculated(refreshDerived)
 
     }
