@@ -569,9 +569,9 @@
                 stockId: key,
                 deriveName: options.deriveName,
                 price: options.dvprice,
-                vol: options.vol,
+                vol: options.curVol,
             }
-        },[])
+        },[]).reverse()
         transaction.optionMatcher.calculated(refreshDerived)
 
     }
