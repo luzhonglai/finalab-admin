@@ -665,14 +665,18 @@ var transaction = {
         },
         calculated: function (msg) {
             var derivedList = [];
-            var stockMap = msg.t.stocks;
-            if (typeof(stockMap) == 'undefined') stockMap = [];
-            $.each(stockMap, function (i, item) {
+            var data = msg;
+            if (typeof(data) == 'undefined') data = [];
+            $.each(data, function (i, item) {
                 var derObj = {};
                 var stockId = item.stockId;
-                var stockName = item.stockName == 'DeltaStock' ? 'Delta' : item.stockName;
-                var base = stockName == 'Delta' ? 1 : 100;
-                var newPrice = (item.price * base);
+                // 股票基数
+                var base = stockMap[stockId].UnitMultiplier;
+                var stockName = item.deriveName == 'DeltaStock' ? 'Delta' : item.deriveName;
+                var newBase = stockName == 'Delta' ? 1 : base;
+                //期权变量价格 * 成交量 * 基数 1或 100
+                var newPrice = (item.price * item.vol).toFixed(2) * newBase;
+                // 校验是否股票和期权股票数据
                 if(stockAndOptionMatchMap.includes(stockId)){
                     derObj['TargetName'] = stockId;
                     derObj[stockName] = newPrice;
@@ -682,8 +686,8 @@ var transaction = {
             //总计数据
             var totalStock = derivedList.reduce(function(init,item){
                 var Delta = init.Delta + item.Delta;
-                var Gamma = init.Gamma+item.Gamma || 0;
-                var Theta = init.Theta+item.Theta || 0;
+                var Gamma = init.Gamma + item.Gamma || 0;
+                var Theta = init.Theta + item.Theta || 0;
                 return {
                     TargetName: '总计',
                     Delta: Delta,
