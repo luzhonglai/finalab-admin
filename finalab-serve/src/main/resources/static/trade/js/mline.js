@@ -679,12 +679,12 @@ var transaction = {
                 // 校验是否股票和期权股票数据
                 if(stockAndOptionMatchMap.includes(stockId)){
                     derObj['TargetName'] = stockId;
-                    derObj[stockName] = newPrice;
+                    derObj[stockName] = newPrice || datas.rows[stockId][stockName];
                     derivedList.push(derObj);
                 }
             });
             //总计数据
-            var totalStock = derivedList.reduce(function(init,item){
+            var totalStock = derivedList.reduce(function(init,item) {
                 var Delta = init.Delta + item.Delta;
                 var Gamma = init.Gamma + item.Gamma || 0;
                 var Theta = init.Theta + item.Theta || 0;
