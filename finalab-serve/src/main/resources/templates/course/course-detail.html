@@ -182,10 +182,8 @@
                                             th:class="${@permission.hasPermi('serve:courseStudent:stop')} == hidden?'hidden':'btn btn-danger btn-primary btn-sm'"
                                             onclick='startOrStop("STOP")'><i class="fa fa-stop"></i>&nbsp;停止
                                     </button>
-                                    <select name="city" class="btn btn-warning btn-primary btn-sm" style="width:80px;background: #f8ac59;">
-                                        <option value="010" selected>倍速选择</option>
-                                        <option value="021"  >200%</option>
-                                        <option value="0571" >400%</option>
+                                    <select onchange='onSpeedOptions("SPEED")' name="city" id="speed" class="btn btn-warning btn-primary btn-sm" style="width:80px;background: #f8ac59;">
+                                        <option value="" selected>倍速选择</option>
                                     </select>
                                 </div>
                             </li>
@@ -294,15 +292,50 @@
         //切换方法
         $.changeTable();
 
+        //获取speed速度;
+        getUpdateVar()
         $.modal.closeLoading();
     });
+
+    /**
+     * 倍速控制speed
+     */
+
+    function onSpeedOptions(status) {
+        var speedValue = $('#speed option:selected').val();
+        if(!speedValue){
+            $.modal.msgError("请选择倍速！！！！！")
+            return false;
+        };
+        changeCourseStatus(status, speedValue)
+    }
 
     /**
      * 启动或暂停
      */
     function startOrStop(status) {
         changeCourseStatus(status);
+    }
 
+    /**
+     * 获取股票速度speed选择框
+     */
+    var updateVarUrl = ctx + "serve/course/getUpdateVar";
+    var speedData = [] // speed 数据集合;
+    function getUpdateVar() {
+        $.ajax({
+            url: updateVarUrl,
+            type: "post",
+            data: {courseId: courseId},
+            success: function (result) {
+               speedData = result.filter(function(item,i) {
+                   return item.type == 'SPEED'
+               }).reverse();
+               for( var key in speedData){
+                   $('#speed').append('<option value="'+speedData[key].value+'">'+speedData[key].value+'%'+'</option>')
+               }
+            }
+        })
     }
 
     /**
@@ -373,7 +406,6 @@
         $(".courseStatus").html(dict);
     }
 
-
     function enable(obj) {
         if (allowInFlag == 'hidden') {
             return;
@@ -397,11 +429,14 @@
         })
     }
 
-    function changeCourseStatus(status) {
+    function changeCourseStatus(status,speedValue) {
         $.modal.loading("请稍后...");
         var url = ctx + "serve/course/op/" + courseId;
-
-        $.post(url + "?status=" + status, function (result) {
+        var data = {
+            status: status
+        }
+        if(!typeof(speedValue) != "undefined") data['speedValue'] = speedValue;
+        $.post(url, data, function (result) {
             $.modal.closeLoading();
             if (result.code != 0) {
                 $.modal.msgError('操作失败' + '<p>' + result.msg + '</p>');
