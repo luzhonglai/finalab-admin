@@ -669,17 +669,30 @@ var transaction = {
             if (typeof(data) == 'undefined') data = [];
             $.each(data, function (i, item) {
                 var derObj = {};
-                var stockId = item.stockId;
+                var stockName = item.stockName;
                 // 股票基数
-                var base = stockMap[stockId].UnitMultiplier;
-                var stockName = item.deriveName == 'DeltaStock' ? 'Delta' : item.deriveName;
-                var newBase = stockName == 'Delta' ? 1 : base;
-                //期权变量价格 * 成交量 * 基数 1或 100
-                var newPrice = (item.price * item.vol).toFixed(2) * newBase;
+                var base = stockMap[stockName].UnitMultiplier;
+                // 股票基数1 期权基数100
+                var newBase = item.type == 'Stock' ? 1 : base;
+                var Gammaprice;
+                var Thetaprice;
+                var Deltaprice = item.dvDeltaprice.toFixed(2);
+                if(item.type == 'Stock'){
+                    Gammaprice = 0;
+                    Thetaprice = 0;
+                } else {
+                    Gammaprice = item.dvGammaprice.toFixed(2);
+                    Thetaprice = item.dvThetaprice.toFixed(2);
+                }
+                if(typeof(datas['rows']) == 'undefined') datas['rows'] = [];
+                // 提取上次数据为零没有显示
+                var getStock = datas['rows'].filter(function(item,i) {return item.TargetName == stockName});
                 // 校验是否股票和期权股票数据
-                if(stockAndOptionMatchMap.includes(stockId)){
-                    derObj['TargetName'] = stockId;
-                    derObj[stockName] = newPrice || datas.rows[stockId][stockName];
+                if(stockAndOptionMatchMap.includes(stockName)){
+                    derObj['TargetName'] = stockName;
+                    derObj['Delta'] = (Deltaprice * item.vol).toFixed(2) * newBase;
+                    derObj['Gamma'] = (Gammaprice * item.vol).toFixed(2) * newBase;
+                    derObj['Theta'] = -((Thetaprice * item.vol).toFixed(2) * newBase);
                     derivedList.push(derObj);
                 }
             });

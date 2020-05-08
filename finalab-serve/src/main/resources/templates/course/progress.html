@@ -76,7 +76,12 @@
         $("#currentPersent").text(currentPersent + "%");
         $("#progress_img").attr("style", "background-color: #1abc9c;width:" + currentPersent + "%;");
         console.log("当前秒数：" + (timeLine) + "; 总时间长度：" + ticksPerPeriod);
-
+        // 校验当前timeLine == 变革时间速度
+        for(var key in speedData) {
+            if(timeLine == speedData[key].tick) {
+                $("#speed").val(speedData[key].value);
+            }
+        }
         if ((timeLine + 1) == ticksPerPeriod) { //时间到头
             if (thePeriod == periods) {         //阶段到头
                 if ($("#cycleIn").attr('value') != '1') {//没有开启循环开启

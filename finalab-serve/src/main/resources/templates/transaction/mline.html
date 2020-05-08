@@ -566,10 +566,12 @@
             var optionMoves = data[key];
             var options = optionMoves[optionMoves.length - 1];
             return {
-                stockId: key,
-                deriveName: options.deriveName,
-                price: options.dvprice,
+                stockName: options.stockName,
+                type: options.type,
                 vol: options.curVol,
+                dvDeltaprice: options.dvDeltaprice,
+                dvGammaprice: options.dvGammaprice,
+                dvThetaprice: options.dvThetaprice,
             }
         },[]).reverse()
         transaction.optionMatcher.calculated(refreshDerived)
