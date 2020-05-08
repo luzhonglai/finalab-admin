@@ -102,7 +102,7 @@ public interface ICourseService {
     String selectPeriods(long courseId);
     String selectTicksPerPeriod(long courseId);
 
-    Integer changeInstanceStatus(Long courseId, String status, Boolean isRecord);
+    Integer changeInstanceStatus(Long courseId, String status,String speedValue, Boolean isRecord);
 
     Integer countRunningCourse();
 
