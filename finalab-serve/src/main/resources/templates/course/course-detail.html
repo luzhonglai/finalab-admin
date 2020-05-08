@@ -328,12 +328,18 @@
             type: "post",
             data: {courseId: courseId},
             success: function (result) {
-               speedData = result.filter(function(item,i) {
-                   return item.type == 'SPEED'
-               }).reverse();
-               for( var key in speedData){
-                   $('#speed').append('<option value="'+speedData[key].value+'">'+speedData[key].value+'%'+'</option>')
-               }
+                var speedValueArr = ['10','100','200','300','400'];
+                speedData = result.filter(function(item,i) {
+                    if(item.type == 'SPEED') {
+                        if(!speedValueArr.includes(item.value)){
+                            speedValueArr.push(item.value);
+                        }
+                    }
+                    return item.type == 'SPEED';
+                }).reverse();   
+                for( var value of speedValueArr){
+                   $('#speed').append('<option value="'+value+'">'+value+'%'+'</option>')
+                }
             }
         })
     }
