@@ -38,6 +38,8 @@ public class Course {
     /**  */
     private Long teacherId;
 
+    private String speedValue;
+
     /**
      * 课件运行状态(0:待启动；1：运行中；2：已停止)
      */
@@ -159,5 +161,13 @@ public class Course {
                 ", allowIn=" + allowIn +
                 ", cycleIn=" + cycleIn +
                 '}';
+    }
+
+    public String getSpeedValue() {
+        return speedValue;
+    }
+
+    public void setSpeedValue(String speedValue) {
+        this.speedValue = speedValue;
     }
 }

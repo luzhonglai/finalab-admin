@@ -141,7 +141,7 @@ public class CourseServiceImpl implements ICourseService {
     }
 
     @Override
-    public Integer changeInstanceStatus(Long courseId, String status, Boolean isRecord) {
+    public Integer changeInstanceStatus(Long courseId, String status,String speedValue,Boolean isRecord) {
         Boolean isStart = status.equals(InstanceStatus.START.name());
         String instanceId = isStart ? UUIDUtil.getAccountIdByUUId() : selectInstance(courseId).getInstanceId();
 
@@ -151,6 +151,7 @@ public class CourseServiceImpl implements ICourseService {
         paramsToSendServer.put("courseId", String.valueOf(courseId));
         paramsToSendServer.put("instanceMethod", status);
         paramsToSendServer.put("financialType",  courseVo.getCaseType().toString());
+        paramsToSendServer.put("speedValue", String.valueOf(speedValue));
 
         HttpResult httpResult = httpMethod.send(paramsToSendServer, instanceUrl);
         logger.info("请求地址：{}， 请求内容：{}, 返回结果：{}", instanceUrl,paramsToSendServer.toString(), httpResult.getMsg());

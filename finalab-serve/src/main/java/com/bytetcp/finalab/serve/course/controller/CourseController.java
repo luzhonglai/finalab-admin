@@ -352,7 +352,7 @@ public class CourseController extends BaseController {
     @RequestMapping("/op/{id}")
     @Log(title = "课件开启状态", businessType = BusinessType.UPDATE)
     @ResponseBody
-    public AjaxResult changeCourseStatus(@PathVariable("id") Long courseId, String status) {
+    public AjaxResult changeCourseStatus(@PathVariable("id") Long courseId, String status,String speedValue) {
 
         if (status.equals("START") && courseService.countRunningCourse() >= maxRunning) {
             return AjaxResult.error("运行中课件达到" + maxRunning + "个,此课件无法启动");
@@ -360,7 +360,8 @@ public class CourseController extends BaseController {
 
         Course course = new Course();
         course.setId(courseId);
-        Integer changeStatusResult = courseService.changeInstanceStatus(courseId, status, true);
+        course.setSpeedValue(speedValue);
+        Integer changeStatusResult = courseService.changeInstanceStatus(courseId, status,speedValue, true);
 
         if (changeStatusResult == 0) {
             switch (status) {
@@ -389,7 +390,7 @@ public class CourseController extends BaseController {
     @Log(title = "改变循环开关", businessType = BusinessType.UPDATE)
     @ResponseBody
     public AjaxResult changeCycleIn(@RequestBody Course course) {
-        Integer result = courseService.changeInstanceStatus(course.getId(), InstanceStatus.LOOPSTART.name(), false);
+        Integer result = courseService.changeInstanceStatus(course.getId(), InstanceStatus.LOOPSTART.name(),course.getSpeedValue(), false);
         if (result == 0) {
             courseService.updateCourse(course);
             return AjaxResult.success(course);
