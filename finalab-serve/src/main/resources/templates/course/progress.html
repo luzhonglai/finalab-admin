@@ -62,7 +62,6 @@
             }
         });
     }
-
     function handleMsg(event) {
         var instanceInfo = JSON.parse(event.data);
         var periods = instanceInfo.t.periods;
@@ -76,10 +75,12 @@
         $("#currentPersent").text(currentPersent + "%");
         $("#progress_img").attr("style", "background-color: #1abc9c;width:" + currentPersent + "%;");
         console.log("当前秒数：" + (timeLine) + "; 总时间长度：" + ticksPerPeriod);
-        // 校验当前timeLine == 变革时间速度
+        // 校验当前timeLine == 变革时间
         for(var key in speedData) {
             if(timeLine == speedData[key].tick) {
                 $("#speed").val(speedData[key].value);
+                // 发送请求 SPEED speedValue
+                changeCourseStatus('SPEED', speedData[key].value)
             }
         }
         if ((timeLine + 1) == ticksPerPeriod) { //时间到头
