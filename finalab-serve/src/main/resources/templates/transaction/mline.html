@@ -27,7 +27,15 @@
         top: -5px;
     }
 
+    .item-col {
+        width: 48%;
+        display: inline-block;
+    }
 
+    #order-option {
+        float: none;
+        margin: 0;
+    }
 </style>
 <body>
 <div class=" container quotat">
@@ -135,39 +143,80 @@
             </ul>
             <div id="myTabContent" class="tab-content">
                 <div class="tab-pane fade in active" id="trade">
-                    <div class="tab-row">
-                        <h4>交易标的</h4>
-                        <p id="trade-title"></p>
-                    </div>
-                    <div class="tab-row">
-                        <h4>交易类型</h4>
-                        <div id="order-option" class="radiolist">
-                            <div class="radio">
-                                <label>
-                                    <input type="radio" name="ordertype" id="type1" value="Market_Order" checked>市场价
-                                </label>
-                            </div>
-                            <div class="radio">
-                                <label>
-                                    <input type="radio" name="ordertype" id="type2" value="Limit_Order">委托单
-                                </label>
-                            </div>
+                    <div class="item-col">
+                        <div class="tab-row">
+                            <h4>交易标的</h4>
+                            <!-- <p id="trade-title"></p> -->
+                            <select onchange='onStockMenu(0)'  class="btn-warning btn-primary btn-sm stock-menu"
+                                style="background:#fff;color:black;">
+                            </select>
                         </div>
-                        <h4>数量</h4>
-                        <input id="tradeQuantity" type="text" class="form-control text"
-                               onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="单行输入">
-                        <i id="DisplayUnit"></i>
-                        <h4 id="priceText">金额</h4>
-                        <input id="tradePrice" type="text" class="form-control text"
-                               onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="单行输入">
-                        <span id="tradeButton">
-                                    <button id="tradeSell" type="button" class="btn btn-danger"
-                                            onclick="transaction.tradeOption.submitOrder('ASK')">卖出</button>
-                                    <button id="tradeBuy" type="button" class="btn btn-success"
-                                            onclick="transaction.tradeOption.submitOrder('BID')">买入</button>
-                                </span>
+                        <div class="tab-row">
+                            <h4>交易类型</h4>
+                            <div id="order-option" class="radiolist">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="ordertype" id="type1" value="Market_Order" checked>市场价
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="ordertype" id="type2" value="Limit_Order">委托单
+                                    </label>
+                                </div>
+                            </div>
+                            <h4>数量</h4>
+                            <input type="text" class="form-control text tradeQuantity"
+                                onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="单行输入">
+                            <i class="DisplayUnit"></i>
+                            <h4 class="priceText">&nbsp;&nbsp;金额</h4>
+                            <input type="text" class="form-control text tradePrice"
+                                onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="单行输入">
+                            <span id="tradeButton">
+                                <button type="button" class="btn btn-danger tradeSell"
+                                    onclick="transaction.tradeOption.submitOrder('ASK',0)">卖出</button>
+                                <button type="button" class="btn btn-success tradeBuy"
+                                    onclick="transaction.tradeOption.submitOrder('BID',0)">买入</button>
+                            </span>
+                        </div>
                     </div>
-
+                    <div class="item-col">
+                        <div class="tab-row">
+                            <h4>交易标的</h4>
+                            <!-- <p id="trade-title"></p> -->
+                            <select onchange='onStockMenu(1)' class="btn-warning btn-primary btn-sm stock-menu"
+                                style="background:#fff;color:black;">
+                            </select>
+                        </div>
+                        <div class="tab-row">
+                            <h4>交易类型</h4>
+                            <div id="order-option" class="radiolist">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="ordertype" id="type1" value="Market_Order" checked>市场价
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="ordertype" id="type2" value="Limit_Order">委托单
+                                    </label>
+                                </div>
+                            </div>
+                            <h4>数量</h4>
+                            <input type="text" class="form-control text tradeQuantity"
+                                onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="单行输入">
+                            <i class="DisplayUnit"></i>
+                            <h4 class="priceText">&nbsp;&nbsp;金额</h4>
+                            <input type="text" class="form-control text tradePrice"
+                                onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="单行输入">
+                            <span id="tradeButton">
+                                <button type="button" class="btn btn-danger tradeSell"
+                                    onclick="transaction.tradeOption.submitOrder('ASK',1)">卖出</button>
+                                <button type="button" class="btn btn-success tradeBuy"
+                                    onclick="transaction.tradeOption.submitOrder('BID',1)">买入</button>
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="tab-pane fade" id="order">
@@ -490,11 +539,15 @@
                     case 'IsTradeable': //1：允许交易 0：不允许交易
                         stockMap[varEle.subType].IsTradeable = varEle.value;
                         if (varEle.value == '1') {
-                            finalab.UnDisable($('#tradeSell'));
-                            finalab.UnDisable($('#tradeBuy'));
+                            $('.tradeSell').each(function(i){
+                            finalab.UnDisable($('.tradeSell').eq(i));
+                            finalab.UnDisable($('.tradeBuy').eq(i));
+                            })
                         } else {
-                            finalab.disable($('#tradeSell'));
-                            finalab.disable($('#tradeBuy'));
+                            $('.tradeSell').each(function(i){
+                            finalab.disable($('.tradeSell').eq(i));
+                            finalab.disable($('.tradeBuy').eq(i));
+                            })
                         }
                         break;
                 }
@@ -513,6 +566,15 @@
 
     function writeToScreen(message) {
         console.log(message);
+    }
+
+
+    /**
+     * 交易下单股票选择器
+     */
+    function onStockMenu(i) {
+        var stockId = $('.stock-menu option:selected').eq(i).val();
+        transaction.target.onClick(stockId);
     }
 
     /**
@@ -551,9 +613,7 @@
             var priceMove = priceMoves[priceMoves.length - 1];
             // console.log('price move ------- ' + priceMove);
             refreshDatas.push({stockId: key, vol: priceMove.curVol});
-
         }
-
         transaction.target.refresh(refreshDatas);
     }
 

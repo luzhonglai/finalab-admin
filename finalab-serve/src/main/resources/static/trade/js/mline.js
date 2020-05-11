@@ -6,20 +6,21 @@ var sellMap = {};
 var buyMap  = {};
 $(function () {
     $(document).ready(function () {
-        $('input[type=radio][name=ordertype]').change(function () {
+        $('input[type=radio][name=ordertype]').change(function (i) {
+            var tabRowDom = $(this).parents('.tab-row');
             if (this.value == 'Market_Order') {
-                $("#priceText").hide();
-                $("#tradePrice").hide();
-                $("#tradePrice").val('');
+                tabRowDom.find(".priceText").hide();
+                tabRowDom.find(".tradePrice").hide();
+                tabRowDom.find(".tradePrice").val('');
             } else if (this.value == 'Limit_Order') {
-                $("#priceText").show();
-                $("#tradePrice").show();
+                tabRowDom.find(".priceText").show();
+                tabRowDom.find(".tradePrice").show();
             }
         });
     });
-    $("#priceText").hide();
-    $("#tradePrice").hide();
-    $("#tradePrice").val('');
+    $(".priceText").hide();
+    $(".tradePrice").hide();
+    $(".tradePrice").val('');
 })
 
 /**
@@ -58,6 +59,8 @@ var transaction = {
             transaction.target.targetData = datas;
             for (var i = 0; i < datas.length; i++) {
                 var li = transaction.target.createLi(datas[i]);
+                // 股票菜单选择添加
+                $('.stock-menu').append(`<option>${datas[i].stockId}</option>`)
                 $('#targetList').append(li);
             }
             transaction.target.isInit = true;
@@ -124,15 +127,21 @@ var transaction = {
             $('#stockName-1').text(title);
             $('#stockName-2').text(title);
             $('#trade-title').text(title);
-            $('#DisplayUnit').text('（' + stockMap[stockId].DisplayUnit + '）');
+            // $('.DisplayUnit').each(function(){
+            //     $(this).text('（' + stockMap[stockId].DisplayUnit + '）');
+            // })
             //判断该股票是否允许交易
             var isTradeable = stockMap[stockId].IsTradeable; //1允许， 0：不允许
             if (isTradeable == '1') {
-                finalab.UnDisable($('#tradeSell'));
-                finalab.UnDisable($('#tradeBuy'));
+                $('.tradeSell').each(function(i){
+                    finalab.UnDisable($('.tradeSell').eq(i));
+                    finalab.UnDisable($('.tradeBuy').eq(i));
+                })
             } else {
-                finalab.disable($('#tradeSell'));
-                finalab.disable($('#tradeBuy'));
+                $('.tradeSell').each(function(i){
+                    finalab.disable($('.tradeSell').eq(i));
+                    finalab.disable($('.tradeBuy').eq(i));
+                })
             }
 
             //切换股票，并需要重新加载分时图页面(设置股票id， 昨收)
@@ -546,22 +555,21 @@ var transaction = {
 
     },
 
-    /**
+    /** 
      * 交易下单，已挂单
      */
     tradeOption: {
-        submitOrder: function (tradeType) {
-            tdCommon.disabled($('#tradeSell'), 3000);//按钮置灰
-            tdCommon.disabled($('#tradeBuy'), 3000);
-            var orderType = $('#order-option input[name="ordertype"]:checked').val();
-            var stockId = transaction.priceMove.stockId;
-
-            var quantity = $('#tradeQuantity').val();
-            var price = $('#tradePrice').val();
+        submitOrder: function (tradeType,index) {
+            tdCommon.disabled($('.tradeSell').eq(index), 3000);//按钮置灰
+            tdCommon.disabled($('.tradeBuy').eq(index), 3000);
+            var orderType = $('.radiolist').eq(index).find('input[name="ordertype"]:checked').val();
+            var stockId = $('.stock-menu option:selected').eq(index).val();
+            var quantity = $('.tradeQuantity').eq(index).val();
+            var price = $('.tradePrice').eq(index).val();
             var maxTradeSize = stockMap[stockId].MaxTradeSize;
             if (Number(quantity) > maxTradeSize) {
                 $.modal.msgWarning('交易数量过多');
-                var quantity = $('#tradeQuantity').val('');
+                var quantity = $('.tradeQuantity').eq(index).val('');
                 return;
             }
             if (orderType == 'Limit_Order') {
@@ -573,7 +581,7 @@ var transaction = {
                 var maxPrice = stockMap[stockId].MaxPrice;
                 if (Number(price) < minPrice || Number(price) > maxPrice) {
                     $.modal.msgWarning('交易价格不符合预设值');
-                    var price = $('#tradePrice').val('');
+                    var price = $('.tradePrice').eq(index).val('');
                     return;
                 }
             } else {
@@ -599,13 +607,13 @@ var transaction = {
             transaction.submit(orderUrl, JSON.stringify(param), function (result) {
                 if (result.code == 0) {
                     $.modal.msgSuccess('挂单成功');
-                    $('#tradeQuantity').val('');
-                    $('#tradePrice').val('');
+                    $('.tradeQuantity').eq(index).val('');
+                    $('.tradePrice').eq(index).val('');
                 } else {
                     $.modal.msgError('挂单失败');
                 }
-                tdCommon.unDisabled($('#tradeSell'));
-                tdCommon.unDisabled($('#tradeBuy'));
+                tdCommon.unDisabled($('.tradeSell').eq(index));
+                tdCommon.unDisabled($('.tradeBuy').eq(index));
             })
         }
     },
