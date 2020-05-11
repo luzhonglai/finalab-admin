@@ -179,7 +179,6 @@ var transaction = {
             transaction.priceMove.priceMoveData = datas;
             transaction.priceMove.isInit = true;
         },
-
         refresh: function (data, isIncrement) {
             var myDatas = transaction.priceMove.priceMoveData;
             if (isIncrement) {
