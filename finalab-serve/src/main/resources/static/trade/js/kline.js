@@ -102,9 +102,9 @@ var get_m_data = function(m_data,type) {
 	// 	vol.push(v[3]); 
 	// })
 	for (var item of m_data.data) {
-		priceArr[item[0]] = item[1];
-		avgPrice[item[0]] = item[2];
-		vol[item[0]] = item[3];
+		priceArr.push({value:[item[0],item[1]]});
+		avgPrice.push({value:[item[0],item[2]]});
+		vol.push({value:[item[0],item[3]]});
 	}
 	return {
 		priceArr: priceArr,
@@ -140,13 +140,10 @@ function initMOption(m_data,type){
 				// 	color ='style="color:#26bf66"';
 				// }
 
-				var html = '<div class="commColor" style="width:100px;"><div>当前价 <span  '+color+' >' + m_datas.priceArr[i] + '</span></div>';
-				html += '<div>MA5 <span  '+color+' >' + m_datas.avgPrice[i] + '</span></div>';
+				var html = '<div class="commColor" style="width:100px;"><div>当前价 <span  '+color+' >' + m_datas.priceArr[i].value[1] + '</span></div>';
+				html += '<div>MA5 <span  '+color+' >' + m_datas.avgPrice[i].value[1] + '</span></div>';
 				// html += '<div>涨幅 <span  '+color+' >' + ratioCalculate(m_datas.priceArr[i],m_data.yestclose)+ '%</span></div>';
-				html += '<div>成交量 <span  '+color+' >' + m_datas.vol[i] + '</span></div></div>'
-				if (!m_datas.avgPrice[i]){
-					return
-				}
+				html += '<div>成交量 <span  '+color+' >' + m_datas.vol[i].value[1] + '</span></div></div>'
 				return html;
 			}
 		},
@@ -367,7 +364,6 @@ function initMOption(m_data,type){
 				gridIndex: 2,
 				xAxisIndex: 2,
 				yAxisIndex: 2,
-				
 				data: m_datas.vol,
 				barWidth: '60%',
 				itemStyle: {
