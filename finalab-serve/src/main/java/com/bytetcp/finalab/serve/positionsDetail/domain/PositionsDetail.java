@@ -68,7 +68,7 @@ public class PositionsDetail {
     /**
      * 交易人名字,机器人ANON
      */
-//    @Excel(name = "账号")
+    @Excel(name = "账号")
     private String traderName;
 
 //    @Excel(name = "姓名")
@@ -104,8 +104,6 @@ public class PositionsDetail {
      */
     @Excel(name = "成本金额")
     private BigDecimal cost;
-
-
 
     /**
      * 当前持仓量
@@ -325,4 +323,5 @@ public class PositionsDetail {
                 .append("orderAction", getOrderAction())
                 .toString();
     }
+
 }

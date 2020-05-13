@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bytetcp.finalab.common.utils.StringUtils;
+import com.bytetcp.finalab.common.utils.poi.ExpExcelUtil;
 import com.bytetcp.finalab.serve.course.domain.InstanceRunRecode;
 import com.bytetcp.finalab.serve.course.service.ICourseService;
+import com.bytetcp.finalab.serve.userMoneyDetail.domain.UserMoneyDetailInCourse;
+import com.bytetcp.finalab.serve.userMoneyDetail.service.IUserMoneyDetailService;
 import com.github.pagehelper.PageHelper;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +44,9 @@ public class PositionsDetailController extends BaseController {
 
     @Autowired
     private IPositionsDetailService positionsDetailService;
+
+    @Autowired
+    private IUserMoneyDetailService userMoneyDetailService;
 
     @RequiresPermissions("serve:positionsDetail:view")
     @GetMapping()
@@ -90,20 +96,56 @@ public class PositionsDetailController extends BaseController {
     public AjaxResult exportForCourse(Long courseId, String traderName, Integer timeLine, String sort, String order) {
         InstanceRunRecode instanceRunRecode = courseService.selectInstance(courseId);
         List<PositionsDetail> list = new ArrayList<>(0);
+        List<UserMoneyDetailInCourse> list2 = new ArrayList<>();
+        List<UserMoneyDetailInCourse> moneyDetaillist = new ArrayList<>(0);
         if (instanceRunRecode != null) {
             PositionsDetail positionsDetail = PositionsDetail.builder()
-                                                             .traderName(traderName)
-                                                             .timeLine(timeLine)
-                                                             .instanceId(instanceRunRecode.getInstanceId()).build();
+                    .traderName(traderName)
+                    .timeLine(timeLine)
+                    .instanceId(instanceRunRecode.getInstanceId()).build();
             divPageByOrder(sort, order);
             list = positionsDetailService.selectPositionsDetailListForCourse(positionsDetail);
-            for (PositionsDetail p: list) {
+            moneyDetaillist = userMoneyDetailService.profitInCourseDetail(instanceRunRecode.getInstanceId());
+            list2 = userMoneyDetailService.profitInCourseDetailExt(moneyDetaillist, instanceRunRecode.getInstanceId());
+            for (PositionsDetail p : list) {
                 p.fixed();
                 p.setCostAndAvg();
             }
+            for (UserMoneyDetailInCourse m : list2) {
+                m.setDealPrice(m.getTotalPrice().subtract(m.getTransactionFee().abs()).subtract(m.getTotalFine()));
+            }
         }
-        ExcelUtil<PositionsDetail> util = new ExcelUtil<PositionsDetail>(PositionsDetail.class);
-        return util.exportExcel(list, "DealDetail");
+        //数据
+        List<String[]> dataset = new ArrayList<String[]>();
+        for (int i = 0; i < list.size(); i++) {
+            String[] arr = new String[9];
+            arr[0] = list.get(i).getTraderId() == null ? "" : list.get(i).getTraderId().toString();
+            arr[1] = list.get(i).getThePeriod() == null ? "" : list.get(i).getThePeriod().toString();
+            arr[2] = list.get(i).getTimeLine() == null ? "" : list.get(i).getTimeLine().toString();
+            arr[3] = list.get(i).getTraderName() == null ? "" : list.get(i).getTraderName().toString();
+            arr[4] = list.get(i).getStockName() == null ? "" : list.get(i).getStockName().toString();
+            arr[5] = list.get(i).getDealPrice() == null ? "" : list.get(i).getDealPrice().toString();
+            arr[6] = list.get(i).getDealQuantity() == null ? "" : list.get(i).getDealQuantity().toString();
+            arr[7] = list.get(i).getCost() == null ? "" : list.get(i).getCost().toString();
+            arr[8] = list.get(i).getTradeType() == null ? "" : list.get(i).getTradeType().toString();
+            dataset.add(arr);
+        }
+        //数据
+        List<String[]> dataset2 = new ArrayList<String[]>();
+        for (int i = 0; i < list2.size(); i++) {
+            String[] arr2 = new String[7];
+            arr2[0] = list2.get(i).getTraderId() == null ? "" : list2.get(i).getTraderId().toString();
+            arr2[1] = list2.get(i).getTraderName() == null ? "" : list2.get(i).getTraderName().toString();
+            arr2[2] = list2.get(i).getTotalPrice() == null ? "" : list2.get(i).getTotalPrice().toString();
+            arr2[3] = list2.get(i).getUnrealizedProfitandLoss() == null ? "" : list2.get(i).getUnrealizedProfitandLoss().toString();
+            arr2[4] = list2.get(i).getTransactionFee() == null ? "" : list2.get(i).getTransactionFee().toString();
+            arr2[5] = list2.get(i).getTotalFine() == null ? "" : list2.get(i).getTotalFine().toString();
+            arr2[6] = list2.get(i).getDealPrice() == null ? "" : list2.get(i).getDealPrice().toString();
+            dataset2.add(arr2);
+        }
+//        ExcelUtil<PositionsDetail> util = new ExcelUtil<PositionsDetail>(PositionsDetail.class);
+//        return util.exportExcel(list, "DealDetail");
+        return ExpExcelUtil.expExcel(dataset, dataset2);
     }
 
 
