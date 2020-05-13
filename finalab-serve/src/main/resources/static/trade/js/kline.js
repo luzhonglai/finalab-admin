@@ -95,11 +95,17 @@ var get_m_data = function(m_data,type) {
 	var avgPrice = new Array();
 	var vol = new Array();
 	var times = time_arr(type); 
-	$.each(m_data.data, function(i, v) {
-		priceArr.push(v[1]);
-		avgPrice.push(v[2]);
-		vol.push(v[3]); 
-	})
+	// $.each(m_data.data, function(i, v) {
+		
+	// 	priceArr.push(v[1]);
+	// 	avgPrice.push(v[2]);
+	// 	vol.push(v[3]); 
+	// })
+	for (var item of m_data.data) {
+		priceArr.push({value:[item[0],item[1]]});
+		avgPrice.push({value:[item[0],item[2]]});
+		vol.push({value:[item[0],item[3]]});
+	}
 	return {
 		priceArr: priceArr,
 		avgPrice: avgPrice,
@@ -127,7 +133,6 @@ function initMOption(m_data,type){
 			},
 			formatter: function(params, ticket, callback) {
 				var i = params[0].dataIndex;
-	
 				var color = 'style="color:' + crossColor + '"';
 				// if (m_datas.priceArr[i] > m_data.yestclose) {
 				// 	color ='style="color:#ff4242"';
@@ -135,10 +140,10 @@ function initMOption(m_data,type){
 				// 	color ='style="color:#26bf66"';
 				// }
 
-				var html = '<div class="commColor" style="width:100px;"><div>当前价 <span  '+color+' >' + m_datas.priceArr[i] + '</span></div>';
-				html += '<div>MA5 <span  '+color+' >' + m_datas.avgPrice[i] + '</span></div>';
+				var html = '<div class="commColor" style="width:100px;"><div>当前价 <span  '+color+' >' + m_datas.priceArr[i].value[1] + '</span></div>';
+				html += '<div>MA5 <span  '+color+' >' + m_datas.avgPrice[i].value[1] + '</span></div>';
 				// html += '<div>涨幅 <span  '+color+' >' + ratioCalculate(m_datas.priceArr[i],m_data.yestclose)+ '%</span></div>';
-				html += '<div>成交量 <span  '+color+' >' + m_datas.vol[i] + '</span></div></div>'
+				html += '<div>成交量 <span  '+color+' >' + m_datas.vol[i].value[1] + '</span></div></div>'
 				return html;
 			}
 		},
@@ -190,7 +195,7 @@ function initMOption(m_data,type){
 				splitLine: {
 					show: false,
 				}
-			},
+			},	
 			{
 				show:false,
 				gridIndex: 1,
@@ -310,21 +315,11 @@ function initMOption(m_data,type){
 						color: ma5Color,
 						width: 2
 					}
-				}
-				// ,
-				// areaStyle: {
-				// 	normal: {
-				// 		color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-				// 			offset: 0,
-				// 			color: 'rgba(0, 136, 212, 0.7)'
-				// 		}, {
-				// 			offset: 0.8,
-				// 			color: 'rgba(0, 136, 212, 0.02)'
-				// 		}], false),
-				// 		shadowColor: 'rgba(0, 0, 0, 0.1)',
-				// 		shadowBlur: 10
-				// 	}
-				// }
+				},
+				axisLabel: { //label文字设置
+					color: '#9b9da9',
+					fontSize: 10
+				},
 			},
 			{
 				name: 'MA5',
@@ -332,17 +327,23 @@ function initMOption(m_data,type){
 				data: m_datas.avgPrice,
 				smooth: true,
 				symbol: "circle",
+				splitNumber: 7,  
 				lineStyle: { //标线的样式
 					normal: {
 						opacity: 0.8,
 						color: ma10Color,
 						width: 2
 					}
-				}
+				},
+				axisLabel: { //label文字设置
+					color: '#9b9da9',
+					fontSize: 10
+				},
 			},{  
 				type: 'line', 
 				data: m_datas.priceArr,
 				smooth: true,
+				splitNumber: 7,  
 				symbol: "none",
 				gridIndex: 1,
 				xAxisIndex: 1,
@@ -351,7 +352,11 @@ function initMOption(m_data,type){
 					normal: { 
 						width: 0
 					}
-				}
+				},
+				axisLabel: { //label文字设置
+					color: '#9b9da9',
+					fontSize: 10
+				},
 			},
 			{
 				name: 'Volumn',
@@ -365,11 +370,12 @@ function initMOption(m_data,type){
 					normal: {
 						color: function(params) {
 							var colorList;
-							if (m_datas.priceArr[params.dataIndex] > m_datas.priceArr[params.dataIndex-1]) {
-								colorList = upColor;
-							} else {
-								colorList = upColor; // downColor
-							}
+							colorList = upColor;
+							// if (m_datas.priceArr[params.dataIndex] > m_datas.priceArr[params.dataIndex-1]) {
+							// 	colorList = upColor;
+							// } else {
+							// 	colorList = upColor; // downColor
+							// }
 							return colorList;
 						},
 					}
