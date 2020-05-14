@@ -114,16 +114,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     select (select IFNULL(sum(cost_price),0)
         from user_money_detail
         where instance_id = pt.instance_id
+          AND stock_id = pt.stock_id
           and action_name = '卖单'
          ) as 'sellprice',
        (select IFNULL(sum(deal_quantity),0)
         from user_money_detail
         where instance_id = pt.instance_id
+          AND stock_id = pt.stock_id
           and action_name = '卖单'
           ) as 'sellquantity',
         (select ABS(IFNULL(sum(cost_price) / sum(deal_quantity), 0))
         from user_money_detail
         where instance_id = pt.instance_id
+        AND stock_id = pt.stock_id
         and time_line &lt;= (select max(time_line)
         from user_money_detail
         where instance_id = pt.instance_id

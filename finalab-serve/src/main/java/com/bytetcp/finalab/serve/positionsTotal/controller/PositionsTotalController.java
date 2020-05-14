@@ -24,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,6 +81,11 @@ public class PositionsTotalController extends BaseController {
         PageHelper.offsetPage(pageOffset, pageLimit);
         //List<PositionsTotal> list = positionsTotalService.selectPositionsTotalList(positionsTotal);
         List<PositionsTotal> list = positionsTotalService.selectPositionsTotalListNew(positionsTotal);
+        for (PositionsTotal p:list) {
+            if(p.getNowQuantity()==0){
+                p.setTotalPrice(new BigDecimal(0));
+            }
+        }
         return getDataTable(list);
     }
 
