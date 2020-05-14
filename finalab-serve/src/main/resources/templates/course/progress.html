@@ -81,6 +81,7 @@
                 $("#speed").val(speedData[key].value);
                 // 发送请求 SPEED speedValue
                 changeCourseStatus('SPEED', speedData[key].value)
+                window.localStorage.speedValue = 1000 / (speedData[key].value / 100);
             }
         }
         if ((timeLine + 1) == ticksPerPeriod) { //时间到头
