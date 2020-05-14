@@ -307,7 +307,11 @@
             $.modal.msgError("请选择倍速！！！！！")
             return false;
         };
+        if(window.localStorage.speedValue) {
+            window.localStorage.speedValue = null;
+        }
         changeCourseStatus(status, speedValue)
+        window.localStorage.speedValue = 1000 / (speedValue / 100);
     }
 
     /**
@@ -315,6 +319,8 @@
      */
     function startOrStop(status) {
         changeCourseStatus(status);
+        var value = $('#speed option[value="100"]').val();
+        window.localStorage.speedValue = 1000 / (value / 100);
     }
 
     /**
@@ -329,17 +335,21 @@
             data: {courseId: courseId},
             success: function (result) {
                 var speedValueArr = ['10','50','100','200','300','400'];
-                speedData = result.filter(function(item,i) {
-                    if(item.type == 'SPEED') {
-                        if(!speedValueArr.includes(item.value)){
-                            speedValueArr.push(item.value);
+                if (result) {
+                    speedData = result.filter(function (item, i) {
+                        if (item.type == 'SPEED') {
+                            if (!speedValueArr.includes(item.value)) {
+                                speedValueArr.push(item.value);
+                            }
                         }
-                    }
-                    return item.type == 'SPEED';
-                }).reverse();   
-                for( var value of speedValueArr){
-                   $('#speed').append('<option value="'+value+'">'+value+'%'+'</option>')
+                        return item.type == 'SPEED';
+                    }).reverse();
                 }
+                for( var value of speedValueArr){
+                   $('#speed').append('<option value="'+value+'">'+value+'%'+'</option>'); 
+                }
+                $('#speed').find("option[value='100']").attr("selected",true);
+                
             }
         })
     }
@@ -441,7 +451,7 @@
         var data = {
             status: status
         }
-        if(!typeof(speedValue) != "undefined") data['speedValue'] = speedValue;
+        if(typeof(speedValue) != "undefined") data['speedValue'] = speedValue;
         $.post(url, data, function (result) {
             $.modal.closeLoading();
             if (result.code != 0) {
