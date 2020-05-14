@@ -485,7 +485,6 @@ var transaction = {
         isNewsTimer: true, // 新闻倒计时开关
         submit: function () {
             transaction.news.priceOrderSwitch(false);
-
             var news_price = $('#news-price').text();
             var flag = $('#trade-flag').text();
             var news_quantity = $('#news-quantity').text();
@@ -509,9 +508,6 @@ var transaction = {
             $('#market-news').text(newsText);
         },
         onUserNews: function (newsData) {
-            if (transaction.news.timer != -1) {
-                window.clearInterval(transaction.news.timer);
-            }
             transaction.news.timeCount = newsData.timeout;
             $('#new-origin-quantity').text(Number(newsData.quantity));
             $('#news-stock-name').text(stockMap[newsData.stockId].Description);
@@ -537,6 +533,9 @@ var transaction = {
             }
         },
         onTimer: function(){
+            if (transaction.news.timer != -1) {
+                window.clearInterval(transaction.news.timer);
+            }
             transaction.news.timer = window.setInterval(function () {
                 if(!transaction.news.isNewsTimer) {
                     window.clearInterval(transaction.news.timer);
@@ -548,8 +547,7 @@ var transaction = {
                     transaction.news.priceOrderSwitch(true);
                     window.clearInterval(transaction.news.timer);
                 }
-
-            }, 1000);
+            }, window.localStorage.speedValue || 1000);
         }
 
     },
