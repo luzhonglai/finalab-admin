@@ -141,6 +141,12 @@ public class PositionsDetailController extends BaseController {
             arr2[4] = list2.get(i).getTransactionFee() == null ? "" : list2.get(i).getTransactionFee().toString();
             arr2[5] = list2.get(i).getTotalFine() == null ? "" : list2.get(i).getTotalFine().toString();
             arr2[6] = list2.get(i).getDealPrice() == null ? "" : list2.get(i).getDealPrice().toString();
+            if(arr2[3].equals("0E-8")){
+                arr2[3] = "0";
+            }
+            if(arr2[5].equals("0E-8")){
+                arr2[5] = "0";
+            }
             dataset2.add(arr2);
         }
 //        ExcelUtil<PositionsDetail> util = new ExcelUtil<PositionsDetail>(PositionsDetail.class);
