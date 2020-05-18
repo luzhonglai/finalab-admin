@@ -318,9 +318,9 @@
      * 启动或暂停
      */
     function startOrStop(status) {
-        changeCourseStatus(status);
         var value = $('#speed option[value="100"]').val();
         window.localStorage.speedValue = 1000 / (value / 100);
+        changeCourseStatus(status, value || 100);
     }
 
     /**
@@ -358,8 +358,8 @@
      * 暂停与继续
      */
     function suspendOrResume() {
-        var status = $('#suspendInstanceInput').val();
-        changeCourseStatus(status);
+        var value = $('#suspendInstanceInput').val();
+        changeCourseStatus(status, value);
     }
 
     function handleButtonStatus(status) {
