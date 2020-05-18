@@ -17,6 +17,17 @@ $(function () {
                 tabRowDom.find(".tradePrice").show();
             }
         });
+        $('input[type=radio][name=ordertype1]').change(function (i) {
+            var tabRowDom = $(this).parents('.tab-row');
+            if (this.value == 'Market_Order') {
+                tabRowDom.find(".priceText").hide();
+                tabRowDom.find(".tradePrice").hide();
+                tabRowDom.find(".tradePrice").val('');
+            } else if (this.value == 'Limit_Order') {
+                tabRowDom.find(".priceText").show();
+                tabRowDom.find(".tradePrice").show();
+            }
+        });
     });
     $(".priceText").hide();
     $(".tradePrice").hide();
@@ -559,7 +570,7 @@ var transaction = {
         submitOrder: function (tradeType,index) {
             tdCommon.disabled($('.tradeSell').eq(index), 3000);//按钮置灰
             tdCommon.disabled($('.tradeBuy').eq(index), 3000);
-            var orderType = $('.radiolist').eq(index).find('input[name="ordertype"]:checked').val();
+            var orderType = $('.radiolist').eq(index).find(`input[name="${index==1 ? 'ordertype1':'ordertype'}"]:checked`).val();
             var stockId = $('.stock-menu option:selected').eq(index).val();
             var quantity = $('.tradeQuantity').eq(index).val();
             var price = $('.tradePrice').eq(index).val();
