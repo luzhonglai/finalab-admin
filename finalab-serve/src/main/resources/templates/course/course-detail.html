@@ -182,9 +182,10 @@
                                             th:class="${@permission.hasPermi('serve:courseStudent:stop')} == hidden?'hidden':'btn btn-danger btn-primary btn-sm'"
                                             onclick='startOrStop("STOP")'><i class="fa fa-stop"></i>&nbsp;停止
                                     </button>
-                                    <select onchange='onSpeedOptions("SPEED")' name="city" id="speed" class="btn btn-warning btn-primary btn-sm" style="width:80px;background: #f8ac59;">
+                                    <select th:class="${@permission.hasPermi('serve:courseStudent:start')} == hidden?'hidden':'btn btn-primary btn-primary btn-sm'" onchange='onSpeedOptions("SPEED")' name="city" id="speed" class="btn btn-warning btn-primary btn-sm" style="width:80px;background: #f8ac59;">
                                         <option value="" selected>倍速选择</option>
                                     </select>
+
                                 </div>
                             </li>
 
@@ -346,10 +347,10 @@
                     }).reverse();
                 }
                 for( var value of speedValueArr){
-                   $('#speed').append('<option value="'+value+'">'+value+'%'+'</option>'); 
+                   $('#speed').append('<option value="'+value+'">'+value+'%'+'</option>');
                 }
                 $('#speed').find("option[value='100']").attr("selected",true);
-                
+
             }
         })
     }

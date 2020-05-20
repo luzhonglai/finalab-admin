@@ -89,7 +89,15 @@
                 {
                     field : 'totalPrice',
                     title : '成本金额',
-                    sortable: true
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        var totalPrice = row.totalPrice;
+                        if(totalPrice<0)
+                        {
+                            totalPrice=-totalPrice;
+                        }
+                        return totalPrice;
+                    }
                 },
                 {
                     field : 'totalQuantity',
@@ -129,7 +137,12 @@
                         if (tdCommon.isEmpty(newestPrice)) {return '--'}
 
                         var quote = stockMap[row.stockId].QuotedDecimals;
-                        var p = row.nowQuantity * newestPrice;
+                        nowQuantity = row.nowQuantity;
+                        if(nowQuantity<0)
+                        {
+                            nowQuantity=-nowQuantity;
+                        }
+                        var p = nowQuantity * newestPrice;
                         return p.toFixed(quote);
                     }
 
