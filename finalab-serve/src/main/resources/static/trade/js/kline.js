@@ -95,6 +95,7 @@ var get_m_data = function(m_data,type) {
 	var avgPrice = new Array();
 	var vol = new Array();
 	var times = time_arr(type); 
+	transaction.news.totalTime = times.length;
 	// $.each(m_data.data, function(i, v) {
 		
 	// 	priceArr.push(v[1]);

@@ -612,7 +612,7 @@
             var priceMoves = data[key];
             var priceMove = priceMoves[priceMoves.length - 1];
             // console.log('price move ------- ' + priceMove);
-            refreshDatas.push({stockId: key, vol: priceMove.curVol});
+            refreshDatas.push({ stockId: key, price: priceMove.price, vol: priceMove.curVol });
         }
         transaction.target.refresh(refreshDatas);
     }
@@ -642,7 +642,7 @@
         var stockNewPriceArr = msg.t.stocks;
         countAndKeyMatcher(stockNewPriceArr);
         if (transaction.target.isInit) {
-            transaction.target.refresh(stockNewPriceArr);
+            // transaction.target.refresh(stockNewPriceArr);
         } else {
             var targetDatas = [];
             for (var key in stockNewPriceArr) {
@@ -771,6 +771,7 @@
         var priceMoves = msg.t[transaction.priceMove.stockId];
         var priceMove = priceMoves[priceMoves.length - 1];
         var param = {timeNum: priceMove.time, courseId: courseId, thePeriod: thePeriod, groupNum: groupNum};
+        transaction.news.timeLine = priceMove.time;
         //当WebSocket暂停了实时通讯超过2秒，关闭新闻倒计时；
         //每次调用调用清除标记
         if(isNews != -1){

@@ -493,6 +493,8 @@ var transaction = {
     news: {
         timer: -1,
         timeCount: 0,
+        timeLine: 0,
+        totalTime: 0,
         isNewsTimer: true, // 新闻倒计时开关
         submit: function () {
             transaction.news.priceOrderSwitch(false);
@@ -549,6 +551,11 @@ var transaction = {
             }
             transaction.news.timer = window.setInterval(function () {
                 if(!transaction.news.isNewsTimer) {
+                    window.clearInterval(transaction.news.timer);
+                }
+                if(transaction.news.timeLine >= transaction.news.totalTime){
+                    $('#user-news').hide();
+                    transaction.news.priceOrderSwitch(true);
                     window.clearInterval(transaction.news.timer);
                 }
                 transaction.news.timeCount--;
