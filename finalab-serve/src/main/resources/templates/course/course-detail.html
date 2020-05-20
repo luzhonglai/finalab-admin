@@ -358,7 +358,8 @@
      * 暂停与继续
      */
     function suspendOrResume() {
-        var value = $('#suspendInstanceInput').val();
+        var status = $('#suspendInstanceInput').val();
+        var value = $('#speed option[value="100"]').val();
         changeCourseStatus(status, value);
     }
 
