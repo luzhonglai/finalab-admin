@@ -13,6 +13,8 @@ import com.bytetcp.finalab.serve.userMoneyDetail.domain.UserMoneyDetail;
 import com.bytetcp.finalab.serve.userMoneyDetail.domain.UserMoneyDetailInCourse;
 import com.bytetcp.finalab.serve.userMoneyDetail.service.IUserMoneyDetailService;
 import com.github.pagehelper.PageHelper;
+import java.util.Collections;
+import java.util.Comparator;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -85,6 +87,12 @@ public class UserMoneyDetailController extends BaseController {
     public TableDataInfo list(UserMoneyDetail userMoneyDetail, Integer pageOffset, Integer pageLimit, String sort, String order) {
         divPage(pageOffset, pageLimit, sort, order);
         List<UserMoneyDetail> list = userMoneyDetailService.selectUserMoneyDetailList(userMoneyDetail);
+        Collections.sort(list, new Comparator<UserMoneyDetail>() {
+            @Override
+            public int compare(UserMoneyDetail o1, UserMoneyDetail o2) {
+                return o2.getId().intValue() - o1.getId().intValue(); //降序
+            }
+        });
         return getDataTable(list);
     }
 
