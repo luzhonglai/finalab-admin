@@ -202,6 +202,10 @@ var transaction = {
             transaction.priceMove.range = ratioCalculate(currentPrice, myDatas.yestclose);
             transaction.storeHouse.refresh({newestPrice: currentPrice});
             transaction.priceMove.mChart.setOption(initMOption(myDatas, 'cn'));
+            if($('.speed-text').text() != window.localStorage.speed) {
+                $('.speed-text').text(window.localStorage.speed+'%');
+            };
+            
         },
         clearAndChangeStock: function (stockId, stockName, yestcolse) {
             transaction.priceMove.stockId = stockId;

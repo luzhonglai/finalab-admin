@@ -54,6 +54,7 @@
                 <div class="right-cont">
                     <div class="tab-tit">
                         <h3 id="stockName-1">NA</h3>
+                        <h3 id="stockName-1">当前倍速：<span class="speed-text">100%</span></h3>
                         <ul class="tab-sp">
                             <li class="active">分时图</li>
                             <li>K线图</li>
@@ -92,7 +93,7 @@
                            onkeyup="value=value.replace(/[^\d.]/g,'')">
                     <h4>V：</h4>
                     <input id="qk-order-V" type="text" readonly="readonly" class="form-control text no_r"
-                           onkeyup="value=value.replace(/[^\d.]/g,'')">
+                           onkeyup="value=value.replace(/[^\d]/g,'')">
                     <a class="downbtn" href="javascript:transaction.quickOrder.switchs()"><img id="qk-order"
                                                                                                src="/trade/imgs/sd.png"
                                                                                                class="gray" alt=""></a>
@@ -493,7 +494,6 @@
                 refreshNews(msg);
                 // 刷新左侧的成交量
                 refreshTradeVal(msg);
-
                 //衍生变量的表格数据
                 if (showDerived) {
                     refreshDerived(msg);
@@ -597,9 +597,6 @@
         } else {
             console.log('走势未初始...');
         }
-        datas = [];//清空数组
-        //刷新左侧成交数量
-
     }
 
     /**

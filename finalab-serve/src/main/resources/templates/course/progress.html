@@ -62,7 +62,16 @@
             }
         });
     }
+    /**
+    * limitNum:节流函数重复调用
+    */
+    var limitNum = 1;
     function handleMsg(event) {
+        if(limitNum == 2) {
+            limitNum = 1;
+            return false; 
+        }
+        limitNum++;
         var instanceInfo = JSON.parse(event.data);
         var periods = instanceInfo.t.periods;
         var thePeriod = instanceInfo.t.thePeriod;
@@ -80,8 +89,9 @@
             if(timeLine == speedData[key].tick) {
                 $("#speed").val(speedData[key].value);
                 // 发送请求 SPEED speedValue
-                changeCourseStatus('SPEED', speedData[key].value)
+                changeCourseStatus('SPEED', speedData[key].value);
                 window.localStorage.speedValue = 1000 / (speedData[key].value / 100);
+                window.localStorage.speed = speedData[key].value;
             }
         }
         if ((timeLine + 1) == ticksPerPeriod) { //时间到头
