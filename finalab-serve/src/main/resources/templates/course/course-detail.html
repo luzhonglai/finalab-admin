@@ -312,8 +312,9 @@
             window.localStorage.speedValue = null;
         }
         changeCourseStatus(status, speedValue)
+        var stockTitle = [[${courseVo.courseName}]];
         window.localStorage.speedValue = 1000 / (speedValue / 100);
-        window.localStorage.speed = speedValue;
+        window.localStorage[stockTitle] = speedValue;
     }
 
     /**

@@ -91,7 +91,8 @@
                 // 发送请求 SPEED speedValue
                 changeCourseStatus('SPEED', speedData[key].value);
                 window.localStorage.speedValue = 1000 / (speedData[key].value / 100);
-                window.localStorage.speed = speedData[key].value;
+                var stockName = courseVo.courseName
+                window.localStorage[stockName] = speedData[key].value;
             }
         }
         if ((timeLine + 1) == ticksPerPeriod) { //时间到头

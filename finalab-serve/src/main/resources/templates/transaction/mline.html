@@ -167,12 +167,12 @@
                                 </div>
                             </div>
                             <h4>数量</h4>
-                            <input type="text" class="form-control text tradeQuantity"
-                                onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="单行输入">
+                            <input type="text" class="form-control text tradeQuantity" onkeyup="value=value.replace(/[^\d.]/g,'')" list="collect"
+                                placeholder="单行输入">
                             <i class="DisplayUnit"></i>
                             <h4 class="priceText">&nbsp;&nbsp;金额</h4>
-                            <input type="text" class="form-control text tradePrice"
-                                onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="单行输入">
+                            <input type="text" class="form-control text tradePrice" onkeyup="value=value.replace(/[^\d.]/g,'')" list="collect"
+                                placeholder="单行输入">
                             <span id="tradeButton">
                                 <button type="button" class="btn btn-danger tradeSell"
                                     onclick="transaction.tradeOption.submitOrder('ASK',0)">卖出</button>
@@ -204,12 +204,15 @@
                                 </div>
                             </div>
                             <h4>数量</h4>
-                            <input type="text" class="form-control text tradeQuantity"
-                                onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="单行输入">
+                            <input type="text" class="form-control text tradeQuantity" onkeyup="value=value.replace(/[^\d.]/g,'')" list="collect"
+                                placeholder="单行输入">
                             <i class="DisplayUnit"></i>
                             <h4 class="priceText">&nbsp;&nbsp;金额</h4>
-                            <input type="text" class="form-control text tradePrice"
-                                onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="单行输入">
+                            <input type="text" class="form-control text tradePrice" onkeyup="value=value.replace(/[^\d.]/g,'')" list="collect"
+                                placeholder="单行输入">
+                            <datalist id="collect">
+                                <option  value="1"></option>
+                            </datalist>
                             <span id="tradeButton">
                                 <button type="button" class="btn btn-danger tradeSell"
                                     onclick="transaction.tradeOption.submitOrder('ASK',1)">卖出</button>
@@ -609,7 +612,8 @@
             var priceMoves = data[key];
             var priceMove = priceMoves[priceMoves.length - 1];
             // console.log('price move ------- ' + priceMove);
-            refreshDatas.push({ stockId: key, price: priceMove.price, vol: priceMove.curVol });
+            var price = priceMove.price.toString().replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g,'$&,')
+            refreshDatas.push({ stockId: key, price: price, vol: priceMove.curVol });
         }
         transaction.target.refresh(refreshDatas);
     }

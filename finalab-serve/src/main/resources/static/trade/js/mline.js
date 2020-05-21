@@ -202,8 +202,9 @@ var transaction = {
             transaction.priceMove.range = ratioCalculate(currentPrice, myDatas.yestclose);
             transaction.storeHouse.refresh({newestPrice: currentPrice});
             transaction.priceMove.mChart.setOption(initMOption(myDatas, 'cn'));
-            if($('.speed-text').text() != window.localStorage.speed) {
-                $('.speed-text').text(window.localStorage.speed+'%');
+            var speedValue = window.localStorage[course.courseName];
+            if(speedValue && speedValue !== $('.speed-text').text()) {
+                $('.speed-text').text(speedValue +'%');
             };
             
         },
@@ -244,7 +245,7 @@ var transaction = {
             if (tdCommon.notEmpty(data.newestPrice)) {
                 var range = transaction.priceMove.range;
                 tdCommon.changeColor(children[0], range);//最新成交价, 需要根据最新价格的涨跌幅更改颜色
-                $(children[0]).text(data.newestPrice);
+                $(children[0]).text(data.newestPrice.toString().replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g,'$&,'));
             }
             if (tdCommon.notEmpty(data.storeHouse)) {
                 $(children[1]).text(data.storeHouse);//仓位
@@ -577,7 +578,9 @@ var transaction = {
     /** 
      * 交易下单，已挂单
      */
+    
     tradeOption: {
+        arr:[1,],
         submitOrder: function (tradeType,index) {
             tdCommon.disabled($('.tradeSell').eq(index), 3000);//按钮置灰
             tdCommon.disabled($('.tradeBuy').eq(index), 3000);
@@ -628,6 +631,9 @@ var transaction = {
                     $.modal.msgSuccess('挂单成功');
                     $('.tradeQuantity').eq(index).val('');
                     $('.tradePrice').eq(index).val('');
+                    $('#collect').append(
+                        '<option  value="' + quantity + '"></option>'
+                    )
                 } else {
                     $.modal.msgError('挂单失败');
                 }
