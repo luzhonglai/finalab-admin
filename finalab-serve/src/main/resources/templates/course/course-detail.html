@@ -271,11 +271,9 @@
     var caseId = [[${courseVo.caseId}]];
     var allowInFlag = [[${@permission.hasPermi('serve:courseStudent:allowIn')}]];
     var instanceStatus = [[${instanceStatus}]];
-
     var Periods = [[${Periods}]]
-
     var stockQuotedDecimals = [[${stockQuotedDecimals}]]
-
+    var stockSpeed = [[${courseVo.courseName}]]; 
     $(function () {
         //注册table对象
         $.registTable(new Student());
@@ -312,18 +310,19 @@
             window.localStorage.speedValue = null;
         }
         changeCourseStatus(status, speedValue)
-        var stockTitle = [[${courseVo.courseName}]];
         window.localStorage.speedValue = 1000 / (speedValue / 100);
-        window.localStorage[stockTitle] = speedValue;
+        window.localStorage[stockSpeed] = speedValue;
     }
 
     /**
-     * 启动或暂停
+     * 启动或停止
      */
     function startOrStop(status) {
+        $("#speed").val(100);
         var value = $('#speed option[value="100"]').val();
         window.localStorage.speedValue = 1000 / (value / 100);
         changeCourseStatus(status, value || 100);
+        window.localStorage[stockSpeed] = value;
     }
 
     /**
@@ -352,7 +351,6 @@
                    $('#speed').append('<option value="'+value+'">'+value+'%'+'</option>');
                 }
                 $('#speed').find("option[value='100']").attr("selected",true);
-
             }
         })
     }

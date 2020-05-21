@@ -141,8 +141,8 @@ function initMOption(m_data,type){
 				// 	color ='style="color:#26bf66"';
 				// }
 
-				var html = '<div class="commColor" style="width:100px;"><div>当前价 <span  '+color+' >' + m_datas.priceArr[i].value[1] + '</span></div>';
-				html += '<div>MA5 <span  '+color+' >' + m_datas.avgPrice[i].value[1] + '</span></div>';
+				var html = '<div class="commColor" style="width:100px;"><div>当前价 <span  '+color+' >' + transaction.toLocaleString(m_datas.priceArr[i].value[1]) + '</span></div>';
+				html += '<div>MA5 <span  '+color+' >' + transaction.toLocaleString(m_datas.avgPrice[i].value[1]) + '</span></div>';
 				// html += '<div>涨幅 <span  '+color+' >' + ratioCalculate(m_datas.priceArr[i],m_data.yestclose)+ '%</span></div>';
 				html += '<div>成交量 <span  '+color+' >' + m_datas.vol[i].value[1] + '</span></div></div>'
 				return html;

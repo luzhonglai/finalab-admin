@@ -103,7 +103,7 @@
 								//sortable: true,
 								formatter: function(value, row, index) {
 									if (value != null && typeof(value) != 'undefined' ) {
-										return value.toFixed(2);
+										return transaction.toLocaleString(value.toFixed(2));
 									}
 								}
 							},
@@ -113,7 +113,7 @@
 								//sortable: true,
 								formatter: function(value, row, index) {
 									if (value != null && typeof(value) != 'undefined' ) {
-										return value.toFixed(2);
+										return transaction.toLocaleString(value.toFixed(2));
 									}
 								}
 							},
@@ -142,11 +142,11 @@
                     field : 'dealPrice',
                     title : '成交价格',
                    // sortable: true,
-										formatter: function(value, row, index) {
-											if (value != null && typeof(value) != 'undefined' ) {
-												return value.toFixed(2);
-											}
-										}
+                    formatter: function(value, row, index) {
+                        if (value != null && typeof(value) != 'undefined' ) {
+                            return transaction.toLocaleString(value.toFixed(2));
+                        }
+                    }
                 },
                 {
                     field : 'traderId',
