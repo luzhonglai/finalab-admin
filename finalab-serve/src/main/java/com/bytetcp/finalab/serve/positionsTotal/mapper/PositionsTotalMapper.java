@@ -23,7 +23,7 @@ public interface PositionsTotalMapper {
      */
     List<PositionsTotal> selectPositionsTotalList(PositionsTotal positionsTotal);
 
-    List<PositionsTotal> selectPositionsTotalListNew(PositionsTotal positionsTotal);
+    List<PositionsTotal> selectPositionsTotalListWithoutZeroNewMarkToMarket(PositionsTotal positionsTotal);
 
 
     /***

@@ -4,15 +4,15 @@ import com.bytetcp.finalab.common.annotation.Log;
 import com.bytetcp.finalab.common.base.AjaxResult;
 import com.bytetcp.finalab.common.base.HttpResult;
 import com.bytetcp.finalab.common.enums.BusinessType;
-import com.bytetcp.finalab.common.json.JSONObject;
 import com.bytetcp.finalab.common.page.TableDataInfo;
-import com.bytetcp.finalab.common.utils.StringUtils;
 import com.bytetcp.finalab.common.utils.poi.ExcelUtil;
 import com.bytetcp.finalab.framework.web.base.BaseController;
 import com.bytetcp.finalab.serve.config.HttpMethod;
 import com.bytetcp.finalab.serve.course.domain.InstanceRunRecode;
 import com.bytetcp.finalab.serve.course.domain.Order;
 import com.bytetcp.finalab.serve.course.service.ICourseService;
+import com.bytetcp.finalab.serve.positionsDetail.domain.PositionsDetail;
+import com.bytetcp.finalab.serve.positionsDetail.service.IPositionsDetailService;
 import com.bytetcp.finalab.serve.positionsTotal.domain.PositionsTotal;
 import com.bytetcp.finalab.serve.positionsTotal.domain.PositionsTotalInCourse;
 import com.bytetcp.finalab.serve.positionsTotal.service.IPositionsTotalService;
@@ -28,7 +28,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 持仓汇总，实例-用户-股票，一只股票一个持仓
@@ -50,6 +49,9 @@ public class PositionsTotalController extends BaseController {
 
     @Autowired
     ICourseService courseService;
+
+    @Autowired
+    private IPositionsDetailService positionsDetailService;
 
     @Autowired
     private IPositionsTotalService positionsTotalService;
@@ -79,11 +81,34 @@ public class PositionsTotalController extends BaseController {
     @ResponseBody
     public TableDataInfo list(PositionsTotal positionsTotal, Integer pageOffset, Integer pageLimit) {
         PageHelper.offsetPage(pageOffset, pageLimit);
+        boolean flag = false;
         //List<PositionsTotal> list = positionsTotalService.selectPositionsTotalList(positionsTotal);
         List<PositionsTotal> list = positionsTotalService.selectPositionsTotalListNew(positionsTotal);
+        //期货和其他展示类型作区分
         for (PositionsTotal p:list) {
             if(p.getNowQuantity()==0){
                 p.setTotalPrice(new BigDecimal(0));
+            }
+            if(!flag){
+                //判断是否为期货
+                PositionsDetail PositionsDetail = new PositionsDetail();
+                PositionsDetail.setInstanceId(p.getInstanceId());
+                List<PositionsDetail> positionsDetails = positionsDetailService.selectPositionsDetailListForFinancialType(PositionsDetail);
+                for (PositionsDetail position:positionsDetails) {
+                    if(position.getFinancialType().equals("期货")){
+                        flag = true;
+                    }
+                }
+            }
+        }
+        if(flag){
+            List<PositionsTotal> listMarkToMarket = positionsTotalService.selectPositionsTotalListWithoutZeroNewMarkToMarket(positionsTotal);
+            list.clear();
+            for (PositionsTotal p:listMarkToMarket) {
+                if(p.getNowQuantity()==0){
+                    p.setTotalPrice(new BigDecimal(0));
+                }
+                list.add(p);
             }
         }
         return getDataTable(list);

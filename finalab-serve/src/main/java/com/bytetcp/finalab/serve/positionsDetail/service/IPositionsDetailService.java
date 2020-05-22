@@ -76,4 +76,6 @@ eg：卖单成交：则-成交数信息
 	public int deletePositionsDetailByIds(String ids);
 
     List<PositionsDetail> selectPositionsDetailListForCourse(PositionsDetail positionsDetail);
+
+    List<PositionsDetail> selectPositionsDetailListForFinancialType(PositionsDetail positionsDetail);
 }

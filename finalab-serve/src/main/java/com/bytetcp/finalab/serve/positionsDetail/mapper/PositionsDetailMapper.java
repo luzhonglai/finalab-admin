@@ -57,4 +57,6 @@ public interface PositionsDetailMapper
 	 int deletePositionsDetailByIds(String[] ids);
 
 	List<PositionsDetail> selectPositionsDetailListForCourse(PositionsDetail positionsDetail);
+
+	List<PositionsDetail> selectPositionsDetailListForFinancialType(PositionsDetail positionsDetail);
 }

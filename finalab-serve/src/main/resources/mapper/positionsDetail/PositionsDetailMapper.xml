@@ -100,7 +100,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </where>
       order by umd.id desc
     </select>
-    
+
+    <select id="selectPositionsDetailListForFinancialType" parameterType="PositionsDetail" resultMap="PositionsDetailResult">
+        SELECT
+        financial_type
+        FROM
+        positions_detail
+        WHERE instance_id = #{instanceId}
+        LIMIT 1
+    </select>
+
     <select id="selectPositionsDetailById" parameterType="Long" resultMap="PositionsDetailResult">
         <include refid="selectPositionsDetailVo"/>
         where id = #{id}

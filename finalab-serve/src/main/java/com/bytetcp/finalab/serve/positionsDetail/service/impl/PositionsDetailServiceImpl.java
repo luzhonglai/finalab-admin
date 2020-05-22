@@ -65,4 +65,9 @@ public class PositionsDetailServiceImpl implements IPositionsDetailService {
         return positionsDetailMapper.selectPositionsDetailListForCourse(positionsDetail);
     }
 
+    @Override
+    public List<PositionsDetail> selectPositionsDetailListForFinancialType(PositionsDetail positionsDetail) {
+        return positionsDetailMapper.selectPositionsDetailListForFinancialType(positionsDetail);
+    }
+
 }

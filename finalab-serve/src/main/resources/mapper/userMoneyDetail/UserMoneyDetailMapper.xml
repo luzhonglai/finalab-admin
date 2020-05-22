@@ -81,7 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="financialType != null  and financialType != '' "> and financial_type = #{financialType}</if>
              <if test="actionName != null  and actionName != '' "> and action_name = #{actionName}</if>
          </where>
-
+        ORDER BY id desc
     </select>
 
     <select id="getLastLoopDetail" parameterType="UserMoneyDetail" resultMap="UserMoneyDetailResult">

@@ -47,8 +47,8 @@ public class PositionsTotalServiceImpl implements IPositionsTotalService {
      * 查询持仓汇总
      */
     @Override
-    public List<PositionsTotal> selectPositionsTotalOrigin(PositionsTotal positionsTotal) {
-        return positionsTotalMapper.selectPositionsTotalList(positionsTotal);
+    public List<PositionsTotal> selectPositionsTotalListWithoutZeroNewMarkToMarket(PositionsTotal positionsTotal) {
+        return positionsTotalMapper.selectPositionsTotalListWithoutZeroNewMarkToMarket(positionsTotal);
     }
 
     /**

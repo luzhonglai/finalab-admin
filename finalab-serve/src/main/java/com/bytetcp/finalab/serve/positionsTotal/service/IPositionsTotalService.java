@@ -26,7 +26,7 @@ public interface IPositionsTotalService {
     List<PositionsTotal> selectPositionsTotalListNew(PositionsTotal positionsTotal);
 
 
-    List<PositionsTotal> selectPositionsTotalOrigin(PositionsTotal positionsTotal);
+    List<PositionsTotal> selectPositionsTotalListWithoutZeroNewMarkToMarket(PositionsTotal positionsTotal);
 
     /**
      * 新增持仓汇总
