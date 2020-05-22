@@ -96,7 +96,7 @@
                         {
                             totalPrice=-totalPrice;
                         }
-                        return totalPrice;
+                        return transaction.toLocaleString(totalPrice);
                     }
                 },
                 {
@@ -125,7 +125,7 @@
 //                        console.log('目前市场价 **********  ' + JSON.stringify(stock))
                         if (tdCommon.isEmpty(newestPrice)) {return '--'}
                         var quote = stockMap[row.stockId].QuotedDecimals;
-                        return newestPrice.toFixed(quote);
+                        return transaction.toLocaleString(newestPrice.toFixed(quote));
                     }
 
                 },{
@@ -143,7 +143,7 @@
                             nowQuantity=-nowQuantity;
                         }
                         var p = nowQuantity * newestPrice;
-                        return p.toFixed(quote);
+                        return transaction.toLocaleString(p.toFixed(quote));
                     }
 
                 },{
@@ -159,7 +159,7 @@
                         var quote = stockMap[row.stockId].QuotedDecimals;
                         var v =  row.nowQuantity * newestPrice-row.totalPrice ;//未实现盈利=最新市值-成本价格
                         var color = Number(v) > 0 ? 'red' : 'green';
-                        return '<span class="profit" style="color: ' + color + '">' + v.toFixed(quote) + '</span>';
+                        return '<span class="profit" style="color: ' + color + '">' + transaction.toLocaleString(v.toFixed(quote)) + '</span>';
                     }
                 },{
                     field: 'profit',
@@ -169,7 +169,7 @@
                         var quote = stockMap[row.stockId].QuotedDecimals;
                         var v =  row.sellPrice-row.sellQuantity*row.cost;
                         var color = Number(v) > 0 ? 'red' : 'green';
-                        return '<span class="profit" style="color: ' + color + '">' + v.toFixed(quote) + '</span>';
+                        return '<span class="profit" style="color: ' + color + '">' + transaction.toLocaleString(v.toFixed(quote)) + '</span>';
                     }
                 },
                 {

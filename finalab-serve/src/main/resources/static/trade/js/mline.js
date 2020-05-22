@@ -61,6 +61,9 @@ var transaction = {
     /**
      * 左侧标的实时价格
      */
+    toLocaleString(num){
+        return num.toString().replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g,'$&,');
+    },
     target: {
         isInit: false,
         targetData: [],
@@ -122,7 +125,7 @@ var transaction = {
                 + 'onmouseout="javascript:transaction.target.markPosition(this.id, \'\')"' +
                 ' id=\'' + data.stockId + '\'href="javascript:transaction.target.onClick(\'' + data.stockId + '\');">'
                 + '<span style="width: 50%">' + data.title + '</span>'
-                + '<span style="width: 25%">' + data.price + '</span>'
+                + '<span style="width: 25%">' + transaction.toLocaleString(data.price) + '</span>'
                 + '<span style="width: 25%">' + data.vol + '</span>'
                 + '</a>'
                 + '</li>'
@@ -206,7 +209,6 @@ var transaction = {
             if(speedValue && speedValue !== $('.speed-text').text()) {
                 $('.speed-text').text(speedValue +'%');
             };
-            
         },
         clearAndChangeStock: function (stockId, stockName, yestcolse) {
             transaction.priceMove.stockId = stockId;
@@ -234,9 +236,9 @@ var transaction = {
             var children = $(childrens[1]).children();
             var range = transaction.priceMove.range;
             tdCommon.changeColor(children[0], range);
-            $(children[0]).text(data.newestPrice);//最新成交价
+            $(children[0]).text(transaction.toLocaleString(data.newestPrice));//最新成交价
             $(children[1]).text(data.storeHouse);//仓位
-            $(children[2]).text(data.avgBuyPrice);//购买价
+            $(children[2]).text(transaction.toLocaleString(data.avgBuyPrice));//购买价
         },
 
         refresh: function (data) {
@@ -245,13 +247,13 @@ var transaction = {
             if (tdCommon.notEmpty(data.newestPrice)) {
                 var range = transaction.priceMove.range;
                 tdCommon.changeColor(children[0], range);//最新成交价, 需要根据最新价格的涨跌幅更改颜色
-                $(children[0]).text(data.newestPrice.toString().replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g,'$&,'));
+                $(children[0]).text(transaction.toLocaleString(data.newestPrice));
             }
             if (tdCommon.notEmpty(data.storeHouse)) {
                 $(children[1]).text(data.storeHouse);//仓位
             }
             if (tdCommon.notEmpty(data.avgBuyPrice)) {
-                $(children[2]).text(data.avgBuyPrice);//购买价
+                $(children[2]).text(transaction.toLocaleString(data.avgBuyPrice));//购买价
             }
 
         }
@@ -329,7 +331,7 @@ var transaction = {
                 if (result.code == 0) {
                     //将闪电下单数据压入数组，用于匹配标蓝
                     transaction.quickOrder.quickOrderArr.push(data);
-                    $.modal.msgSuccess( '<p>闪电下单-' + act + '单成功</p><p>股票名：' + qk_order_data.stockName + '</p><p>价格: ' + price + '</p><p>数量: ' + quantity  + '</p>');
+                    /*$.modal.msgSuccess( '<p>闪电下单-' + act + '单成功</p><p>股票名：' + qk_order_data.stockName + '</p><p>价格: ' + price + '</p><p>数量: ' + quantity  + '</p>');*/
                 } else {
                     $.modal.msgError( '<p>闪电下单-' + act + '单失败</p><p>股票名：' + qk_order_data.stockName + '</p><p>价格: ' + price + '</p><p>数量: ' + quantity  + '</p><p>原因：'+ result.msg +'</p>');
                 }
@@ -436,7 +438,7 @@ var transaction = {
                     var children = $(childrens[i]).children();
                     // children.context.style.backgroundColor = '#fff';
                     $(children[1]).text(sellarr[WebConst.ORDER_LIST_SIZE - i - 1].traderName);
-                    $(children[2]).text(sellarr[WebConst.ORDER_LIST_SIZE - i - 1].price);
+                    $(children[2]).text(transaction.toLocaleString(sellarr[WebConst.ORDER_LIST_SIZE - i - 1].price));
                     $(children[3]).text(sellarr[WebConst.ORDER_LIST_SIZE - i - 1].quantity);
                     $(childrens[i]).show();
                 }
@@ -471,7 +473,7 @@ var transaction = {
                     var children = $(childrens[i]).children();
                     // children.context.style.backgroundColor = '#fff';
                     $(children[1]).text(buyArr[i].traderName);
-                    $(children[2]).text(buyArr[i].price);
+                    $(children[2]).text(transaction.toLocaleString(buyArr[i].price));
                     $(children[3]).text(buyArr[i].quantity);
                     $(childrens[i]).show();
                 }
@@ -483,10 +485,11 @@ var transaction = {
             var hide = isShow ? '' : 'hidden'
             var s = type == WebConst.BUY_TYPE ? '买' : '卖';
             var color = type == WebConst.BUY_TYPE ? 'red' : 'green';
+            var parce = transaction.toLocaleString(data.price)
             return '<li ondblclick="transaction.quickOrder.submit(this)" ' + hide + ' onselectstart="return false">' +
                 '<span>' + s + WebConst.NUMCH[index] + '</span>' +
                 '<span class="gray">' + data.traderName + '</span>' +
-                '<span class="' + color + '">' + data.price + '</span>' +
+                '<span class="' + color + '">' + parce + '</span>' +
                 '<span>' + data.quantity + '</span>' +
                 '</li>'
         }
@@ -575,10 +578,10 @@ var transaction = {
 
     },
 
-    /** 
+    /**
      * 交易下单，已挂单
      */
-    
+
     tradeOption: {
         arr:[1,],
         submitOrder: function (tradeType,index) {
@@ -629,8 +632,8 @@ var transaction = {
             transaction.submit(orderUrl, JSON.stringify(param), function (result) {
                 if (result.code == 0) {
                     $.modal.msgSuccess('挂单成功');
-                    $('.tradeQuantity').eq(index).val('');
-                    $('.tradePrice').eq(index).val('');
+                    // $('.tradeQuantity').eq(index).val('');
+                    // $('.tradePrice').eq(index).val('');
                     $('#collect').append(
                         '<option  value="' + quantity + '"></option>'
                     )
