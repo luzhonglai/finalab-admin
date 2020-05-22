@@ -208,7 +208,7 @@ var transaction = {
             var speedValue = window.localStorage[course.courseName];
             if(speedValue && speedValue !== $('.speed-text').text()) {
                 $('.speed-text').text(speedValue +'%');
-            }; 
+            };
         },
         clearAndChangeStock: function (stockId, stockName, yestcolse) {
             transaction.priceMove.stockId = stockId;
@@ -331,7 +331,7 @@ var transaction = {
                 if (result.code == 0) {
                     //将闪电下单数据压入数组，用于匹配标蓝
                     transaction.quickOrder.quickOrderArr.push(data);
-                    $.modal.msgSuccess( '<p>闪电下单-' + act + '单成功</p><p>股票名：' + qk_order_data.stockName + '</p><p>价格: ' + price + '</p><p>数量: ' + quantity  + '</p>');
+                    /*$.modal.msgSuccess( '<p>闪电下单-' + act + '单成功</p><p>股票名：' + qk_order_data.stockName + '</p><p>价格: ' + price + '</p><p>数量: ' + quantity  + '</p>');*/
                 } else {
                     $.modal.msgError( '<p>闪电下单-' + act + '单失败</p><p>股票名：' + qk_order_data.stockName + '</p><p>价格: ' + price + '</p><p>数量: ' + quantity  + '</p><p>原因：'+ result.msg +'</p>');
                 }
@@ -578,10 +578,10 @@ var transaction = {
 
     },
 
-    /** 
+    /**
      * 交易下单，已挂单
      */
-    
+
     tradeOption: {
         arr:[1,],
         submitOrder: function (tradeType,index) {
