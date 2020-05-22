@@ -41,14 +41,14 @@
         $.table.refresh($('#positions_table'));
         var count = 0;
         $('.profit').each(function (index, element) {
-            var text = $(element).text();
+            var text = $(element).attr('value');
             if (text != '--') {
                 count = count + Number(text);
             } else {
                 count = '--';
             }
         });
-        $('#z-profit').text('（总盈亏：' + count.toFixed(2) + '）');
+        $('#z-profit').text('（总盈亏：' + transaction.toLocaleString(count.toFixed(2)) + '）');
     }
 
     function task3() {

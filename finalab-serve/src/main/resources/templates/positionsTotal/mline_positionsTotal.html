@@ -159,7 +159,7 @@
                         var quote = stockMap[row.stockId].QuotedDecimals;
                         var v =  row.nowQuantity * newestPrice-row.totalPrice ;//未实现盈利=最新市值-成本价格
                         var color = Number(v) > 0 ? 'red' : 'green';
-                        return '<span class="profit" style="color: ' + color + '">' + transaction.toLocaleString(v.toFixed(quote)) + '</span>';
+                        return '<span class="profit" style="color: ' + color + '" value="'+ v.toFixed(quote) +'">' + transaction.toLocaleString(v.toFixed(quote)) + '</span>';
                     }
                 },{
                     field: 'profit',
@@ -169,7 +169,7 @@
                         var quote = stockMap[row.stockId].QuotedDecimals;
                         var v =  row.sellPrice-row.sellQuantity*row.cost;
                         var color = Number(v) > 0 ? 'red' : 'green';
-                        return '<span class="profit" style="color: ' + color + '">' + transaction.toLocaleString(v.toFixed(quote)) + '</span>';
+                        return '<span class="profit" style="color: ' + color + '" value="'+ v.toFixed(quote) +'">' + transaction.toLocaleString(v.toFixed(quote)) + '</span>';
                     }
                 },
                 {
