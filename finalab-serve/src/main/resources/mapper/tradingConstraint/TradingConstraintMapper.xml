@@ -69,7 +69,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="netPosition != null  ">net_position = #{netPosition},</if>
             <if test="netUnitFines != null  ">net_unit_fines = #{netUnitFines},</if>
             <if test="tradingTarget != null  and tradingTarget != ''  ">trading_target = #{tradingTarget},</if>
-            <if test="caseId != null "> and case_id = #{caseId},</if>
+            <if test="caseId != null "> case_id = #{caseId},</if>
         </trim>
         where id = #{id}
     </update>

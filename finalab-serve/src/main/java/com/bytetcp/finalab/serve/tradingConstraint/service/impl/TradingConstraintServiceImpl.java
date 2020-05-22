@@ -106,13 +106,21 @@ public class TradingConstraintServiceImpl implements ITradingConstraintService {
             tradingConstraint.setCaseId(caseId);
             tradingConstraint.setConstraintName(String.valueOf(ExcelUtil.getCellValue(row, 0)));
             tradingConstraint.setGrossQuantity(Integer.parseInt(String.valueOf(ExcelUtil.getCellValue(row, 1))));
-            tradingConstraint.setGrossUnitFines(Integer.parseInt(String.valueOf(ExcelUtil.getCellValue(row, 2))));
+            if (ExcelUtil.getCellValue(row, 2).equals("") || ExcelUtil.getCellValue(row, 2) == null) {
+                tradingConstraint.setGrossUnitFines(0);
+            }else {
+                tradingConstraint.setGrossUnitFines(Integer.parseInt(String.valueOf(ExcelUtil.getCellValue(row, 2))));
+            }
             if (ExcelUtil.getCellValue(row, 3).equals("") || ExcelUtil.getCellValue(row, 3) == null) {
                 tradingConstraint.setNetPosition(0);
             }else {
                 tradingConstraint.setNetPosition(Integer.parseInt(String.valueOf(ExcelUtil.getCellValue(row, 3))));
             }
-            tradingConstraint.setNetUnitFines(Integer.parseInt(String.valueOf(ExcelUtil.getCellValue(row, 4))));
+            if (ExcelUtil.getCellValue(row, 4).equals("") || ExcelUtil.getCellValue(row, 4) == null) {
+                tradingConstraint.setNetUnitFines(0);
+            }else {
+                tradingConstraint.setNetUnitFines(Integer.parseInt(String.valueOf(ExcelUtil.getCellValue(row, 4))));
+            }
             tradingConstraint.setTradingTarget(String.valueOf(ExcelUtil.getCellValue(row, 5)));
             tradingConstraints.add(tradingConstraint);
         }
