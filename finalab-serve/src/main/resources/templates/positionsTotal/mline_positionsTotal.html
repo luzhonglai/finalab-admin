@@ -84,7 +84,11 @@
                 {
                     field : 'nowQuantity',
                     title : '持仓量',
-                    sortable: true
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        var nowQuantity = row.nowQuantity;
+                        return `<span class="holding">${nowQuantity}</span>`
+                    },
                 },
                 {
                     field : 'totalPrice',
@@ -135,7 +139,6 @@
                     formatter: function (value, row, index) {
                         var newestPrice = getNewPrice(row.stockId);
                         if (tdCommon.isEmpty(newestPrice)) {return '--'}
-
                         var quote = stockMap[row.stockId].QuotedDecimals;
                         nowQuantity = row.nowQuantity;
                         if(nowQuantity<0)

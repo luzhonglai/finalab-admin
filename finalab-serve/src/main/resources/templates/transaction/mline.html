@@ -539,19 +539,19 @@
             var varEle = updateVars[i];
             if (thePeriod == varEle.period && currentSec >= varEle.tick) {
                 switch (varEle.variable) {
-                    case 'IsTradeable': //1：允许交易 0：不允许交易
+                    case 'IsTradeable': 
                         stockMap[varEle.subType].IsTradeable = varEle.value;
-                        if (varEle.value == '1') {
-                            $('.tradeSell').each(function(i){
-                            finalab.UnDisable($('.tradeSell').eq(i));
-                            finalab.UnDisable($('.tradeBuy').eq(i));
-                            })
-                        } else {
-                            $('.tradeSell').each(function(i){
-                            finalab.disable($('.tradeSell').eq(i));
-                            finalab.disable($('.tradeBuy').eq(i));
-                            })
-                        }
+                        // if (varEle.value == '1') { //1：允许交易 0：不允许交易
+                        //     $('.tradeSell').each(function(i){
+                        //     finalab.UnDisable($('.tradeSell').eq(i));
+                        //     finalab.UnDisable($('.tradeBuy').eq(i));
+                        //     })
+                        // } else {
+                        //     $('.tradeSell').each(function(i){
+                        //     finalab.disable($('.tradeSell').eq(i));
+                        //     finalab.disable($('.tradeBuy').eq(i));
+                        //     })
+                        // }
                         break;
                 }
             }
