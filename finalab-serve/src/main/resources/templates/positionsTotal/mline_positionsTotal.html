@@ -86,8 +86,8 @@
                     title : '持仓量',
                     sortable: true,
                     formatter: function (value, row, index) {
-                        var nowQuantity = row.nowQuantity;
-                        return `<span class="holding">${nowQuantity}</span>`
+                        var nowQuantity = Math.abs(row.nowQuantity);
+                        return `<span class="holding" holding="${[row.stockName,nowQuantity]}" >${nowQuantity}</span>`
                     },
                 },
                 {
@@ -100,7 +100,7 @@
                         {
                             totalPrice=-totalPrice;
                         }
-                        return transaction.toLocaleString(totalPrice);
+                        return transaction.toLocaleString(Math.abs(totalPrice));
                     }
                 },
                 {
