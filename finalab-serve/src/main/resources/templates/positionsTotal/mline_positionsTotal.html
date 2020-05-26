@@ -160,7 +160,17 @@
                         }
 
                         var quote = stockMap[row.stockId].QuotedDecimals;
-                        var v =  row.nowQuantity * newestPrice-row.totalPrice ;//未实现盈利=最新市值-成本价格
+                        nowQuantity = row.nowQuantity;
+                        if(nowQuantity<0)
+                        {
+                            nowQuantity=-nowQuantity;
+                        }
+                        totalPrice =row.totalPrice;
+                        if(totalPrice<0)
+                        {
+                            totalPrice=-totalPrice;
+                        }
+                        var v =  nowQuantity * newestPrice-totalPrice ;//未实现盈利=最新市值-成本价格
                         var color = Number(v) > 0 ? 'red' : 'green';
                         return '<span class="profit" style="color: ' + color + '" value="'+ v.toFixed(quote) +'">' + transaction.toLocaleString(v.toFixed(quote)) + '</span>';
                     }
@@ -170,7 +180,14 @@
                     sortable: true,
                     formatter: function (value, row, index) {
                         var quote = stockMap[row.stockId].QuotedDecimals;
-                        var v =  row.sellPrice-row.sellQuantity*row.cost;
+                        if(row.cost==0)
+                        {
+                            var v =0;
+
+                        }else{
+                            var v =  row.sellPrice-row.sellQuantity*row.cost;
+                        }
+
                         var color = Number(v) > 0 ? 'red' : 'green';
                         return '<span class="profit" style="color: ' + color + '" value="'+ v.toFixed(quote) +'">' + transaction.toLocaleString(v.toFixed(quote)) + '</span>';
                     }
