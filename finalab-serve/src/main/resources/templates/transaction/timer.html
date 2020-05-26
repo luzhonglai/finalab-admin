@@ -29,10 +29,6 @@
 
     function task1(){
         console.log("交易明细表更新");
-        var speedValue = window.localStorage[course.courseName];
-        if (speedValue && speedValue !== $('.speed-text').text()) {
-            $('.speed-text').text(speedValue + '%');
-        };
         $.table.refresh($("#user_money_detail_table"));
     }
 

@@ -332,6 +332,7 @@
     var cancelUrl = ctx + "serve/entryOrder/cancel";//下单url
     var addUrl = ctx + "serve/userNews/mustAdd";//用户新闻加仓
     var orderUrl = ctx + "serve/course/order";//下单url
+    var constraintUrl= ctx +"serve/positionsTotal/judgeConstraints"
     var autoSocketUrl = [[${autoSocketUrl}]];
     var updateVarMap = [[${updateVarMap}]];
     var instanceId = [[${instanceId}]];
@@ -600,6 +601,10 @@
         } else {
             console.log('走势未初始...');
         }
+        var speedValue = t[t.length-1].speedValue;
+        if(speedValue && speedValue !== $('.speed-text').text()) {
+        $('.speed-text').text(speedValue +'%');
+        };
     }
 
     /**
@@ -626,10 +631,20 @@
         var refreshDerived = Object.keys(data).map(function(key, i) {
             var optionMoves = data[key];
             var options = optionMoves[optionMoves.length - 1];
+            var vol = function(param){
+                var holding = 0;
+                $('.holding').each(function(i, item) {
+                    var vol = $(item).attr('holding').split(',');
+                    if(vol[0] == param){
+                        holding = vol[1];
+                    }
+                });
+                return holding;
+            } 
             return {
                 stockName: options.stockName,
                 type: options.type,
-                vol: options.curVol,
+                vol: vol(options.stockName),
                 dvDeltaprice: options.dvDeltaprice,
                 dvGammaprice: options.dvGammaprice,
                 dvThetaprice: options.dvThetaprice,
@@ -788,7 +803,8 @@
         transaction.submit(url, JSON.stringify(param), function (result) {
             if (result.code == 0) {
                 if (tdCommon.notEmpty(result.userNews)) {
-                    transaction.news.onUserNews(result.userNews);
+                    var speedTimer = 1000 / (priceMove.speedValue / 100);
+                    transaction.news.onUserNews(result.userNews, speedTimer);
                 }
                 if (tdCommon.notEmpty(result.marketNews)) {
                     transaction.news.onMarketNews(result.marketNews);

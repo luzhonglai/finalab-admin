@@ -205,10 +205,6 @@ var transaction = {
             transaction.priceMove.range = ratioCalculate(currentPrice, myDatas.yestclose);
             transaction.storeHouse.refresh({newestPrice: currentPrice});
             transaction.priceMove.mChart.setOption(initMOption(myDatas, 'cn'));
-            var speedValue = window.localStorage[course.courseName];
-            if(speedValue && speedValue !== $('.speed-text').text()) {
-                $('.speed-text').text(speedValue +'%');
-            };
         },
         clearAndChangeStock: function (stockId, stockName, yestcolse) {
             transaction.priceMove.stockId = stockId;
@@ -237,8 +233,9 @@ var transaction = {
             var range = transaction.priceMove.range;
             tdCommon.changeColor(children[0], range);
             $(children[0]).text(transaction.toLocaleString(data.newestPrice));//最新成交价
-            $(children[1]).text(data.storeHouse);//仓位
-            $(children[2]).text(transaction.toLocaleString(data.avgBuyPrice));//购买价
+            $(children[1]).text(data.storeHouse.includes('--')? '--' : Math.abs(data.storeHouse));
+            var avgBuyPrice = data.avgBuyPrice.includes('--')? '--' : Math.abs(data.avgBuyPrice);
+            $(children[2]).text(transaction.toLocaleString(avgBuyPrice));//购买价
         },
 
         refresh: function (data) {
@@ -250,10 +247,11 @@ var transaction = {
                 $(children[0]).text(transaction.toLocaleString(data.newestPrice));
             }
             if (tdCommon.notEmpty(data.storeHouse)) {
-                $(children[1]).text(data.storeHouse);//仓位
+                $(children[1]).text(data.storeHouse.includes('--')? '--' : Math.abs(data.storeHouse));//仓位
             }
             if (tdCommon.notEmpty(data.avgBuyPrice)) {
-                $(children[2]).text(transaction.toLocaleString(data.avgBuyPrice));//购买价
+                var avgBuyPrice = data.avgBuyPrice.includes('--')? '--' : Math.abs(data.avgBuyPrice);
+                $(children[2]).text(transaction.toLocaleString(avgBuyPrice));//购买价
             }
 
         }
@@ -528,7 +526,7 @@ var transaction = {
             var newsText = newsData.title + '：' + newsData.content;
             $('#market-news').text(newsText);
         },
-        onUserNews: function (newsData) {
+        onUserNews: function (newsData,speedTimer) {
             transaction.news.timeCount = newsData.timeout;
             $('#new-origin-quantity').text(Number(newsData.quantity));
             $('#news-stock-name').text(stockMap[newsData.stockId].Description);
@@ -538,7 +536,7 @@ var transaction = {
             $('#news-stockid').text(newsData.stockId);
             $('#news-timer').text('('+transaction.news.timeCount+'S)');
             $('#user-news').show();
-            transaction.news.onTimer()
+            transaction.news.onTimer(speedTimer)
 
         },
         //控制新闻下单 “是” 按钮置灰动作，防止用户重复下单
@@ -553,7 +551,7 @@ var transaction = {
                     .attr('disabled', 'true');
             }
         },
-        onTimer: function(){
+        onTimer: function(speedTimer){
             if (transaction.news.timer != -1) {
                 window.clearInterval(transaction.news.timer);
             }
@@ -573,7 +571,7 @@ var transaction = {
                     transaction.news.priceOrderSwitch(true);
                     window.clearInterval(transaction.news.timer);
                 }
-            }, window.localStorage.speedValue || 1000);
+            }, speedTimer || 1000);
         }
 
     },
@@ -597,51 +595,63 @@ var transaction = {
                 var quantity = $('.tradeQuantity').eq(index).val('');
                 return;
             }
-            if (orderType == 'Limit_Order') {
-                if (tdCommon.isEmpty(quantity) || tdCommon.isEmpty(price)) {
-                    $.modal.msgWarning('请输入数量与价格');
-                    return;
-                }
-                var minPrice = stockMap[stockId].MinPrice;
-                var maxPrice = stockMap[stockId].MaxPrice;
-                if (Number(price) < minPrice || Number(price) > maxPrice) {
-                    $.modal.msgWarning('交易价格不符合预设值');
-                    var price = $('.tradePrice').eq(index).val('');
-                    return;
-                }
-            } else {
-                if (tdCommon.isEmpty(quantity)) {
-                    $.modal.msgWarning('请输入数量');
-                    return;
-                }
+            var params = {
+                    instanceId: instanceId,
+                    traderId: userId,
+                    loopNum: loopNum,
+                    // thePeriod: thePeriod,
             }
-
-            var param = {
-                stockId: stockId,
-                stockName: stockMap[stockId].Description,
-                courseId: courseId,
-                instanceId: instanceId,
-                financialType: stockMap[stockId].Type.toLowerCase(),
-                orderType: orderType,
-                tradeType: tradeType,
-                orderAction: tradeType,
-                quantity: quantity,
-                price: price
-            };
-            console.log('交易下单 - ' + JSON.stringify(param));
-            transaction.submit(orderUrl, JSON.stringify(param), function (result) {
-                if (result.code == 0) {
-                    $.modal.msgSuccess('挂单成功');
-                    // $('.tradeQuantity').eq(index).val('');
-                    // $('.tradePrice').eq(index).val('');
-                    $('#collect').append(
-                        '<option  value="' + quantity + '"></option>'
-                    )
-                } else {
-                    $.modal.msgError('挂单失败');
+            transaction.submit(constraintUrl,  JSON.stringify(params),function(result) {
+                if(result.code==0) {
+                    if (orderType == 'Limit_Order') {
+                        if (tdCommon.isEmpty(quantity) || tdCommon.isEmpty(price)) {
+                            $.modal.msgWarning('请输入数量与价格');
+                            return;
+                        }
+                        var minPrice = stockMap[stockId].MinPrice;
+                        var maxPrice = stockMap[stockId].MaxPrice;
+                        if (Number(price) < minPrice || Number(price) > maxPrice) {
+                            $.modal.msgWarning('交易价格不符合预设值');
+                            var price = $('.tradePrice').eq(index).val('');
+                            return;
+                        }
+                    } else {
+                        if (tdCommon.isEmpty(quantity)) {
+                            $.modal.msgWarning('请输入数量');
+                            return;
+                        }
+                    }
+        
+                    var param = {
+                        stockId: stockId,
+                        stockName: stockMap[stockId].Description,
+                        courseId: courseId,
+                        instanceId: instanceId,
+                        financialType: stockMap[stockId].Type.toLowerCase(),
+                        orderType: orderType,
+                        tradeType: tradeType,
+                        orderAction: tradeType,
+                        quantity: quantity,
+                        price: price
+                    };
+                    console.log('交易下单 - ' + JSON.stringify(param));
+                    transaction.submit(orderUrl, JSON.stringify(param), function (result) {
+                        if (result.code == 0) {
+                            // $.modal.msgSuccess('挂单成功');
+                            // $('.tradeQuantity').eq(index).val('');
+                            // $('.tradePrice').eq(index).val('');
+                            $('#collect').append(
+                                '<option  value="' + quantity + '"></option>'
+                            )
+                        } else {
+                            $.modal.msgError('挂单失败');
+                        }
+                        tdCommon.unDisabled($('.tradeSell').eq(index));
+                        tdCommon.unDisabled($('.tradeBuy').eq(index));
+                    })
+                }else{
+                    $.modal.msgWarning('交易失败');
                 }
-                tdCommon.unDisabled($('.tradeSell').eq(index));
-                tdCommon.unDisabled($('.tradeBuy').eq(index));
             })
         }
     },

@@ -27,7 +27,7 @@ server:
     # Tomcat启动初始化的线程数，默认值25
     min-spare-threads: 30
     # tomcat的临时目录
-    basedir: /home/temp
+    basedir: maven
 # 日志配置
 logging:
   level:
