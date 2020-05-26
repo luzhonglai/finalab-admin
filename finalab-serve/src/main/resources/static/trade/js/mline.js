@@ -599,9 +599,10 @@ var transaction = {
                     instanceId: instanceId,
                     traderId: userId,
                     loopNum: loopNum,
+                    StockId: stockId
                     // thePeriod: thePeriod,
             }
-            transaction.submit(constraintUrl,  JSON.stringify(params),function(result) {
+            transaction.submit(constraintUrl, JSON.stringify(params),function(result) {
                 if(result.code==0) {
                     if (orderType == 'Limit_Order') {
                         if (tdCommon.isEmpty(quantity) || tdCommon.isEmpty(price)) {
