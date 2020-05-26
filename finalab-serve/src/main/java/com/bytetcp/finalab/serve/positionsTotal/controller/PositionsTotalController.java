@@ -3,6 +3,7 @@ package com.bytetcp.finalab.serve.positionsTotal.controller;
 import com.bytetcp.finalab.common.annotation.Log;
 import com.bytetcp.finalab.common.base.AjaxResult;
 import com.bytetcp.finalab.common.base.HttpResult;
+import com.bytetcp.finalab.common.base.ResultStatus;
 import com.bytetcp.finalab.common.enums.BusinessType;
 import com.bytetcp.finalab.common.page.TableDataInfo;
 import com.bytetcp.finalab.common.utils.poi.ExcelUtil;
@@ -11,11 +12,15 @@ import com.bytetcp.finalab.serve.config.HttpMethod;
 import com.bytetcp.finalab.serve.course.domain.InstanceRunRecode;
 import com.bytetcp.finalab.serve.course.domain.Order;
 import com.bytetcp.finalab.serve.course.service.ICourseService;
+import com.bytetcp.finalab.serve.courseTargetParam.domain.CourseTargetParam;
+import com.bytetcp.finalab.serve.courseTradingConstraint.domain.CourseTradingConstraint;
+import com.bytetcp.finalab.serve.courseTradingConstraint.service.ICourseTradingConstraintService;
 import com.bytetcp.finalab.serve.positionsDetail.domain.PositionsDetail;
 import com.bytetcp.finalab.serve.positionsDetail.service.IPositionsDetailService;
 import com.bytetcp.finalab.serve.positionsTotal.domain.PositionsTotal;
 import com.bytetcp.finalab.serve.positionsTotal.domain.PositionsTotalInCourse;
 import com.bytetcp.finalab.serve.positionsTotal.service.IPositionsTotalService;
+import com.bytetcp.finalab.serve.userStock.domain.UserStock;
 import com.github.pagehelper.PageHelper;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +30,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 持仓汇总，实例-用户-股票，一只股票一个持仓
@@ -55,6 +59,9 @@ public class PositionsTotalController extends BaseController {
 
     @Autowired
     private IPositionsTotalService positionsTotalService;
+
+    @Autowired
+    private ICourseTradingConstraintService courseTradingConstraintService;
 
     @RequiresPermissions("serve:positionsTotal:view")
     @GetMapping()
@@ -225,5 +232,47 @@ public class PositionsTotalController extends BaseController {
             quantityMap.put(p.getStockId(), p.getNowQuantity());
         }
         return AjaxResult.success(quantityMap);
+    }
+
+    @PostMapping("/judgeConstraints")
+    @ResponseBody
+    public AjaxResult getUserStore(PositionsTotal positionsTotal) {
+        boolean flag = true;
+        CourseTradingConstraint courseTradingConstraint = new CourseTradingConstraint();
+        courseTradingConstraint.setCourseId(positionsTotal.getTraderId());
+        List<CourseTradingConstraint> tradingConstraint = courseTradingConstraintService.selectCourseTradingConstraintList(courseTradingConstraint);
+        if (Objects.isNull(tradingConstraint)) {
+            return AjaxResult.success("操作成功");
+        }
+        Map<String, List<CourseTradingConstraint>> store = tradingConstraint.stream().collect(Collectors.groupingBy(CourseTradingConstraint::getTradingTarget));
+        List<CourseTradingConstraint> courseTradingConstraints = store.get(positionsTotal.getStockId());
+        if(Objects.isNull(courseTradingConstraints)){
+            return AjaxResult.success("操作成功");
+        }
+        //交易约束  毛
+        int grossQuantity = courseTradingConstraints.get(0).getGrossQuantity();
+        int grossUnitFines = courseTradingConstraints.get(0).getGrossUnitFines();
+
+        //交易约束  净
+        int netPosition = courseTradingConstraints.get(0).getNetPosition();
+        Integer netUnitFines = courseTradingConstraints.get(0).getNetUnitFines();
+
+
+        PositionsTotal positionTotal = positionsTotalService.findPositionTotal(positionsTotal);
+        if(Objects.isNull(positionTotal)){
+            return AjaxResult.success("操作成功");
+        }
+        int totalQuantity = positionTotal.getTotalQuantity();
+        int nowQuantity = positionTotal.getNowQuantity();
+        if (totalQuantity >= grossQuantity && grossUnitFines == 0) {
+            flag = false;
+        }
+        if (nowQuantity >= netPosition && netUnitFines == 0) {
+            flag = false;
+        }
+        if (!flag) {
+            return AjaxResult.error(ResultStatus.FAIL);
+        }
+        return AjaxResult.success("操作成功");
     }
 }
