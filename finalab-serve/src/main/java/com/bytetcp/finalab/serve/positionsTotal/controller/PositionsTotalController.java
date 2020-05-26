@@ -236,10 +236,10 @@ public class PositionsTotalController extends BaseController {
 
     @PostMapping("/judgeConstraints")
     @ResponseBody
-    public AjaxResult getUserStore(PositionsTotal positionsTotal) {
+    public AjaxResult getJudgeConstraints(@RequestBody PositionsTotal positionsTotal) {
         boolean flag = true;
         CourseTradingConstraint courseTradingConstraint = new CourseTradingConstraint();
-        courseTradingConstraint.setCourseId(positionsTotal.getTraderId());
+        courseTradingConstraint.setCourseId(positionsTotal.getCourseId());
         List<CourseTradingConstraint> tradingConstraint = courseTradingConstraintService.selectCourseTradingConstraintList(courseTradingConstraint);
         if (Objects.isNull(tradingConstraint)) {
             return AjaxResult.success("操作成功");

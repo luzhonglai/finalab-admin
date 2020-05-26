@@ -72,6 +72,8 @@ public class PositionsTotal implements Serializable {
      */
     private String traderName;
 
+    private Long courseId;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -177,8 +179,28 @@ public class PositionsTotal implements Serializable {
     }
 
 
-
-
+    @Override
+    public String toString() {
+        return "PositionsTotal{" +
+                "id=" + id +
+                ", createTime=" + createTime +
+                ", modifyTime=" + modifyTime +
+                ", thePeriod=" + thePeriod +
+                ", loopNum=" + loopNum +
+                ", instanceId='" + instanceId + '\'' +
+                ", stockId='" + stockId + '\'' +
+                ", stockName='" + stockName + '\'' +
+                ", totalPrice=" + totalPrice +
+                ", totalQuantity=" + totalQuantity +
+                ", nowQuantity=" + nowQuantity +
+                ", traderId=" + traderId +
+                ", traderName='" + traderName + '\'' +
+                ", courseId=" + courseId +
+                ", sellPrice=" + sellPrice +
+                ", sellQuantity=" + sellQuantity +
+                ", Cost=" + Cost +
+                '}';
+    }
 
     public Integer getSellQuantity() {
         return sellQuantity;
@@ -197,6 +219,15 @@ public class PositionsTotal implements Serializable {
     }
 
     private BigDecimal sellPrice;
+
+    public Long getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Long courseId) {
+        this.courseId = courseId;
+    }
+
     private Integer sellQuantity;
 
     public BigDecimal getCost() {
@@ -209,24 +240,4 @@ public class PositionsTotal implements Serializable {
 
     private BigDecimal Cost;
 
-    public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-                .append("id", getId())
-                .append("createTime", getCreateTime())
-                .append("modifyTime", getModifyTime())
-                .append("thePeriod", getThePeriod())
-                .append("loopNum", getLoopNum())
-                .append("instanceId", getInstanceId())
-                .append("stockId", getStockId())
-                .append("stockName", getStockName())
-                .append("totalPrice", getTotalPrice())
-                .append("totalQuantity", getTotalQuantity())
-                .append("nowQuantity", getNowQuantity())
-                .append("traderId", getTraderId())
-                .append("traderName", getTraderName())
-                .append("sellPrice", getSellPrice())
-                .append("sellQuantity", getSellQuantity())
-                .append("Cost", getCost())
-                .toString();
-    }
 }
