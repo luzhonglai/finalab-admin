@@ -7,7 +7,7 @@ finalab:
   # 版权年份
   copyrightYear: 2019
   # 文件上传路径
-  profile: /Users/zhangwangming/MyFile/
+  profile: /data/profile/
 #  profile: C:\my_local\profile
   # 获取ip地址开关
   addressEnabled: true
@@ -27,7 +27,7 @@ server:
     # Tomcat启动初始化的线程数，默认值25
     min-spare-threads: 30
     # tomcat的临时目录
-    basedir: /Users/zhangwangming/MyFile/temp
+    basedir: maven
 # 日志配置
 logging:
   level:
