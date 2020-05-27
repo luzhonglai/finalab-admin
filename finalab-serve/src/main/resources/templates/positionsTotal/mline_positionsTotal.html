@@ -6,6 +6,7 @@
     var positionUrl = ctx + "serve/positionsTotal";
 
     $(function() {
+        var profitData= 0;
         var options = {
             url: positionUrl + "/list",
             queryParams: function(params){
@@ -86,7 +87,7 @@
                     title : '持仓量',
                     sortable: true,
                     formatter: function (value, row, index) {
-                        var nowQuantity = Math.abs(row.nowQuantity);
+                        var nowQuantity = row.nowQuantity;
                         return `<span class="holding" holding="${[row.stockName,nowQuantity]}" >${nowQuantity}</span>`
                     },
                 },
@@ -98,9 +99,9 @@
                         var totalPrice = row.totalPrice;
                         if(totalPrice<0)
                         {
-                            totalPrice=-totalPrice;
+                            totalPrice= transaction.toLocaleString(totalPrice);
                         }
-                        return transaction.toLocaleString(Math.abs(totalPrice));
+                        return totalPrice;
                     }
                 },
                 {
@@ -158,7 +159,6 @@
                         if (tdCommon.isEmpty(newestPrice)) {
                             return '<span class="profit">--</span>'
                         }
-
                         var quote = stockMap[row.stockId].QuotedDecimals;
                         nowQuantity = row.nowQuantity;
                         if(nowQuantity<0)
@@ -170,6 +170,7 @@
                         {
                             totalPrice=-totalPrice;
                         }
+
                         var v =  nowQuantity * newestPrice-totalPrice ;//未实现盈利=最新市值-成本价格
                         var color = Number(v) > 0 ? 'red' : 'green';
                         return '<span class="profit" style="color: ' + color + '" value="'+ v.toFixed(quote) +'">' + transaction.toLocaleString(v.toFixed(quote)) + '</span>';

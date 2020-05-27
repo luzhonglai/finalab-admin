@@ -652,7 +652,7 @@ var transaction = {
                         tdCommon.unDisabled($('.tradeBuy').eq(index));
                     })
                 }else{
-                    $.modal.msgWarning('交易失败');
+                    $.modal.msgWarning('违反交易约束');
                 }
             })
         }
@@ -738,9 +738,9 @@ var transaction = {
                 // 校验是否股票和期权股票数据
                 if(stockAndOptionMatchMap.includes(stockName)){
                     derObj['TargetName'] = stockName;
-                    derObj['Delta'] = (Deltaprice * item.vol).toFixed(2) * newBase;
-                    derObj['Gamma'] = (Gammaprice * item.vol).toFixed(2) * newBase;
-                    derObj['Theta'] = -((Thetaprice * item.vol).toFixed(2) * newBase);
+                    derObj['Delta'] = (Deltaprice * item.vol) * newBase.toFixed(2);
+                    derObj['Gamma'] = (Gammaprice * item.vol) * newBase.toFixed(2) ;
+                    derObj['Theta'] = -((Thetaprice * item.vol) * newBase).toFixed(2);
                     derivedList.push(derObj);
                 }
             });
