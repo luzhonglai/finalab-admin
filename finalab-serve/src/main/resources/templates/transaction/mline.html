@@ -360,6 +360,19 @@
             }
         })
     }
+    var tradeQuantity = [];// 拷贝交易记录数据
+    var isNomer
+    function checkSelArr(selected) {
+        var len = tradeQuantity.length;
+        for (var i = 0; i < len; i++) {
+            if (selected.stockId == tradeQuantity[i].stockId) {
+                tradeQuantity[i] = selected;
+                return;
+            }
+        };
+        tradeQuantity.push(selected)
+
+    }
     $(function () {
         document.title = course.courseName;
         //是否允许客户端显示BUYSELL_ENTRY窗口

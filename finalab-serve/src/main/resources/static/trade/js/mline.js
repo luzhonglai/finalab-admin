@@ -233,7 +233,7 @@ var transaction = {
             var range = transaction.priceMove.range;
             tdCommon.changeColor(children[0], range);
             $(children[0]).text(transaction.toLocaleString(data.newestPrice));//最新成交价
-            $(children[1]).text(data.storeHouse.includes('--')? '--' : Math.abs(data.storeHouse));
+            $(children[1]).text(data.storeHouse);
             var avgBuyPrice = data.avgBuyPrice.includes('--')? '--' : Math.abs(data.avgBuyPrice);
             $(children[2]).text(transaction.toLocaleString(avgBuyPrice));//购买价
         },
@@ -247,7 +247,7 @@ var transaction = {
                 $(children[0]).text(transaction.toLocaleString(data.newestPrice));
             }
             if (tdCommon.notEmpty(data.storeHouse)) {
-                $(children[1]).text(data.storeHouse.includes('--')? '--' : Math.abs(data.storeHouse));//仓位
+                $(children[1]).text(data.storeHouse);//仓位
             }
             if (tdCommon.notEmpty(data.avgBuyPrice)) {
                 var avgBuyPrice = data.avgBuyPrice.includes('--')? '--' : Math.abs(data.avgBuyPrice);
@@ -582,6 +582,7 @@ var transaction = {
 
     tradeOption: {
         arr:[1,],
+        tradeQuantity: [],
         submitOrder: function (tradeType,index) {
             tdCommon.disabled($('.tradeSell').eq(index), 3000);//按钮置灰
             tdCommon.disabled($('.tradeBuy').eq(index), 3000);
@@ -595,6 +596,7 @@ var transaction = {
                 var quantity = $('.tradeQuantity').eq(index).val('');
                 return;
             }
+            var tradeQuantity = this.tradeQuantity;
             var params = {
                     instanceId: instanceId,
                     traderId: userId,
@@ -644,7 +646,7 @@ var transaction = {
                             // $('.tradePrice').eq(index).val('');
                             $('#collect').append(
                                 '<option  value="' + quantity + '"></option>'
-                            )
+                            ) 
                         } else {
                             $.modal.msgError('挂单失败');
                         }
@@ -652,7 +654,7 @@ var transaction = {
                         tdCommon.unDisabled($('.tradeBuy').eq(index));
                     })
                 }else{
-                    $.modal.msgWarning('违反交易约束');
+                    $.modal.msgWarning('超出交易约束');
                 }
             })
         }
@@ -738,23 +740,23 @@ var transaction = {
                 // 校验是否股票和期权股票数据
                 if(stockAndOptionMatchMap.includes(stockName)){
                     derObj['TargetName'] = stockName;
-                    derObj['Delta'] = (Deltaprice * item.vol) * newBase.toFixed(2);
-                    derObj['Gamma'] = (Gammaprice * item.vol) * newBase.toFixed(2) ;
-                    derObj['Theta'] = -((Thetaprice * item.vol) * newBase).toFixed(2);
+                    derObj['Delta'] = (Deltaprice * item.vol).toFixed(2) * newBase;
+                    derObj['Gamma'] = (Gammaprice * item.vol).toFixed(2) * newBase;
+                    derObj['Theta'] = -((Thetaprice * item.vol).toFixed(2) * newBase);
                     derivedList.push(derObj);
                 }
             });
             //总计数据
             var totalStock = derivedList.reduce(function(init,item) {
-                var Delta = init.Delta + item.Delta;
-                var Gamma = init.Gamma + item.Gamma || 0;
-                var Theta = init.Theta + item.Theta || 0;
+                var Delta = (init.Delta + item.Delta);
+                var Gamma = (init.Gamma + item.Gamma || 0);
+                var Theta = (init.Theta + item.Theta || 0);
                 return {
                     TargetName: '总计',
                     Delta: Delta,
                     Gamma: Gamma,
-                    Theta: Theta
-                };
+                    Theta: Theta,
+                }
             })
             // 总计股票数据和
             derivedList.push(totalStock)

@@ -6,7 +6,6 @@
     var positionUrl = ctx + "serve/positionsTotal";
 
     $(function() {
-        var profitData= 0;
         var options = {
             url: positionUrl + "/list",
             queryParams: function(params){
@@ -96,10 +95,10 @@
                     title : '成本金额',
                     sortable: true,
                     formatter: function (value, row, index) {
-                        var totalPrice = row.totalPrice;
+                        var totalPrice = transaction.toLocaleString(row.totalPrice);
                         if(totalPrice<0)
                         {
-                            totalPrice= transaction.toLocaleString(totalPrice);
+                            totalPrice= totalPrice;
                         }
                         return totalPrice;
                     }
@@ -180,15 +179,40 @@
                     title: '已实现盈利',
                     sortable: true,
                     formatter: function (value, row, index) {
+                        //  交易记录获取当前匹配数据
+                        // var currentQuantity = tradeQuantity.filter(function (item,i) {
+                        //     return item.stockId == row.stockId;
+                        // })
+                        var currentQuantity = $('.tradeQuantity').eq(0).val();
                         var quote = stockMap[row.stockId].QuotedDecimals;
-                        if(row.cost==0)
-                        {
-                            var v =0;
-
-                        }else{
-                            var v =  row.sellPrice-row.sellQuantity*row.cost;
-                        }
-
+                        var totalQuantity = row.nowQuantity; // 总仓位;
+                        var totalPrice = row.totalPrice; //成本金额     
+                        var meanPrice = (totalPrice / totalQuantity).toFixed(2); // 平均价 = 成本金额 / 持仓总量; 
+                        var newestPrice = getNewPrice(row.stockId); // 股票市场价格
+                        var beofQuantity = totalQuantity - currentQuantity; // 本次持仓量减去上次成交量
+                        var v = row.sellPrice-row.sellQuantity * row.cost; // 本次以盈利的
+                        // 前持仓量总和
+                        if(beofQuantity <=0) {
+                            // 上一次成交量
+                            if(beofQuantity == 0){
+                                v = 0;
+                            } 
+                            // 此次交易持仓量
+                            if (totalQuantity < 0) {
+                                v +=(newestPrice - meanPrice) * Math.abs(currentQuantity) * Math.sign(beofQuantity)
+                            } else if (totalQuantity > 0){
+                                v += (newestPrice - meanPrice) * currentQuantity;
+                            }   
+                        }else {
+                            if(beofQuantity == 0){
+                                v = 0;
+                            }
+                            if (totalQuantity > 0) {
+                                v = +(newestPrice - meanPrice) * Math.abs(currentQuantity) * Math.sign(beofQuantity)
+                            } else if (totalQuantity < 0){
+                                v = +(newestPrice - meanPrice) * currentQuantity;
+                            }
+                        };
                         var color = Number(v) > 0 ? 'red' : 'green';
                         return '<span class="profit" style="color: ' + color + '" value="'+ v.toFixed(quote) +'">' + transaction.toLocaleString(v.toFixed(quote)) + '</span>';
                     }
