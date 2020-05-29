@@ -4,7 +4,7 @@
 
 <script th:inline="javascript" th:fragment="mline_positionsTotal_js">
     var positionUrl = ctx + "serve/positionsTotal";
-
+    var beofQuantity;
     $(function() {
         var options = {
             url: positionUrl + "/list",
@@ -179,38 +179,43 @@
                     title: '已实现盈利',
                     sortable: true,
                     formatter: function (value, row, index) {
-                        //  交易记录获取当前匹配数据
-                        // var currentQuantity = tradeQuantity.filter(function (item,i) {
-                        //     return item.stockId == row.stockId;
-                        // })
-                        var currentQuantity = $('.tradeQuantity').eq(0).val();
-                        var quote = stockMap[row.stockId].QuotedDecimals;
-                        var totalQuantity = row.nowQuantity; // 总仓位;
-                        var totalPrice = row.totalPrice; //成本金额     
-                        var meanPrice = (totalPrice / totalQuantity).toFixed(2); // 平均价 = 成本金额 / 持仓总量; 
+                        //  查询当前股票交易记录
+                        var currentQuantity = tradeQuantity.filter(function (item,i) {
+                            return item.stockId == row.stockId;
+                        });
+                        var quantity = Number(currentQuantity[0].quantity);
                         var newestPrice = getNewPrice(row.stockId); // 股票市场价格
-                        var beofQuantity = totalQuantity - currentQuantity; // 本次持仓量减去上次成交量
-                        var v = row.sellPrice-row.sellQuantity * row.cost; // 本次以盈利的
+                        var quote = stockMap[row.stockId].QuotedDecimals;
+                        var nowQuantity = row.nowQuantity; // 总仓位;   
+                        var meanPrice = Math.abs(row.totalPrice / nowQuantity); // 平均价 = 成本金额 / 持仓总量; 
+                        var stockDifference =  (meanPrice - newestPrice);
+                        var v = row.sellPrice - row.sellQuantity * row.cost; // 本次以盈利的
+                        var beofQuantity = nowQuantity + quantity;
+                        // 求上次持仓量总和
+                        if(currentQuantity[0].tradeType !== '卖单'){
+                            beofQuantity = nowQuantity - quantity;
+                        }
                         // 前持仓量总和
-                        if(beofQuantity <=0) {
-                            // 上一次成交量
-                            if(beofQuantity == 0){
+                        if(beofQuantity < 0 ) {
+                            if(nowQuantity == 0){
                                 v = 0;
-                            } 
-                            // 此次交易持仓量
-                            if (totalQuantity < 0) {
-                                v +=(newestPrice - meanPrice) * Math.abs(currentQuantity) * Math.sign(beofQuantity)
-                            } else if (totalQuantity > 0){
-                                v += (newestPrice - meanPrice) * currentQuantity;
-                            }   
-                        }else {
-                            if(beofQuantity == 0){
+                            } else if(row.cost == 0) {
                                 v = 0;
+                            } else if (nowQuantity < 0) {
+                                v += (stockDifference) * Math.abs(quantity) * Math.sign(beofQuantity)
+                            } else if (nowQuantity > 0){
+                                v += (stockDifference) * beofQuantity;
                             }
-                            if (totalQuantity > 0) {
-                                v = +(newestPrice - meanPrice) * Math.abs(currentQuantity) * Math.sign(beofQuantity)
-                            } else if (totalQuantity < 0){
-                                v = +(newestPrice - meanPrice) * currentQuantity;
+                               
+                        } else {
+                            if(nowQuantity == 0){
+                                v = 0;
+                            } else if(row.cost == 0){
+                                v = 0;  
+                            } else if (nowQuantity > 0) {
+                                v += (stockDifference) * Math.abs(quantity) * Math.sign(beofQuantity)
+                            } else if (nowQuantity < 0){
+                                v += (stockDifference) * beofQuantity;
                             }
                         };
                         var color = Number(v) > 0 ? 'red' : 'green';
