@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bytetcp.finalab.serve.courseMessage.mapper.CourseMessageMapper">
+    
+    <resultMap type="CourseMessage" id="CourseMessageResult">
+        <result property="id"    column="id"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="information"    column="information"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+	
+    <select id="selectCourseMessage" parameterType="CourseMessage" resultMap="CourseMessageResult">
+        SELECT id,course_id,student_id,information,create_time,STATUS FROM course_message
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="courseId != null "> and course_id = #{courseId}</if>
+             <if test="studentId != null "> and student_id = #{studentId}</if>
+             <if test="information != null "> and information = #{information}</if>
+             <if test="status != null "> and status = #{status}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+         </where>
+    </select>
+
+    <insert id="insertCourseMessage" parameterType="CourseMessage">
+        INSERT INTO course_message (
+        course_id,
+        student_id,
+        information
+        ) VALUES (
+        #{courseId},
+        #{studentId},
+        #{information})
+    </insert>
+
+    <update id="updateCourseMessage" parameterType="CourseMessage">
+        update course_message
+        SET status = 1
+        where course_id = #{courseId} and student_id = #{studentId} AND information = #{information} AND STATUS = 0  LIMIT 1
+    </update>
+
+	<delete id="deleteCourseMessage" parameterType="CourseMessage">
+        delete from course_message where course_id = #{courseId} AND student_id = #{studentId} AND information = #{information}  LIMIT 1
+    </delete>
+	
+    <delete id="deleteAllCourseMessage" parameterType="CourseMessage">
+        delete from course_message where course_id = #{courseId} AND student_id = #{studentId}
+    </delete>
+    
+</mapper>
