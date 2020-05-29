@@ -75,6 +75,7 @@ var transaction = {
                 var li = transaction.target.createLi(datas[i]);
                 // 股票菜单选择添加
                 $('.stock-menu').append(`<option>${datas[i].stockId}</option>`)
+                if(datas.length !== tradeQuantity.length) tradeQuantity.push({stockId: datas[i].stockId, timeLine: 0});
                 $('#targetList').append(li);
             }
             transaction.target.isInit = true;
@@ -233,7 +234,7 @@ var transaction = {
             var range = transaction.priceMove.range;
             tdCommon.changeColor(children[0], range);
             $(children[0]).text(transaction.toLocaleString(data.newestPrice));//最新成交价
-            $(children[1]).text(data.storeHouse);
+            $(children[1]).text(data.storeHouse.includes('--')? '--' : Math.abs(data.storeHouse));
             var avgBuyPrice = data.avgBuyPrice.includes('--')? '--' : Math.abs(data.avgBuyPrice);
             $(children[2]).text(transaction.toLocaleString(avgBuyPrice));//购买价
         },
@@ -247,7 +248,7 @@ var transaction = {
                 $(children[0]).text(transaction.toLocaleString(data.newestPrice));
             }
             if (tdCommon.notEmpty(data.storeHouse)) {
-                $(children[1]).text(data.storeHouse);//仓位
+                $(children[1]).text(data.storeHouse.includes('--')? '--' : Math.abs(data.storeHouse));//仓位
             }
             if (tdCommon.notEmpty(data.avgBuyPrice)) {
                 var avgBuyPrice = data.avgBuyPrice.includes('--')? '--' : Math.abs(data.avgBuyPrice);
@@ -582,7 +583,6 @@ var transaction = {
 
     tradeOption: {
         arr:[1,],
-        tradeQuantity: [],
         submitOrder: function (tradeType,index) {
             tdCommon.disabled($('.tradeSell').eq(index), 3000);//按钮置灰
             tdCommon.disabled($('.tradeBuy').eq(index), 3000);
@@ -596,7 +596,6 @@ var transaction = {
                 var quantity = $('.tradeQuantity').eq(index).val('');
                 return;
             }
-            var tradeQuantity = this.tradeQuantity;
             var params = {
                     instanceId: instanceId,
                     traderId: userId,
@@ -646,7 +645,7 @@ var transaction = {
                             // $('.tradePrice').eq(index).val('');
                             $('#collect').append(
                                 '<option  value="' + quantity + '"></option>'
-                            ) 
+                            )
                         } else {
                             $.modal.msgError('挂单失败');
                         }
