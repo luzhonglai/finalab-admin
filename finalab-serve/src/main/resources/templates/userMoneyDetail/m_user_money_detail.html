@@ -98,17 +98,17 @@
                     title : '成交数量',
                     //sortable: true
                     formatter: function(value, row, index) {
-                        var item = {
-                            stockId: row.stockId,
-                            quantity: row.dealQuantity,
-                            tradeType: row.actionName, 
-                            timeLine: row.timeLine
-                        };
                         for (var key in tradeQuantity) {
                             var data = tradeQuantity[key];
-                            if (data.stockId == row.stockId && data.timeLine < row.timeLine) { 
-                                tradeQuantity[key] = item; 
+                            if(row.dealQuantity){
+                                if (data.stockId == row.stockId && data.timeLine < row.timeLine) { 
+                                    data.stockId = row.stockId,
+                                    data.quantity = row.dealQuantity,
+                                    data.tradeType = row.actionName, 
+                                    data.timeLine = row.timeLine
+                                }    
                             }
+                            
                         }
                         return `<span class="dealQuantity" >${row.dealQuantity}</span>`
                     }
