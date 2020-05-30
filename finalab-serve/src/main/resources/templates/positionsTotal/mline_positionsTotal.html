@@ -185,22 +185,31 @@
                         })[0];
                         // 买卖成交量
                         var quantity = Number(currentQuantity.quantity);
-                        // 股票价格
+                        // 当前股票价格
                         var newestPrice = getNewPrice(row.stockId);
                         // 此次交易持仓量
-                        var nowQuantity = row.nowQuantity;    
-                        // 股票差价 = 平均价 - 市场价格
-                        var stockDifference = totalPrice / nowQuantity - newestPrice;
-                        // 获取上次已盈利 初始值没有 赋值为0;
-                        var v = currentQuantity.v || 0; 
-                        // 操场交易类型 买卖
-                        var tradeType = currentQuantity.tradeType;
+                        var nowQuantity = row.nowQuantity;  
+
+                        // 成本金额
+                        var totalPrice = Math.abs(row.totalPrice).toFixed(2);
+
                         // 获取上次持仓量 初始值没有 用本次持仓量;
                         var beofQuantity = currentQuantity.beofQuantity || nowQuantity;
 
+                        // 获取上次平均价格 初始值没有 计算本次平均价
+                        var dealPrice = currentQuantity.dealPrice || totalPrice / nowQuantity;
+                        
+                        // 差价 = 平均价 - 市场价格 
+                        var stockDifference = dealPrice - newestPrice ;
+
+                        // 获取上次已盈利 初始值没有 赋值为0;
+                        var v = currentQuantity.v || 0; 
+
+                        // 操场交易类型 买卖
+                        var tradeType = currentQuantity.tradeType;
                         var quote = stockMap[row.stockId].QuotedDecimals;
                         // 判断本次与上次持仓量是否相等
-                        if(currentQuantity.beofQuantity !== nowQuantity) {
+                        if(beofQuantity !== nowQuantity) {
                             if(beofQuantity < 0 ) {
                                 if (nowQuantity < 0 && tradeType == '买单') {
                                     v += (stockDifference) * Math.abs(quantity) * Math.sign(beofQuantity)
@@ -214,9 +223,11 @@
                                     v += (stockDifference) * beofQuantity;
                                 }
                             };
+
                             currentQuantity.v = v; // 记录盈利金额
                          }
                          currentQuantity.beofQuantity = nowQuantity // 记录上次持仓量;
+                         currentQuantity.dealPrice = totalPrice / nowQuantity; // 记录平均价
                         var color = Number(v) > 0 ? 'red' : 'green';
                         return '<span class="profit" style="color: ' + color + '" value="'+ v.toFixed(quote) +'">' + transaction.toLocaleString(v.toFixed(quote)) + '</span>';
                     }
