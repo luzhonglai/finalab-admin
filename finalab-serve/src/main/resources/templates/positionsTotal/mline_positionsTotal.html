@@ -195,8 +195,6 @@
                         var beofQuantity = currentQuantity.beofQuantity || nowQuantity;
                         // 获取上次平均价格 初始值没有 计算本次平均价
                         var averagePrice = currentQuantity.averagePrice || Math.abs(totalPrice / nowQuantity).toFixed(2);
-                        // 差价 = 平均价格 - 市场价格
-                        var stockDifference = (averagePrice - newestPrice).toFixed(2);
                         // 获取上次已盈利 初始值没有 赋值为0;
                         var v = currentQuantity.v || 0; 
                         // 操场交易类型 买卖
@@ -206,19 +204,21 @@
                         if(beofQuantity !== nowQuantity) {
                             if(beofQuantity < 0 ) {
                                 if (nowQuantity < 0 && tradeType == '买单') {
-                                    v += (stockDifference) * Math.abs(quantity) * Math.sign(beofQuantity)
-                                } else if (nowQuantity >= 0){
-                                    v += (stockDifference) * beofQuantity;
+                                    v += (newestPrice - averagePrice) * Math.abs(quantity) * Math.sign(beofQuantity)
+                                } else if (nowQuantity >=0){
+                                    v += (newestPrice - averagePrice) * beofQuantity;
+                                    // alert(`盈利：${(newestPrice - averagePrice) * Math.abs(quantity) * Math.sign(beofQuantity)} `)
                                 }
                             } else {
                                 if (nowQuantity > 0 && tradeType == '卖单') {
-                                    v += (stockDifference) * Math.abs(quantity) * Math.sign(beofQuantity)
+                                    v += (newestPrice - averagePrice) * Math.abs(quantity) * Math.sign(beofQuantity)
+                                    // alert(`盈利：${(newestPrice - averagePrice) * Math.abs(quantity)*Math.sign(beofQuantity)} `)
                                 } else if (nowQuantity <= 0){
-                                    v += (stockDifference) * beofQuantity;
+                                    v += (newestPrice - averagePrice)  * beofQuantity;
                                 }
-                            };
-                            // alert(`上一次平均价格: ${currentQuantity.averagePrice} 市场价格:${newestPrice}`)
-                            // alert(`上次持仓量:${beofQuantity} 本次持仓量${nowQuantity} 差价：${stockDifference} 交易量：${quantity}`)
+                            };  
+                            alert(`平均价格: ${currentQuantity.averagePrice} 市场价格:${newestPrice}`)
+                            alert(`上次持仓量:${beofQuantity} 本次持仓量${nowQuantity} 差价：${averagePrice - newestPrice} 交易量：${quantity}`)
                             currentQuantity.v = v; // 记录盈利金额
                          }
                          currentQuantity.averagePrice = Math.abs(totalPrice / nowQuantity).toFixed(2) // 记录平均价
