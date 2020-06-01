@@ -211,7 +211,6 @@
                             <input type="text" class="form-control text tradePrice" onkeyup="value=value.replace(/[^\d.]/g,'')" list="collect"
                                 placeholder="单行输入">
                             <datalist id="collect">
-                                <option  value="1"></option>
                             </datalist>
                             <span id="tradeButton">
                                 <button type="button" class="btn btn-danger tradeSell"
@@ -360,7 +359,6 @@
             }
         })
     }
-    var tradeQuantity = [];// 拷贝交易记录数据
     var isNomer;
     $(function () {
         document.title = course.courseName;
@@ -788,7 +786,7 @@
         var url = '/serve/userNews/news';
         var priceMoves = msg.t[transaction.priceMove.stockId];
         var priceMove = priceMoves[priceMoves.length - 1];
-        var param = {timeNum: priceMove.time, courseId: courseId, thePeriod: thePeriod, groupNum: groupNum};
+        var param = {timeNum: priceMove.time, courseId: courseId, thePeriod: thePeriod, groupNum: groupNum,instanceId:instanceId};
         transaction.news.timeLine = priceMove.time;
         //当WebSocket暂停了实时通讯超过2秒，关闭新闻倒计时；
         //每次调用调用清除标记
