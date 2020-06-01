@@ -126,9 +126,21 @@ public class UserNewsController extends BaseController {
             result.toSuccess().put("marketNews", marketNewsMap);
         }
         //userId username  userNews.getcaseId 案例id    result.getUserNews  userNewsReq.getTimeNum 时间  userNewsReq.getCourseId 课件id
+        UserNewsDetail userNewsDetail = new UserNewsDetail();
         if(result.get("code").equals(0)){
-            UserNewsDetail userNewsDetail = new UserNewsDetail();
             SysUser sysUser = userService.selectUserById(userId);
+            userNewsDetail.setUserId(userId);
+            userNewsDetail.setUserName(sysUser.getUserName());
+            userNewsDetail.setTimeNum(userNewsReq.getTimeNum());
+            userNewsDetail.setCourseId(userNewsReq.getCourseId());
+            if (Objects.nonNull(userNews)) {
+                userNewsDetail.setCaseId(userNews.getCaseId());
+                userNewsDetail.setUserNews(result.get("userNews").toString());
+            }
+            if (Objects.nonNull(marketNews)) {
+                userNewsDetail.setCaseId(marketNews.getCaseId());
+                userNewsDetail.setUserNews(result.get("marketNews").toString());
+            }
 
         }
         return result;

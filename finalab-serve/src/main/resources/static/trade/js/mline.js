@@ -72,7 +72,7 @@ var transaction = {
         quantityArr: [],
         init: function (datas) {
             transaction.target.targetData = datas;
-            var quantityArr = [];
+            var quantityArr = []; 
             for (var i = 0; i < datas.length; i++) {
                 var li = transaction.target.createLi(datas[i]);
                 // 股票菜单选择添加
@@ -744,9 +744,9 @@ var transaction = {
                 // 校验是否股票和期权股票数据
                 if(stockAndOptionMatchMap.includes(stockName)){
                     derObj['TargetName'] = stockName;
-                    derObj['Delta'] = (Deltaprice * item.vol).toFixed(2) * newBase;
-                    derObj['Gamma'] = (Gammaprice * item.vol).toFixed(2) * newBase;
-                    derObj['Theta'] = -((Thetaprice * item.vol).toFixed(2) * newBase);
+                    derObj['Delta'] = parseInt(Deltaprice * item.vol * newBase, 10);
+                    derObj['Gamma'] = parseInt(Gammaprice * item.vol * newBase, 10);
+                    derObj['Theta'] = - parseInt(Thetaprice * item.vol * newBase, 10);
                     derivedList.push(derObj);
                 }
             });
