@@ -98,20 +98,18 @@
                     title : '成交数量',
                     //sortable: true
                     formatter: function(value, row, index) {
-                        var tradeQuantity = JSON.parse(window.sessionStorage.getItem('tradeQuantity'));
-                        for (var key in tradeQuantity) {
-                            var data = tradeQuantity[key];
-                            if(row.actionName !== '交易费'){
-                                if (data.stockId == row.stockId && data.timeLine < row.timeLine) { 
-                                    data.stockId = row.stockId,
-                                    data.quantity = row.dealQuantity,
-                                    data.tradeType = row.actionName, 
-                                    data.timeLine = row.timeLine,
-                                    data.dealPrice = row.dealPrice
-                                }    
-                            } 
-                        }
-                        window.sessionStorage.setItem('tradeQuantity',JSON.stringify(tradeQuantity));
+                        // var tradeQuantity = JSON.parse(window.sessionStorage.getItem('tradeQuantity'));
+                        // for (var key in tradeQuantity) {
+                        //     var data = tradeQuantity[key];
+                        //     if (data.stockId == row.stockId && row.actionName !== '交易费' && data.timeLine < row.timeLine) { 
+                        //         data.stockId = row.stockId,
+                        //         data.quantity = row.dealQuantity,
+                        //         data.tradeType = row.actionName, 
+                        //         data.timeLine = row.timeLine,
+                        //         data.dealPrice = row.dealPrice
+                        //     }  
+                        // }
+                        // window.sessionStorage.setItem('tradeQuantity',JSON.stringify(tradeQuantity));
                         return `<span class="dealQuantity" >${row.dealQuantity}</span>`
                     }
                 }
