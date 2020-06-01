@@ -306,12 +306,7 @@
             $.modal.msgError("请选择倍速！！！！！")
             return false;
         };
-        if(window.localStorage.speedValue) {
-            window.localStorage.speedValue = null;
-        }
         changeCourseStatus(status, speedValue)
-        window.localStorage.speedValue = 1000 / (speedValue / 100);
-        window.localStorage[stockSpeed] = speedValue;
     }
 
     /**
@@ -319,10 +314,8 @@
      */
     function startOrStop(status) {
         $("#speed").val(100);
-        var value = $('#speed option[value="100"]').val();
-        window.localStorage.speedValue = 1000 / (value / 100);
+        var value = $('#speed option[value="100"]').val();  
         changeCourseStatus(status, value || 100);
-        window.localStorage[stockSpeed] = value;
     }
 
     /**
