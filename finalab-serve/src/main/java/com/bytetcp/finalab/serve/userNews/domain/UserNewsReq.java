@@ -7,6 +7,15 @@ public class UserNewsReq implements Serializable {
     private Long courseId;
     private Integer thePeriod;
     private Integer groupNum;
+    private String instanceId;
+
+    public String getInstanceId() {
+        return instanceId;
+    }
+
+    public void setInstanceId(String instanceId) {
+        this.instanceId = instanceId;
+    }
 
     public Integer getGroupNum() {
         return groupNum;
