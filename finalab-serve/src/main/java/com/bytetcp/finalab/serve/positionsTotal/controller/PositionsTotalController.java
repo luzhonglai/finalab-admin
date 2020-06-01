@@ -96,6 +96,9 @@ public class PositionsTotalController extends BaseController {
             if(p.getNowQuantity()==0){
                 p.setTotalPrice(new BigDecimal(0));
             }
+            if(p.getProfit().toString().equals("0E-8")){
+                p.setProfit(new BigDecimal(0));
+            }
             if(!flag){
                 //判断是否为期货
                 PositionsDetail PositionsDetail = new PositionsDetail();
