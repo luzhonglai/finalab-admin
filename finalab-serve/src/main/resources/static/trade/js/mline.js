@@ -69,14 +69,19 @@ var transaction = {
         targetData: [],
         targetDataMap: {},
         tooltipLocation: '',
+        quantityArr: [],
         init: function (datas) {
             transaction.target.targetData = datas;
+            var quantityArr = []; 
             for (var i = 0; i < datas.length; i++) {
                 var li = transaction.target.createLi(datas[i]);
                 // 股票菜单选择添加
                 $('.stock-menu').append(`<option>${datas[i].stockId}</option>`)
-                if(datas.length !== tradeQuantity.length) tradeQuantity.push({stockId: datas[i].stockId, timeLine: 0});
+                if(datas.length !== this.quantityArr.length) this.quantityArr.push({stockId: datas[i].stockId, timeLine: 0});
                 $('#targetList').append(li);
+            }
+            if(!JSON.parse(window.sessionStorage.getItem('tradeQuantity'))){
+                window.sessionStorage.setItem('tradeQuantity', JSON.stringify(this.quantityArr))
             }
             transaction.target.isInit = true;
         },
@@ -739,9 +744,9 @@ var transaction = {
                 // 校验是否股票和期权股票数据
                 if(stockAndOptionMatchMap.includes(stockName)){
                     derObj['TargetName'] = stockName;
-                    derObj['Delta'] = (Deltaprice * item.vol).toFixed(2) * newBase;
-                    derObj['Gamma'] = (Gammaprice * item.vol).toFixed(2) * newBase;
-                    derObj['Theta'] = -((Thetaprice * item.vol).toFixed(2) * newBase);
+                    derObj['Delta'] = parseInt(Deltaprice * item.vol * newBase, 10);
+                    derObj['Gamma'] = parseInt(Gammaprice * item.vol * newBase, 10);
+                    derObj['Theta'] = - parseInt(Thetaprice * item.vol * newBase, 10);
                     derivedList.push(derObj);
                 }
             });

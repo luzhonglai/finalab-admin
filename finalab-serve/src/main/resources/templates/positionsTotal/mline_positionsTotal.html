@@ -169,8 +169,9 @@
                         {
                             totalPrice=-totalPrice;
                         }
-
-                        var v =  nowQuantity * newestPrice-totalPrice ;//未实现盈利=最新市值-成本价格
+                        // 股票基数
+                        var base = stockMap[row.stockId].UnitMultiplier;
+                        var v =  (nowQuantity * newestPrice-totalPrice) * base;//未实现盈利=最新市值-成本价格
                         var color = Number(v) > 0 ? 'red' : 'green';
                         return '<span class="profit" style="color: ' + color + '" value="'+ v.toFixed(quote) +'">' + transaction.toLocaleString(v.toFixed(quote)) + '</span>';
                     }
@@ -179,44 +180,53 @@
                     title: '已实现盈利',
                     sortable: true,
                     formatter: function (value, row, index) {
-                        // 匹配当前前交易明细操场数据
-                        var currentQuantity = tradeQuantity.filter(function (item,i) {
-                            return item.stockId == row.stockId;
-                        })[0];
-                        // 买卖成交量
-                        var quantity = Number(currentQuantity.quantity);
-                        // 股票价格
-                        var newestPrice = getNewPrice(row.stockId);
-                        // 此次交易持仓量
-                        var nowQuantity = row.nowQuantity;    
-                        // 股票差价 = 平均价 - 市场价格
-                        var stockDifference = totalPrice / nowQuantity - newestPrice;
-                        // 获取上次已盈利 初始值没有 赋值为0;
-                        var v = currentQuantity.v || 0; 
-                        // 操场交易类型 买卖
-                        var tradeType = currentQuantity.tradeType;
-                        // 获取上次持仓量 初始值没有 用本次持仓量;
-                        var beofQuantity = currentQuantity.beofQuantity || nowQuantity;
-
-                        var quote = stockMap[row.stockId].QuotedDecimals;
-                        // 判断本次与上次持仓量是否相等
-                        if(currentQuantity.beofQuantity !== nowQuantity) {
-                            if(beofQuantity < 0 ) {
-                                if (nowQuantity < 0 && tradeType == '买单') {
-                                    v += (stockDifference) * Math.abs(quantity) * Math.sign(beofQuantity)
-                                } else if (nowQuantity >= 0){
-                                    v += (stockDifference) * beofQuantity;
-                                }
-                            } else {
-                                if (nowQuantity > 0 && tradeType == '卖单') {
-                                    v += (stockDifference) * Math.abs(quantity) * Math.sign(beofQuantity)
-                                } else if (nowQuantity <= 0){
-                                    v += (stockDifference) * beofQuantity;
-                                }
-                            };
-                            currentQuantity.v = v; // 记录盈利金额
-                         }
-                         currentQuantity.beofQuantity = nowQuantity // 记录上次持仓量;
+                        var v = row.profit;
+                        // // 取本地缓存数据
+                        // var tradeQuantity = JSON.parse(window.sessionStorage.getItem('tradeQuantity'));
+                        // // 匹配当前股票交易明细操场数据
+                        // var currentQuantity = tradeQuantity.filter(function (item,i) {
+                        //     return item.stockId == row.stockId;
+                        // })[0];
+                        // // 买卖成交量
+                        // var quantity = currentQuantity.quantity || $('#collect').children('option:last-child').val();
+                        // // 市场价格
+                        // var newestPrice = currentQuantity.dealPrice || getNewPrice(row.stockId);
+                        // // 此次交易持仓量
+                        // var nowQuantity = row.nowQuantity;  
+                        // // 成本金额
+                        // var totalPrice = Math.abs(row.totalPrice);
+                        // // 获取上次持仓量 初始值没有 用本次持仓量;
+                        // var beofQuantity = currentQuantity.beofQuantity || nowQuantity;
+                        // // 获取上次平均价格 初始值没有 计算本次平均价
+                        // var averagePrice = currentQuantity.averagePrice || Math.abs(totalPrice / nowQuantity).toFixed(2);
+                        // // 获取上次已盈利 初始值没有 赋值为0;
+                        // var v = currentQuantity.v || 0; 
+                        // // 操场交易类型 买卖
+                        // var tradeType = currentQuantity.tradeType;
+                        // var quote = stockMap[row.stockId].QuotedDecimals;
+                        // // 判断本次与上次持仓量是否相等
+                        // if(beofQuantity !== nowQuantity) {
+                        //     // alert(`盈利：${v}`)
+                        //     if(beofQuantity < 0 ) {
+                        //         if (nowQuantity < 0 && tradeType == '买单') {
+                        //             v += (newestPrice - averagePrice).toFixed(2) * Math.abs(quantity) * Math.sign(beofQuantity)
+                        //         } else if (nowQuantity >= 0){
+                        //             v += (newestPrice - averagePrice).toFixed(2) * beofQuantity;
+                        //         }
+                        //     } else {
+                        //         if (nowQuantity > 0 && tradeType == '卖单') {
+                        //             v += (newestPrice - averagePrice).toFixed(2) * Math.abs(quantity) * Math.sign(beofQuantity)
+                        //         } else if (nowQuantity <= 0){
+                        //             v += (newestPrice - averagePrice).toFixed(2)  * beofQuantity;
+                        //         }
+                        //     };  
+                        //     // alert(`市场价格:${newestPrice} 平均价格: ${currentQuantity.averagePrice}. `)
+                        //     // alert(`上次持仓量:${beofQuantity} 本次持仓量${nowQuantity} 差价：${(newestPrice - averagePrice).toFixed(2)} 交易量：${quantity} 盈利：${v}`)
+                        //  }
+                        //  currentQuantity.v = v; // 记录盈利金额
+                        //  currentQuantity.averagePrice = Math.abs(totalPrice / nowQuantity).toFixed(2) // 记录平均价
+                        //  currentQuantity.beofQuantity = nowQuantity // 记录上次持仓量;
+                        //  window.sessionStorage.setItem('tradeQuantity', JSON.stringify(tradeQuantity));
                         var color = Number(v) > 0 ? 'red' : 'green';
                         return '<span class="profit" style="color: ' + color + '" value="'+ v.toFixed(quote) +'">' + transaction.toLocaleString(v.toFixed(quote)) + '</span>';
                     }
@@ -269,7 +279,7 @@
                 $.modal.msgError('<p>平仓失败</p>');
             }
         });
-
+        
     };
 
     function getNewPrice(stockId) {
