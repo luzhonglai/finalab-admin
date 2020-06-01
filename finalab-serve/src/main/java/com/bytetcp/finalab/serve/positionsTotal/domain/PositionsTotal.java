@@ -56,6 +56,10 @@ public class PositionsTotal implements Serializable {
      */
     private BigDecimal totalPrice;
     /**
+     * 已实现盈利
+     */
+    private BigDecimal profit;
+    /**
      * 毛仓位,|买入|+|卖出|
      */
     private Integer totalQuantity;
@@ -191,6 +195,7 @@ public class PositionsTotal implements Serializable {
                 ", stockId='" + stockId + '\'' +
                 ", stockName='" + stockName + '\'' +
                 ", totalPrice=" + totalPrice +
+                ", profit=" + profit +
                 ", totalQuantity=" + totalQuantity +
                 ", nowQuantity=" + nowQuantity +
                 ", traderId=" + traderId +
@@ -240,4 +245,11 @@ public class PositionsTotal implements Serializable {
 
     private BigDecimal Cost;
 
+    public BigDecimal getProfit() {
+        return profit;
+    }
+
+    public void setProfit(BigDecimal profit) {
+        this.profit = profit;
+    }
 }

@@ -14,6 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="stockId"    column="stock_id"    />
         <result property="stockName"    column="stock_name"    />
         <result property="totalPrice"    column="total_price"    />
+        <result property="profit"    column="profit"    />
         <result property="totalQuantity"    column="total_quantity"    />
         <result property="nowQuantity"    column="now_quantity"    />
         <result property="traderId"    column="trader_id"    />
@@ -37,6 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 p.`now_quantity`,
                 p.`total_quantity`,
                 p.`total_price`,
+                p.`profit`,
                 p.`trader_id`,
                 p.`trader_name`
         FROM positions_total p WHERE p.`instance_id` = #{instanceId}
@@ -55,6 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
           pt.stock_id,
           pt.stock_name,
           pt.total_price,
+          pt.profit,
           pt.total_quantity,
           pt.now_quantity,
           pt.trader_id,
@@ -76,7 +79,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="findPositionTotal"  parameterType="PositionsTotal" resultMap="PositionsTotalResult">
-        select id, create_time, modify_time, the_period, loop_num, instance_id, stock_id, stock_name, total_price, total_quantity, now_quantity, trader_id, trader_name
+        select id, create_time, modify_time, the_period, loop_num, instance_id, stock_id, stock_name, total_price,profit, total_quantity, now_quantity, trader_id, trader_name
         from positions_total p
         WHERE p.`instance_id` = #{instanceId}
         AND p.`stock_id` = #{stockId}
@@ -87,7 +90,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 	
 	<sql id="selectPositionsTotalVo" >
-        select id, create_time, modify_time, the_period, loop_num, instance_id, stock_id, stock_name, total_price, total_quantity, now_quantity, trader_id, trader_name from positions_total
+        select id, create_time, modify_time, the_period, loop_num, instance_id, stock_id, stock_name, total_price,profit, total_quantity, now_quantity, trader_id, trader_name from positions_total
     </sql>
 	
     <select id="selectPositionsTotalList" parameterType="PositionsTotal" resultMap="PositionsTotalResult">
@@ -102,6 +105,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="stockId != null  and stockId != '' "> and stock_id = #{stockId}</if>
              <if test="stockName != null  and stockName != '' "> and stock_name = #{stockName}</if>
              <if test="totalPrice != null "> and total_price = #{totalPrice}</if>
+             <if test="profit != null "> and profit = #{profit}</if>
              <if test="totalQuantity != null "> and total_quantity = #{totalQuantity}</if>
              <if test="nowQuantity != null "> and now_quantity = #{nowQuantity}</if>
              <if test="traderId != null "> and trader_id = #{traderId}</if>
@@ -134,7 +138,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         and action_name = '买单'
         ) as 'cost',
           pt.id, pt.create_time, pt.modify_time, pt.the_period, pt.loop_num, pt.instance_id,
-          pt.stock_id, pt.stock_name, pt.total_price, pt.total_quantity, pt.now_quantity, pt.trader_id, pt.trader_name from positions_total pt
+          pt.stock_id, pt.stock_name, pt.total_price, pt.profit, pt.total_quantity, pt.now_quantity, pt.trader_id, pt.trader_name from positions_total pt
     </sql>
 
     <sql id="selectPositionsTotalVoNewMarkToMarket" >
@@ -151,7 +155,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ) as 'sellquantity',
         0 as 'cost',
         pt.id, pt.create_time, pt.modify_time, pt.the_period, pt.loop_num, pt.instance_id,
-        pt.stock_id, pt.stock_name, pt.total_price, pt.total_quantity, pt.now_quantity, pt.trader_id, pt.trader_name from positions_total pt
+        pt.stock_id, pt.stock_name, pt.total_price,pt.profit , pt.total_quantity, pt.now_quantity, pt.trader_id, pt.trader_name from positions_total pt
     </sql>
 
   <select id="selectPositionsTotalListNew" parameterType="PositionsTotal" resultMap="PositionsTotalResult">
@@ -166,6 +170,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
       <if test="stockId != null  and stockId != '' "> and pt.stock_id = #{stockId}</if>
       <if test="stockName != null  and stockName != '' "> and pt.stock_name = #{stockName}</if>
       <if test="totalPrice != null "> and pt.total_price = #{totalPrice}</if>
+      <if test="profit != null "> and pt.profit = #{profit}</if>
       <if test="totalQuantity != null "> and pt.total_quantity = #{totalQuantity}</if>
       <if test="nowQuantity != null "> and pt.now_quantity = #{nowQuantity}</if>
       <if test="traderId != null "> and pt.trader_id = #{traderId}</if>
@@ -185,6 +190,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="stockId != null  and stockId != '' "> and stock_id = #{stockId}</if>
              <if test="stockName != null  and stockName != '' "> and stock_name = #{stockName}</if>
              <if test="totalPrice != null "> and total_price = #{totalPrice}</if>
+             <if test="profit != null "> and profit = #{profit}</if>
              <if test="totalQuantity != null "> and total_quantity = #{totalQuantity}</if>
              <if test="nowQuantity != null "> and now_quantity = #{nowQuantity} </if>
              <if test="traderId != null "> and trader_id = #{traderId}</if>
@@ -205,6 +211,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
       <if test="stockId != null  and stockId != '' "> and pt.stock_id = #{stockId}</if>
       <if test="stockName != null  and stockName != '' "> and pt.stock_name = #{stockName}</if>
       <if test="totalPrice != null "> and pt.total_price = #{totalPrice}</if>
+      <if test="profit != null "> and pt.profit = #{profit}</if>
       <if test="totalQuantity != null "> and pt.total_quantity = #{totalQuantity}</if>
       <if test="nowQuantity != null "> and pt.now_quantity = #{nowQuantity} </if>
       <if test="traderId != null "> and pt.trader_id = #{traderId}</if>
@@ -225,6 +232,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
       <if test="stockId != null  and stockId != '' "> and pt.stock_id = #{stockId}</if>
       <if test="stockName != null  and stockName != '' "> and pt.stock_name = #{stockName}</if>
       <if test="totalPrice != null "> and pt.total_price = #{totalPrice}</if>
+      <if test="profit != null "> and pt.profit = #{profit}</if>
       <if test="totalQuantity != null "> and pt.total_quantity = #{totalQuantity}</if>
       <if test="nowQuantity != null "> and pt.now_quantity = #{nowQuantity} </if>
       <if test="traderId != null "> and pt.trader_id = #{traderId}</if>
@@ -249,6 +257,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="stockId != null  and stockId != ''  ">stock_id,</if>
 			<if test="stockName != null  and stockName != ''  ">stock_name,</if>
 			<if test="totalPrice != null  ">total_price,</if>
+			<if test="profit != null  ">profit,</if>
 			<if test="totalQuantity != null  ">total_quantity,</if>
 			<if test="nowQuantity != null  ">now_quantity,</if>
 			<if test="traderId != null  ">trader_id,</if>
@@ -263,6 +272,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="stockId != null  and stockId != ''  ">#{stockId},</if>
 			<if test="stockName != null  and stockName != ''  ">#{stockName},</if>
 			<if test="totalPrice != null  ">#{totalPrice},</if>
+			<if test="profit != null  ">#{profit},</if>
 			<if test="totalQuantity != null  ">#{totalQuantity},</if>
 			<if test="nowQuantity != null  ">#{nowQuantity},</if>
 			<if test="traderId != null  ">#{traderId},</if>
@@ -281,6 +291,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="stockId != null  and stockId != ''  ">stock_id = #{stockId},</if>
             <if test="stockName != null  and stockName != ''  ">stock_name = #{stockName},</if>
             <if test="totalPrice != null  ">total_price = #{totalPrice},</if>
+            <if test="profit != null  ">profit = #{profit},</if>
             <if test="totalQuantity != null  ">total_quantity = #{totalQuantity},</if>
             <if test="nowQuantity != null  ">now_quantity = #{nowQuantity},</if>
             <if test="traderId != null  ">trader_id = #{traderId},</if>

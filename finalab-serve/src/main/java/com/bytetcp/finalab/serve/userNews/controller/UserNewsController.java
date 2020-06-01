@@ -22,8 +22,11 @@ import com.bytetcp.finalab.serve.courseStudent.service.ICourseStudentService;
 import com.bytetcp.finalab.serve.courseUserNews.domain.CourseUserNews;
 import com.bytetcp.finalab.serve.courseUserNews.service.ICourseUserNewsService;
 import com.bytetcp.finalab.serve.userNews.domain.UserNews;
+import com.bytetcp.finalab.serve.userNews.domain.UserNewsDetail;
 import com.bytetcp.finalab.serve.userNews.domain.UserNewsReq;
 import com.bytetcp.finalab.serve.userNews.service.IUserNewsService;
+import com.bytetcp.finalab.system.domain.SysUser;
+import com.bytetcp.finalab.system.service.ISysUserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +64,9 @@ public class UserNewsController extends BaseController {
 
     @Autowired
     private ICourseMarketNewsService courseMarketNewsService;
+
+    @Autowired
+    private ISysUserService userService;
 
     @Autowired
     private ICourseService courseService;
@@ -118,9 +124,25 @@ public class UserNewsController extends BaseController {
                 marketNewsMap.put("content", marketNews.getContent());
             }
             result.toSuccess().put("marketNews", marketNewsMap);
+        }
+        //userId username  userNews.getcaseId 案例id    result.getUserNews  userNewsReq.getTimeNum 时间  userNewsReq.getCourseId 课件id
+        UserNewsDetail userNewsDetail = new UserNewsDetail();
+        if(result.get("code").equals(0)){
+            SysUser sysUser = userService.selectUserById(userId);
+            userNewsDetail.setUserId(userId);
+            userNewsDetail.setUserName(sysUser.getUserName());
+            userNewsDetail.setTimeNum(userNewsReq.getTimeNum());
+            userNewsDetail.setCourseId(userNewsReq.getCourseId());
+            if (Objects.nonNull(userNews)) {
+                userNewsDetail.setCaseId(userNews.getCaseId());
+                userNewsDetail.setUserNews(result.get("userNews").toString());
+            }
+            if (Objects.nonNull(marketNews)) {
+                userNewsDetail.setCaseId(marketNews.getCaseId());
+                userNewsDetail.setUserNews(result.get("marketNews").toString());
+            }
 
         }
-
         return result;
     }
 
