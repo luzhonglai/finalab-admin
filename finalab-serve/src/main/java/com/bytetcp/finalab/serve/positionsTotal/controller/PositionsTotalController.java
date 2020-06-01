@@ -20,6 +20,8 @@ import com.bytetcp.finalab.serve.positionsDetail.service.IPositionsDetailService
 import com.bytetcp.finalab.serve.positionsTotal.domain.PositionsTotal;
 import com.bytetcp.finalab.serve.positionsTotal.domain.PositionsTotalInCourse;
 import com.bytetcp.finalab.serve.positionsTotal.service.IPositionsTotalService;
+import com.bytetcp.finalab.serve.userMoneyDetail.domain.UserMoneyDetail;
+import com.bytetcp.finalab.serve.userMoneyDetail.service.IUserMoneyDetailService;
 import com.bytetcp.finalab.serve.userStock.domain.UserStock;
 import com.github.pagehelper.PageHelper;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -62,6 +64,9 @@ public class PositionsTotalController extends BaseController {
 
     @Autowired
     private ICourseTradingConstraintService courseTradingConstraintService;
+
+    @Autowired
+    private IUserMoneyDetailService userMoneyDetailService;
 
     @RequiresPermissions("serve:positionsTotal:view")
     @GetMapping()
@@ -118,6 +123,23 @@ public class PositionsTotalController extends BaseController {
                 if(p.getNowQuantity()==0){
                     p.setTotalPrice(new BigDecimal(0));
                 }
+                if(p.getProfit().toString().equals("0E-8")){
+                    p.setProfit(new BigDecimal(0));
+                }
+                UserMoneyDetail userMoneyDetail = new UserMoneyDetail();
+                userMoneyDetail.setLoopNum(positionsTotal.getLoopNum());
+                userMoneyDetail.setInstanceId(positionsTotal.getInstanceId());
+                userMoneyDetail.setCourseId(positionsTotal.getCourseId());
+                userMoneyDetail.setTraderId(positionsTotal.getTraderId());
+                userMoneyDetail.setStockId(positionsTotal.getStockId());
+                List<UserMoneyDetail> userMoneyDetailList = userMoneyDetailService.selectUserMoneyDetailList(userMoneyDetail);
+                BigDecimal profit = new BigDecimal(0);
+                for (UserMoneyDetail user:userMoneyDetailList) {
+                    if(p.getStockId().equals(user.getStockId())){
+                        profit = profit.add(user.getCostPrice());
+                    }
+                }
+                p.setProfit(profit);
                 list.add(p);
             }
         }
