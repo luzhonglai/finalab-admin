@@ -232,27 +232,28 @@
                         return '<span class="profit" style="color: ' + color + '" value="'+ v.toFixed(quote) +'">' + transaction.toLocaleString(v.toFixed(quote)) + '</span>';
                     }
                 },
-                {
-                    title: '操作',
-                    align: 'center',
-                    formatter: function (value, row, index) {
-                        var financialType = stockMap[row.stockId].Type.toLowerCase();
-                        var param =
-                            {
-                                courseId: courseId,
-                                traderId: row.traderId,
-                                traderName: row.traderName,
-                                stockName: row.stockName,
-                                instanceId: row.instanceId,
-                                stockId: row.stockId,
-                                // tradeType: 'CLEAR',
-                                tradeType: row.nowQuantity > 0 ? 'ASK' : 'BID',
-                                orderAction: 'CLEAR_STORE',
-                                financialType: financialType
-                            }
-                        return '<a id=positions_table' + row.id + ' class="btn btn-success btn-xs" onclick="closePosition(' + JSON.stringify(param).replace(/\"/g, "'") + ',' + row.id + ')"><i class="fa"></i>一键平仓</a>';
-                    }
-                }]
+                // {
+                //     title: '操作',
+                //     align: 'center',
+                //     formatter: function (value, row, index) {
+                //         var financialType = stockMap[row.stockId].Type.toLowerCase();
+                //         var param =
+                //             {
+                //                 courseId: courseId,
+                //                 traderId: row.traderId,
+                //                 traderName: row.traderName,
+                //                 stockName: row.stockName,
+                //                 instanceId: row.instanceId,
+                //                 stockId: row.stockId,
+                //                 // tradeType: 'CLEAR',
+                //                 tradeType: row.nowQuantity > 0 ? 'ASK' : 'BID',
+                //                 orderAction: 'CLEAR_STORE',
+                //                 financialType: financialType
+                //             }
+                //         return '<a id=positions_table' + row.id + ' class="btn btn-success btn-xs" onclick="closePosition(' + JSON.stringify(param).replace(/\"/g, "'") + ',' + row.id + ')"><i class="fa"></i>一键平仓</a>';
+                //     }
+                // }
+            ]
         };
         $.table.init(options);
     });
