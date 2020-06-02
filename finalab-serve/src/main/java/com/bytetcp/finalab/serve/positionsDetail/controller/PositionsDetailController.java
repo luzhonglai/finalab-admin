@@ -9,6 +9,8 @@ import com.bytetcp.finalab.serve.course.domain.InstanceRunRecode;
 import com.bytetcp.finalab.serve.course.service.ICourseService;
 import com.bytetcp.finalab.serve.userMoneyDetail.domain.UserMoneyDetailInCourse;
 import com.bytetcp.finalab.serve.userMoneyDetail.service.IUserMoneyDetailService;
+import com.bytetcp.finalab.serve.userNews.domain.UserNewsDetail;
+import com.bytetcp.finalab.serve.userNews.mapper.UserNewsDetailMapper;
 import com.github.pagehelper.PageHelper;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +49,9 @@ public class PositionsDetailController extends BaseController {
 
     @Autowired
     private IUserMoneyDetailService userMoneyDetailService;
+
+    @Autowired
+    private UserNewsDetailMapper userNewsDetailMapper;
 
     @RequiresPermissions("serve:positionsDetail:view")
     @GetMapping()
@@ -97,6 +102,7 @@ public class PositionsDetailController extends BaseController {
         InstanceRunRecode instanceRunRecode = courseService.selectInstance(courseId);
         List<PositionsDetail> list = new ArrayList<>(0);
         List<UserMoneyDetailInCourse> list2 = new ArrayList<>();
+        List<UserNewsDetail> list3 = new ArrayList<>();
         List<UserMoneyDetailInCourse> moneyDetaillist = new ArrayList<>(0);
         if (instanceRunRecode != null) {
             PositionsDetail positionsDetail = PositionsDetail.builder()
@@ -107,6 +113,9 @@ public class PositionsDetailController extends BaseController {
             list = positionsDetailService.selectPositionsDetailListForCourse(positionsDetail);
             moneyDetaillist = userMoneyDetailService.profitInCourseDetail(instanceRunRecode.getInstanceId());
             list2 = userMoneyDetailService.profitInCourseDetailExt(moneyDetaillist, instanceRunRecode.getInstanceId());
+            //新闻数据  先清除重复数据
+            userNewsDetailMapper.deleteRepeat();
+            list3 = userNewsDetailMapper.selectByInstanceId(instanceRunRecode.getInstanceId());
             for (PositionsDetail p : list) {
                 p.fixed();
                 p.setCostAndAvg();
@@ -149,9 +158,17 @@ public class PositionsDetailController extends BaseController {
             }
             dataset2.add(arr2);
         }
-//        ExcelUtil<PositionsDetail> util = new ExcelUtil<PositionsDetail>(PositionsDetail.class);
-//        return util.exportExcel(list, "DealDetail");
-        return ExpExcelUtil.expExcel(dataset, dataset2);
+        //数据
+        List<String[]> dataset3 = new ArrayList<String[]>();
+        for (int i = 0; i < list3.size(); i++) {
+            String[] arr3 = new String[4];
+            arr3[0] = list3.get(i).getUserId() == null ? "" : list3.get(i).getUserId().toString();
+            arr3[1] = list3.get(i).getUserName() == null ? "" : list3.get(i).getUserName().toString();
+            arr3[2] = list3.get(i).getUserNews() == null ? "" : list3.get(i).getUserNews().toString();
+            arr3[3] = list3.get(i).getTimeNum() == null ? "" : list3.get(i).getTimeNum().toString();
+            dataset3.add(arr3);
+        }
+        return ExpExcelUtil.expExcel(dataset, dataset2,dataset3);
     }
 
 

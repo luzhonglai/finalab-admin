@@ -7,6 +7,7 @@ import com.bytetcp.finalab.common.base.AjaxResult;
 import com.bytetcp.finalab.common.base.HttpResult;
 import com.bytetcp.finalab.common.enums.BusinessType;
 import com.bytetcp.finalab.common.page.TableDataInfo;
+import com.bytetcp.finalab.common.utils.ParamsUtil;
 import com.bytetcp.finalab.common.utils.StringUtils;
 import com.bytetcp.finalab.common.utils.poi.ExcelUtil;
 import com.bytetcp.finalab.framework.web.base.BaseController;
@@ -24,6 +25,7 @@ import com.bytetcp.finalab.serve.courseUserNews.service.ICourseUserNewsService;
 import com.bytetcp.finalab.serve.userNews.domain.UserNews;
 import com.bytetcp.finalab.serve.userNews.domain.UserNewsDetail;
 import com.bytetcp.finalab.serve.userNews.domain.UserNewsReq;
+import com.bytetcp.finalab.serve.userNews.mapper.UserNewsDetailMapper;
 import com.bytetcp.finalab.serve.userNews.service.IUserNewsService;
 import com.bytetcp.finalab.system.domain.SysUser;
 import com.bytetcp.finalab.system.service.ISysUserService;
@@ -75,6 +77,9 @@ public class UserNewsController extends BaseController {
     private ICourseStudentService courseStudentService;
 
     @Autowired
+    private UserNewsDetailMapper userNewsDetailMapper;
+
+    @Autowired
     private HttpMethod httpMethod;
 
 
@@ -111,7 +116,6 @@ public class UserNewsController extends BaseController {
             userNewsMap.put("timeout", userNews.getContinueTime());
             result.toSuccess().put("userNews", userNewsMap);
         }
-
         CourseMarketNews marketNews = courseMarketNewsService.selectCourseMarketNewsByTimeNum(userNewsReq.getTimeNum(), userNewsReq.getCourseId(), userNewsReq.getThePeriod(), userNewsReq.getGroupNum());
         if (Objects.nonNull(marketNews)) {
             HashMap<String, Object> marketNewsMap = new HashMap<>();
@@ -133,15 +137,19 @@ public class UserNewsController extends BaseController {
             userNewsDetail.setUserName(sysUser.getUserName());
             userNewsDetail.setTimeNum(userNewsReq.getTimeNum());
             userNewsDetail.setCourseId(userNewsReq.getCourseId());
+            userNewsDetail.setInstanceId(userNewsReq.getInstanceId());
             if (Objects.nonNull(userNews)) {
                 userNewsDetail.setCaseId(userNews.getCaseId());
-                userNewsDetail.setUserNews(result.get("userNews").toString());
+                String usernew = userNews.getTargetName() +"准备以￥"+ ParamsUtil.priceExact(userNews.getPrice(),2)
+                        + userNews.getTradeType()+Math.abs(userNews.getNumber())+"支"+userNews.getTargetName();
+                userNewsDetail.setUserNews(usernew);
             }
             if (Objects.nonNull(marketNews)) {
                 userNewsDetail.setCaseId(marketNews.getCaseId());
-                userNewsDetail.setUserNews(result.get("marketNews").toString());
+                String usernew = marketNews.getContent()+" "+marketNews.getTargetString();
+                userNewsDetail.setUserNews(usernew);
             }
-
+            userNewsDetailMapper.insert(userNewsDetail);
         }
         return result;
     }

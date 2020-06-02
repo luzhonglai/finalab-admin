@@ -25,20 +25,23 @@ public class ExpExcelUtil {
     private static String filename = UUID.randomUUID().toString() + "_DetailsExport" + ".xlsx";
 
 
-    public static AjaxResult expExcel(List<String[]> dataset,List<String[]> dataset2) {
+    public static AjaxResult expExcel(List<String[]> dataset1,List<String[]> dataset2,List<String[]> dataset3) {
         try {
 
             //表头
             String[] handers1 = {"TraderId", "阶段", "成交时间", "账号", "交易标的", "成交价格", "成交数量", "成本金额", "类型"};
             String[] handers2 = {"TraderId", "账号", "已实现盈亏", "未实现盈亏", "交易费", "总罚款", "总盈亏"};
+            String[] handers3 = {"学生id", "学生姓名", "新闻内容", "接受时间"};
 
             //对象
-            ExcelExp e1 = new ExcelExp("成交明细", handers1, dataset);
+            ExcelExp e1 = new ExcelExp("成交明细", handers1, dataset1);
             ExcelExp e2 = new ExcelExp("交易盈亏", handers2, dataset2);
+            ExcelExp e3 = new ExcelExp("接受新闻", handers3, dataset3);
 
             List<ExcelExp> mysheet = new ArrayList<ExcelExp>();
             mysheet.add(e1);
             mysheet.add(e2);
+            mysheet.add(e3);
 
             AjaxResult ajaxResult = exportManySheetExcel(getAbsoluteFile(filename), mysheet);//生成sheet
             return ajaxResult;
