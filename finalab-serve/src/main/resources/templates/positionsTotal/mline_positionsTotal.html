@@ -176,11 +176,12 @@
                         return '<span class="profit" style="color: ' + color + '" value="'+ v.toFixed(quote) +'">' + transaction.toLocaleString(v.toFixed(quote)) + '</span>';
                     }
                 },{
-                    field: 'profit',
+                    field: 'profit',    
                     title: '已实现盈利',
                     sortable: true,
                     formatter: function (value, row, index) {
                         var v = row.profit;
+                        var quote = stockMap[row.stockId].QuotedDecimals;
                         // // 取本地缓存数据
                         // var tradeQuantity = JSON.parse(window.sessionStorage.getItem('tradeQuantity'));
                         // // 匹配当前股票交易明细操场数据
