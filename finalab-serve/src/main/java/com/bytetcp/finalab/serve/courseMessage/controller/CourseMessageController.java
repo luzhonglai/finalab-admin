@@ -57,6 +57,7 @@ public class CourseMessageController extends BaseController {
         CourseMessage msg = new CourseMessage();
         msg.setCourseId(courseMessage.getCourseId());
         msg.setInformation(courseMessage.getInformation());
+        msg.setInstanceId(courseMessage.getInstanceId());
         List<CourseStudent> list = courseStudentService.selectCourseStudentListByCourseId(courseMessage.getCourseId());
         int count = 0;
         for (CourseStudent std:list) {

@@ -21,7 +21,11 @@ public class CourseMessage {
      */
     private Long courseId;
     /**
-     * 学生id
+     * 课程id
+     */
+    private String instanceId;
+    /**
+     * 实例id
      */
     private Long studentId;
     /**
@@ -85,11 +89,20 @@ public class CourseMessage {
         this.createTime = createTime;
     }
 
+    public String getInstanceId() {
+        return instanceId;
+    }
+
+    public void setInstanceId(String instanceId) {
+        this.instanceId = instanceId;
+    }
+
     @Override
     public String toString() {
         return "CourseMessage{" +
                 "id=" + id +
                 ", courseId=" + courseId +
+                ", instanceId='" + instanceId + '\'' +
                 ", studentId=" + studentId +
                 ", information='" + information + '\'' +
                 ", status=" + status +

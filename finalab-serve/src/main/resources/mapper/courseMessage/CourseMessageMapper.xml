@@ -7,6 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="CourseMessage" id="CourseMessageResult">
         <result property="id"    column="id"    />
         <result property="courseId"    column="course_id"    />
+        <result property="instanceId"    column="instance_id"    />
         <result property="studentId"    column="student_id"    />
         <result property="information"    column="information"    />
         <result property="status"    column="status"    />
@@ -14,10 +15,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
     <select id="selectCourseMessage" parameterType="CourseMessage" resultMap="CourseMessageResult">
-        SELECT id,course_id,student_id,information,create_time,STATUS FROM course_message
+        SELECT id,course_id,instance_id,student_id,information,create_time,STATUS FROM course_message
         <where>  
             <if test="id != null "> and id = #{id}</if>
              <if test="courseId != null "> and course_id = #{courseId}</if>
+             <if test="instanceId != null "> and instance_id = #{instanceId}</if>
              <if test="studentId != null "> and student_id = #{studentId}</if>
              <if test="information != null "> and information = #{information}</if>
              <if test="status != null "> and status = #{status}</if>
@@ -28,10 +30,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertCourseMessage" parameterType="CourseMessage">
         INSERT INTO course_message (
         course_id,
+        instance_id,
         student_id,
         information
         ) VALUES (
         #{courseId},
+        #{instanceId},
         #{studentId},
         #{information})
     </insert>
@@ -39,15 +43,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateCourseMessage" parameterType="CourseMessage">
         update course_message
         SET status = 1
-        where course_id = #{courseId} and student_id = #{studentId} AND information = #{information} AND STATUS = 0  LIMIT 1
+        where course_id = #{courseId} and student_id = #{studentId} AND information = #{information} AND instance_id = #{instanceId} AND STATUS = 0  LIMIT 1
     </update>
 
 	<delete id="deleteCourseMessage" parameterType="CourseMessage">
-        delete from course_message where course_id = #{courseId} AND student_id = #{studentId} AND information = #{information}  LIMIT 1
+        delete from course_message where course_id = #{courseId} AND student_id = #{studentId} AND information = #{information}  AND instance_id = #{instanceId}  LIMIT 1
     </delete>
 	
     <delete id="deleteAllCourseMessage" parameterType="CourseMessage">
-        delete from course_message where course_id = #{courseId} AND student_id = #{studentId}
+        delete from course_message where course_id = #{courseId} AND student_id = #{studentId} AND instance_id = #{instanceId}
     </delete>
     
 </mapper>
