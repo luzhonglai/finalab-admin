@@ -119,6 +119,7 @@
     }
 
 </style>
+<link th:href="@{/layui/css/layui.css}" rel="stylesheet"></link>
 <head th:include="include :: header"></head>
 <body class="gray-bg">
 
@@ -261,6 +262,7 @@
     $.modal.loading("数据加载中，请稍后...");
     console.log("init javascript start." + Date.now());
 </script>
+<script th:src="@{/layui/layui.js}"></script>
 <div th:replace="course/student :: course_student_js"></div>
 <div th:replace="course/progress :: progress_js"></div>
 

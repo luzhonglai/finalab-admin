@@ -17,6 +17,22 @@
         >
             <i class="fa fa-minus"></i> 退出
         </a>
+
+        <a onclick="onMessage('all')"
+          th:class="${@permission.hasPermi('serve:courseStudent:start')} == hidden?'hidden':'btn btn-primary btn-primary btn-sm'"
+         >
+         <i class="fa fa-newspaper-o">全体消息</i> 
+        </a>
+        <div id="modify" style="padding: 20px;display: none;">
+          <form class="layui-form" action="" lay-filter="modifyForm" method="post" id="modifyForm">
+            <div class="layui-form-item layui-form-text">
+              <label class="layui-form-label" style="width:100px;color:#000;" >普通文本域</label>
+              <div class="layui-input-block">
+                <textarea placeholder="请输入内容" name="content" class="layui-textarea"></textarea>
+              </div>
+            </div>
+          </form>
+        </div>
         <!--<a class="btn btn-warning btn-rounded btn-sm "-->
         <!--onclick="$.table.refresh($('#bootstrap-table-student'))"><i class="fa fa-refresh"></i>&nbsp;刷新</a>-->
     </div>
@@ -25,7 +41,6 @@
 <script th:inline="javascript" th:fragment="course_student_js">
     var editFlag = [[${@permission.hasPermi('serve:courseStudent:edit')}]];
     var removeFlag = [[${@permission.hasPermi('serve:courseStudent:remove')}]];
-
     var startFlag = [[${@permission.hasPermi('serve:courseStudent:start')}]];
     var suspendFlag = [[${@permission.hasPermi('serve:courseStudent:suspend')}]];
     var stopFlag = [[${@permission.hasPermi('serve:courseStudent:stop')}]];
@@ -122,6 +137,7 @@
                     formatter: function (value, row, index) {
                         var actions = [];
                         actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        actions.push('<a class="btn btn-success btn-xs" href="#" style="margin-left:10px" onclick="onMessage('+ row.id +')"><i class="fa fa-newspaper-o"></i>发消息</a>');
                         return actions.join('');
                     }
                 }]
@@ -141,7 +157,54 @@
                     }
                 });
     }
-
+    function onMessage(id) {
+        
+        var url = `${ctx}${id=='all'? 'serve/courseMessage/sendInformationToAllStudent':'serve/courseMessage/sendInformationToStudent'}`;
+        layui.use(['layer','form'], function () {
+          var layer = layui.layer
+          var $ = layui.jquery;
+          var form = layui.form;
+          layer.open({
+            type: 1,
+            title: ['编辑广播信息', 'background:#1b5cb4;color:white'],
+            content: $("#modify"),
+            btn: ['发送', '取消'],
+            btnAlign: 'c',
+            shade: 0.3,
+            area: ['600px', '300px'],
+            yes: function (index, layero) {
+              var formData = form.val('modifyForm');
+              if (!formData) {
+                layer.msg('请输入内容', { anim: 5, icon: 6 })
+                return;
+              }
+              var data = { courseId: courseId, studentId: id, information: formData.content };
+              if(id == 'all') delete data['studentId'];
+              $.ajax({
+                  type: 'post',
+                  url: url,
+                  contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                  data: data,
+                  // dataType: "json",
+                  success: function (res) {
+                     if (res.code == 0) {
+                      layer.msg('操作成功！', { anim: 5, icon: 6 })
+                      layer.close(index)
+                    } else {
+                      layer.msg('操作失败', { anim: 5, icon: 5 });
+                      layer.close(index)
+                    }
+                  },
+              });
+              // var loadIndex = layer.load(1, { shade: [0.8, '#393D49'] });//启动遮罩
+            },
+            end: function () {
+              form.val("modifyForm", { content:'' });
+              form.render();
+            }
+          });
+        })
+    }
     function exitCourse() {
         var exitCourseUrl = prefix + "/exitCourse"
         $.post(exitCourseUrl,

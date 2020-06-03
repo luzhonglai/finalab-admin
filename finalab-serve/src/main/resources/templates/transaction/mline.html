@@ -422,6 +422,73 @@
         setTimeout(callback, ms)
     }
 
+    layui.use('layer', function() {
+        var $ = layui.jquery,
+        layer = layui.layer;
+        var timer = 0;
+        onTimer()
+        function offset (text){
+            layer.open({
+                type: 1, offset: 'rt',
+                title: '信息提示',
+                id: 'layerDemo' + 'rt', //防止重复弹出
+                content: '<div style="padding: 20px 100px;">' + text + '</div>',
+                btn: ['确定', '取消'],
+                btnAlign: 'c',
+                shade: 0,
+                yes: function (index) {
+                    var url = '/serve/courseMessage/edit';
+                    var data = {courseId:courseId,studentId:userId,information: text};
+                    $.ajax({
+                        type: 'post',
+                        url: url,
+                        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                        data: data,
+                        dataType: "json",
+                        success: function (res) {
+                            if (res.code == 0) {
+                                onTimer()
+                                layer.close(index)
+                            }
+                        },
+                    });
+                    layer.closeAll();
+                },
+                end: function () {
+                    
+                }
+            });
+        }
+        var url = '/serve/courseMessage/list',
+        data={
+            courseId: courseId,
+            studentId: userId
+        };
+        function message() {
+            $.ajax({
+                type: 'post',
+                url: url,
+                contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                data: data,
+                dataType: "json",
+                success: function (res) {
+                    if (res.code == 0) {
+                        clearInterval(timer)
+                        offset(res.rows[res.rows.length-1].information)
+                    } else {
+                        layer.msg('服务器蹦了', { anim: 5, icon: 5 });
+                    }
+                },
+            });
+        };
+        function onTimer (){
+            timer=setInterval(() => {
+                message()
+            }, 1000);
+        }
+    })
+
+
     /**
      * 初始化stocklist
      * 初始化分时图
