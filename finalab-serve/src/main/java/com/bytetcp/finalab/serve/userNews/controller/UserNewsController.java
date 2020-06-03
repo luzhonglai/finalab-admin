@@ -131,22 +131,24 @@ public class UserNewsController extends BaseController {
         }
         //userId username  userNews.getcaseId 案例id    result.getUserNews  userNewsReq.getTimeNum 时间  userNewsReq.getCourseId 课件id
         UserNewsDetail userNewsDetail = new UserNewsDetail();
-        if(result.get("code").equals(0)){
+        if (result.get("code").equals(0)) {
             SysUser sysUser = userService.selectUserById(userId);
             userNewsDetail.setUserId(userId);
             userNewsDetail.setUserName(sysUser.getUserName());
             userNewsDetail.setTimeNum(userNewsReq.getTimeNum());
             userNewsDetail.setCourseId(userNewsReq.getCourseId());
             userNewsDetail.setInstanceId(userNewsReq.getInstanceId());
+            String type = userNews.getNumber() > 0 ? "买入" : "卖出";
+
             if (Objects.nonNull(userNews)) {
                 userNewsDetail.setCaseId(userNews.getCaseId());
-                String usernew = userNews.getTargetName() +"准备以￥"+ ParamsUtil.priceExact(userNews.getPrice(),2)
-                        + userNews.getTradeType()+Math.abs(userNews.getNumber())+"支"+userNews.getTargetName();
+                String usernew = userNews.getTargetName() + "准备以￥" + ParamsUtil.priceExact(userNews.getPrice(), 2)
+                        + type + Math.abs(userNews.getNumber()) + "支" + userNews.getTargetName();
                 userNewsDetail.setUserNews(usernew);
             }
             if (Objects.nonNull(marketNews)) {
                 userNewsDetail.setCaseId(marketNews.getCaseId());
-                String usernew = marketNews.getContent()+" "+marketNews.getTargetString();
+                String usernew = marketNews.getContent() + " " + marketNews.getTargetString();
                 userNewsDetail.setUserNews(usernew);
             }
             userNewsDetailMapper.insert(userNewsDetail);
@@ -158,7 +160,7 @@ public class UserNewsController extends BaseController {
 
         static List<Trader> convertTraderList(List<CourseStudent> list) {
             List<Trader> result = new ArrayList<>();
-            for (CourseStudent stu: list) {
+            for (CourseStudent stu : list) {
                 Trader trader = new Trader();
                 trader.setTraderId(stu.getStudentId());
                 trader.setTraderName(stu.getUserName());
