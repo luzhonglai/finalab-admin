@@ -69,6 +69,10 @@ public class UserMoneyDetailController extends BaseController {
             list = userMoneyDetailService.profitInCourseDetail(instanceRunRecode.getInstanceId());
             userMoneyDetailInCourses = userMoneyDetailService.profitInCourseDetailExt(list, instanceRunRecode.getInstanceId());
         }
+        for (UserMoneyDetailInCourse m : userMoneyDetailInCourses) {
+            m.setDealPrice(m.getTotalPrice());
+            m.setTotalPrice(m.getTotalPrice().subtract(m.getTransactionFee()).subtract(m.getTotalFine()));
+        }
         return getDataTable(userMoneyDetailInCourses);
     }
 

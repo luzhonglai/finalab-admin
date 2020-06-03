@@ -53,52 +53,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectPositionsDetailListForCourse" parameterType="PositionsDetail" resultMap="PositionsDetailResult">
-      select umd.id,
-      umd.create_time,
-      umd.modify_time,
-      umd.the_period,
-      umd.loop_num,
-      umd.time_line,
-      umd.instance_id,
-      umd.course_id,
-      umd.stock_id,
-      umd.stock_name,
-      case
-      when umd.action_name = '交易费' then
-      umd.cost_price / (select max(deal_quantity)
-      from user_money_detail a
-      where a.instance_id = umd.instance_id
-      and a.time_line = umd.time_line
-      )
-      else
-      umd.deal_price
-      end deal_price,
-
-      case
-      when umd.action_name = '交易费' then
-      (select max(deal_quantity)
-      from user_money_detail a
-      where a.instance_id = umd.instance_id
-      and a.time_line = umd.time_line
-      )
-      else
-      umd.deal_quantity
-      end deal_quantity,
-      umd.cost_price,
-      umd.total_price,
-      umd.trader_id,
-      umd.trader_name,
-      umd.financial_type,
-      umd.action_name as 'trade_type'
-      from user_money_detail umd
-      left join sys_user su on su.user_id = umd.trader_id
-        <where>
-             <if test="timeLine != null "> and time_line = #{timeLine}</if>
-             <if test="instanceId != null  and instanceId != '' "> and instance_id = #{instanceId}</if>
-             <if test="traderName != null  and traderName != '' "> and trader_name like concat('%',#{traderName},'%')</if>
-             and loop_num = (select MAX(loop_num) from positions_detail p where p.instance_id = #{instanceId})
-         </where>
-      order by umd.id desc
+        SELECT
+        trader_id,
+        the_period,
+        time_line,
+        stock_name,
+        trader_name,
+        deal_price,
+        deal_quantity,
+        cost_price,
+        action_name AS 'trade_type'
+        FROM
+        user_money_detail
+        WHERE instance_id = #{instanceId}
+        ORDER BY id DESC
     </select>
 
     <select id="selectPositionsDetailListForFinancialType" parameterType="PositionsDetail" resultMap="PositionsDetailResult">

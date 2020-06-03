@@ -121,7 +121,8 @@ public class PositionsDetailController extends BaseController {
                 p.setCostAndAvg();
             }
             for (UserMoneyDetailInCourse m : list2) {
-                m.setDealPrice(m.getTotalPrice().subtract(m.getTransactionFee().abs()).subtract(m.getTotalFine()));
+                m.setDealPrice(m.getTotalPrice());
+                m.setTotalPrice(m.getTotalPrice().subtract(m.getTransactionFee()).subtract(m.getTotalFine()));
             }
         }
         //数据

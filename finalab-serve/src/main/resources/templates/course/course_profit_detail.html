@@ -122,7 +122,7 @@
                             && stockQuotedDecimals[row.stockId] != '') {
                             toFixedVal = stockQuotedDecimals[row.stockId];
                         }
-                        return (row.totalPrice + row.unrealizedProfitandLoss + row.transactionFee + row.totalFine).toFixed(toFixedVal);
+                        return value.toFixed(toFixedVal);
                     }
                 }/*,
                 {
