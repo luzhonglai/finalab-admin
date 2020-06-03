@@ -20,9 +20,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="courseId != null "> and course_id = #{courseId}</if>
              <if test="studentId != null "> and student_id = #{studentId}</if>
              <if test="information != null "> and information = #{information}</if>
-             <if test="status != null "> and status = #{status}</if>
              <if test="createTime != null "> and create_time = #{createTime}</if>
          </where>
+        and status = 0
     </select>
 
     <insert id="insertCourseMessage" parameterType="CourseMessage">
