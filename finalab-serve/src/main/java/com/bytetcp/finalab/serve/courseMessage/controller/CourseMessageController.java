@@ -35,7 +35,7 @@ public class CourseMessageController extends BaseController {
     /**
      * 发送消息给指定学生
      */
-    @RequiresPermissions("serve:courseMessage:sendInformation")
+//    @RequiresPermissions("serve:courseMessage:sendInformation")
     @PostMapping("/sendInformationToStudent")
     @ResponseBody
     public AjaxResult sendInformationToStudent(CourseMessage courseMessage) {
@@ -45,7 +45,7 @@ public class CourseMessageController extends BaseController {
     /**
      * 发送消息给所有学生
      */
-    @RequiresPermissions("serve:courseMessage:sendInformationToAllStudent")
+//    @RequiresPermissions("serve:courseMessage:sendInformationToAllStudent")
     @PostMapping("/sendInformationToAllStudent")
     @ResponseBody
     public AjaxResult sendInformationToAllStudent(CourseMessage courseMessage) {
@@ -82,7 +82,7 @@ public class CourseMessageController extends BaseController {
     /**
      * 删除 学生消息广播
      */
-    @RequiresPermissions("serve:courseMessage:remove")
+//    @RequiresPermissions("serve:courseMessage:remove")
     @Log(title = " 学生课件消息", businessType = BusinessType.DELETE)
     @PostMapping("/remove")
     @ResponseBody
@@ -93,7 +93,7 @@ public class CourseMessageController extends BaseController {
     /**
      * 删除 学生所有消息广播
      */
-    @RequiresPermissions("serve:courseMessage:removeAll")
+//    @RequiresPermissions("serve:courseMessage:removeAll")
     @Log(title = " 学生课件消息", businessType = BusinessType.DELETE)
     @PostMapping("/removeAll")
     @ResponseBody
