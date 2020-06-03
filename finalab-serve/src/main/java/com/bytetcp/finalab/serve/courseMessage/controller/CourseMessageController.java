@@ -38,13 +38,8 @@ public class CourseMessageController extends BaseController {
     @RequiresPermissions("serve:courseMessage:sendInformation")
     @PostMapping("/sendInformationToStudent")
     @ResponseBody
-    public AjaxResult sendInformationToStudent(@RequestBody List<CourseMessage> studentList) {
-        int count = 0;
-        for (CourseMessage courseMessage : studentList) {
-            int num = courseMessageService.insertCourseMessage(courseMessage);
-            count += num;
-        }
-        return toAjax(count);
+    public AjaxResult sendInformationToStudent(CourseMessage courseMessage) {
+        return toAjax(courseMessageService.insertCourseMessage(courseMessage));
     }
 
     /**
@@ -53,7 +48,7 @@ public class CourseMessageController extends BaseController {
     @RequiresPermissions("serve:courseMessage:sendInformationToAllStudent")
     @PostMapping("/sendInformationToAllStudent")
     @ResponseBody
-    public AjaxResult sendInformationToAllStudent(@RequestBody CourseMessage courseMessage) {
+    public AjaxResult sendInformationToAllStudent(CourseMessage courseMessage) {
         CourseMessage msg = new CourseMessage();
         msg.setCourseId(courseMessage.getCourseId());
         msg.setInformation(courseMessage.getInformation());
@@ -73,7 +68,7 @@ public class CourseMessageController extends BaseController {
      */
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(@RequestBody CourseMessage courseMessage) {
+    public TableDataInfo list(CourseMessage courseMessage) {
         startPage();
         List<CourseMessage> messageList = courseMessageService.selectCourseMessage(courseMessage);
         return getDataTable(messageList);
@@ -81,7 +76,7 @@ public class CourseMessageController extends BaseController {
 
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult edit(@RequestBody CourseMessage courseMessage) {
+    public AjaxResult edit(CourseMessage courseMessage) {
         return toAjax(courseMessageService.updateCourseMessage(courseMessage));
     }
 
@@ -92,7 +87,7 @@ public class CourseMessageController extends BaseController {
     @Log(title = " 学生课件消息", businessType = BusinessType.DELETE)
     @PostMapping("/remove")
     @ResponseBody
-    public AjaxResult remove(@RequestBody CourseMessage courseMessage) {
+    public AjaxResult remove(CourseMessage courseMessage) {
         return toAjax(courseMessageService.deleteCourseMessage(courseMessage));
     }
 
@@ -103,7 +98,7 @@ public class CourseMessageController extends BaseController {
     @Log(title = " 学生课件消息", businessType = BusinessType.DELETE)
     @PostMapping("/removeAll")
     @ResponseBody
-    public AjaxResult removeAll(@RequestBody CourseMessage courseMessage) {
+    public AjaxResult removeAll(CourseMessage courseMessage) {
         return toAjax(courseMessageService.deleteAllCourseMessage(courseMessage));
     }
 
