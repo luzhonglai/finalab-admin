@@ -172,7 +172,7 @@
                         }
                         // 股票基数
                         var base = stockMap[row.stockId].UnitMultiplier;
-                        var v =  (nowQuantity * newestPrice-totalPrice) * base;//未实现盈利=最新市值-成本价格
+                        var v =  (nowQuantity * newestPrice * base) - totalPrice;
                         var color = Number(v) > 0 ? 'red' : 'green';
                         return '<span class="profit" style="color: ' + color + '" value="'+ v.toFixed(quote) +'">' + transaction.toLocaleString(v.toFixed(quote)) + '</span>';
                     }
