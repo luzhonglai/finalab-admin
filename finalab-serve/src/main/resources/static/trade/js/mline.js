@@ -239,7 +239,7 @@ var transaction = {
             var range = transaction.priceMove.range;
             tdCommon.changeColor(children[0], range);
             $(children[0]).text(transaction.toLocaleString(data.newestPrice));//最新成交价
-            $(children[1]).text(data.storeHouse.includes('--')? '--' : Math.abs(data.storeHouse));
+            $(children[1]).text(data.storeHouse);
             var avgBuyPrice = data.avgBuyPrice.includes('--')? '--' : Math.abs(data.avgBuyPrice);
             $(children[2]).text(transaction.toLocaleString(avgBuyPrice));//购买价
         },
@@ -253,7 +253,7 @@ var transaction = {
                 $(children[0]).text(transaction.toLocaleString(data.newestPrice));
             }
             if (tdCommon.notEmpty(data.storeHouse)) {
-                $(children[1]).text(data.storeHouse.includes('--')? '--' : Math.abs(data.storeHouse));//仓位
+                $(children[1]).text(data.storeHouse);//仓位
             }
             if (tdCommon.notEmpty(data.avgBuyPrice)) {
                 var avgBuyPrice = data.avgBuyPrice.includes('--')? '--' : Math.abs(data.avgBuyPrice);

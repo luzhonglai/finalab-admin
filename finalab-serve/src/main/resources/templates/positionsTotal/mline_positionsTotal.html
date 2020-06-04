@@ -145,7 +145,8 @@
                         {
                             nowQuantity=-nowQuantity;
                         }
-                        var p = nowQuantity * newestPrice;
+                        var base = stockMap[row.stockId].UnitMultiplier;
+                        var p = nowQuantity * newestPrice*base;
                         return transaction.toLocaleString(p.toFixed(quote));
                     }
 
