@@ -120,6 +120,9 @@ public class UserNewsController extends BaseController {
         if (Objects.nonNull(marketNews)) {
             HashMap<String, Object> marketNewsMap = new HashMap<>();
             marketNewsMap.put("title", marketNews.getNewsTitle());
+            marketNewsMap.put("isCompel", marketNews.getIsCompel());
+            marketNewsMap.put("compelStockId", marketNews.getCompelStockId());
+            marketNewsMap.put("action", marketNews.getAction());
             String targetString = marketNews.getTargetString();
             if (StringUtils.isNotEmpty(targetString)) {
                 String[] formatEle = targetString.split(",");
@@ -138,9 +141,8 @@ public class UserNewsController extends BaseController {
             userNewsDetail.setTimeNum(userNewsReq.getTimeNum());
             userNewsDetail.setCourseId(userNewsReq.getCourseId());
             userNewsDetail.setInstanceId(userNewsReq.getInstanceId());
-            String type = userNews.getNumber() > 0 ? "买入" : "卖出";
-
             if (Objects.nonNull(userNews)) {
+                String type = userNews.getNumber() > 0 ? "买入" : "卖出";
                 userNewsDetail.setCaseId(userNews.getCaseId());
                 String usernew = userNews.getTargetName() + "准备以￥" + ParamsUtil.priceExact(userNews.getPrice(), 2)
                         + type + Math.abs(userNews.getNumber()) + "支" + userNews.getTargetName();
@@ -148,8 +150,14 @@ public class UserNewsController extends BaseController {
             }
             if (Objects.nonNull(marketNews)) {
                 userNewsDetail.setCaseId(marketNews.getCaseId());
-                String usernew = marketNews.getContent() + " " + marketNews.getTargetString();
-                userNewsDetail.setUserNews(usernew);
+                String targetString = marketNews.getTargetString();
+                if (StringUtils.isNotEmpty(targetString)) {
+                    String[] formatEle = targetString.split(",");
+                    userNewsDetail.setUserNews(MessageFormat.format(marketNews.getContent(), formatEle));
+                }else {
+                    String usernew = marketNews.getContent() + " " + marketNews.getTargetString();
+                    userNewsDetail.setUserNews(usernew);
+                }
             }
             userNewsDetailMapper.insert(userNewsDetail);
         }
