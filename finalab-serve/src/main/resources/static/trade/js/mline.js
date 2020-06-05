@@ -240,10 +240,9 @@ var transaction = {
             tdCommon.changeColor(children[0], range);
             $(children[0]).text(transaction.toLocaleString(data.newestPrice));//最新成交价
             $(children[1]).text(data.storeHouse);
-            var avgBuyPrice = data.avgBuyPrice.includes('--')? '--' : Math.abs(data.avgBuyPrice);
-            // 股票基数
-            var base = stockMap[transaction.priceMove].UnitMultiplier;
-            $(children[2]).text(transaction.toLocaleString(avgBuyPrice/data.storeHouse/base));//购买价
+            var base = stockMap[transaction.priceMove.stockName].UnitMultiplier;
+            var avgBuyPrice = data.avgBuyPrice.includes('--')? '--' : Math.abs(data.avgBuyPrice)* Math.abs(data.storeHouse) / Math.abs(data.storeHouse) / base;
+            $(children[2]).text(transaction.toLocaleString(avgBuyPrice.toFixed(2)));//购买价
         },
 
         refresh: function (data) {
@@ -258,9 +257,9 @@ var transaction = {
                 $(children[1]).text(data.storeHouse);//仓位
             }
             if (tdCommon.notEmpty(data.avgBuyPrice)) {
-                var avgBuyPrice = data.avgBuyPrice.includes('--')? '--' : Math.abs(data.avgBuyPrice);
                 var base = stockMap[transaction.priceMove.stockName].UnitMultiplier;
-                $(children[2]).text(transaction.toLocaleString(avgBuyPrice/data.storeHouse/base));//购买价
+                var avgBuyPrice = data.avgBuyPrice.includes('--')? '--' : Math.abs(data.avgBuyPrice) * Math.abs(data.storeHouse) / Math.abs(data.storeHouse)/ base;
+                $(children[2]).text(transaction.toLocaleString(avgBuyPrice.toFixed(2)));//购买价
             }
 
         }
@@ -533,19 +532,21 @@ var transaction = {
         onMarketNews: function (newsData) {
             var newsText = newsData.title + '：' + newsData.content;
             $('#market-news').text(newsText);
-            $('#new-origin-quantity').text(Number(newsData.quantity));
-            $('#news-stock-name').text(stockMap[newsData.stockId].Description);
-            $('#news-price').text(newsData.price.toFixed(2));
-            $('#trade-flag').text(Number(newsData.quantity) < 0 ? '卖出' : '买入');
-            $('#news-quantity').text(Math.abs(newsData.quantity));
-            $('#news-stockid').text(newsData.stockId);
-            if(newsData.isCompel == 1) {
-                $('#isCompel').show();
-                this.submit();
-                return false;
+            // 强制市场新闻
+            if(newsData.price !=='#'){
+                $('#new-origin-quantity').text(Number(newsData.quantity));
+                $('#news-stock-name').text(stockMap[newsData.stockId].Description);
+                $('#news-price').text(Number(newsData.price).toFixed(2));
+                $('#trade-flag').text(Number(newsData.quantity) < 0 ? '卖出' : '买入');
+                $('#news-quantity').text(Math.abs(newsData.quantity));
+                $('#news-stockid').text(newsData.stockId);
             }
-            $('#isCompel').show()
-
+            if(newsData.price !=='#' && newsData.isCompel == 0){
+                $('#isCompel').show();
+            }
+            if(newsData.isCompel == 1) {
+                this.submit();
+            }
         },
         onUserNews: function (newsData,speedTimer) {
             transaction.news.timeCount = newsData.timeout;
@@ -567,7 +568,7 @@ var transaction = {
                     .removeAttr('style',"background-color: #e4e4e4")
                     .removeAttr('disabled', 'true');
             } else {
-                $('#news_place_order, #isCompel').attr('href','javascript:return false;')
+                $('#news_place_order, isCompel').attr('href','javascript:return false;')
                     .attr('style',"background-color: #e4e4e4")
                     .attr('disabled', 'true');
             }
