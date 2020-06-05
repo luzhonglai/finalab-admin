@@ -1,7 +1,6 @@
 package com.bytetcp.finalab.serve.userNews.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.bytetcp.finalab.common.annotation.Log;
 import com.bytetcp.finalab.common.base.AjaxResult;
 import com.bytetcp.finalab.common.base.HttpResult;
@@ -12,8 +11,6 @@ import com.bytetcp.finalab.common.utils.StringUtils;
 import com.bytetcp.finalab.common.utils.poi.ExcelUtil;
 import com.bytetcp.finalab.framework.web.base.BaseController;
 import com.bytetcp.finalab.serve.config.HttpMethod;
-import com.bytetcp.finalab.serve.course.controller.CourseController;
-import com.bytetcp.finalab.serve.course.domain.InstanceRunRecode;
 import com.bytetcp.finalab.serve.course.domain.MustAdd;
 import com.bytetcp.finalab.serve.course.service.ICourseService;
 import com.bytetcp.finalab.serve.courseMarketNews.domain.CourseMarketNews;
@@ -39,8 +36,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.MessageFormat;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * user_news用户新闻 信息操作处理
@@ -120,16 +119,24 @@ public class UserNewsController extends BaseController {
         if (Objects.nonNull(marketNews)) {
             HashMap<String, Object> marketNewsMap = new HashMap<>();
             marketNewsMap.put("title", marketNews.getNewsTitle());
-            marketNewsMap.put("isCompel", marketNews.getIsCompel());
-            marketNewsMap.put("compelStockId", marketNews.getCompelStockId());
-            marketNewsMap.put("action", marketNews.getAction());
             String targetString = marketNews.getTargetString();
             if (StringUtils.isNotEmpty(targetString)) {
                 String[] formatEle = targetString.split(",");
                 marketNewsMap.put("content", MessageFormat.format(marketNews.getContent(), formatEle));
+                marketNewsMap.put("price", formatEle[0]);
+                if(marketNews.getAction().contains("-")){
+                    marketNewsMap.put("quantity", "-"+formatEle[1]);
+                }else {
+                    marketNewsMap.put("quantity", formatEle[1]);
+                }
             } else {
                 marketNewsMap.put("content", marketNews.getContent());
+                marketNewsMap.put("price", "");
+                marketNewsMap.put("quantity", "");
             }
+            marketNewsMap.put("isCompel", marketNews.getIsCompel());
+            marketNewsMap.put("stockId", marketNews.getCompelStockId());
+            marketNewsMap.put("timeout", marketNews.getTimeNum());
             result.toSuccess().put("marketNews", marketNewsMap);
         }
         //userId username  userNews.getcaseId 案例id    result.getUserNews  userNewsReq.getTimeNum 时间  userNewsReq.getCourseId 课件id
