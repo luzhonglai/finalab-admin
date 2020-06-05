@@ -241,7 +241,9 @@ var transaction = {
             $(children[0]).text(transaction.toLocaleString(data.newestPrice));//最新成交价
             $(children[1]).text(data.storeHouse);
             var avgBuyPrice = data.avgBuyPrice.includes('--')? '--' : Math.abs(data.avgBuyPrice);
-            $(children[2]).text(transaction.toLocaleString(avgBuyPrice));//购买价
+            // 股票基数
+            var base = stockMap[transaction.priceMove].UnitMultiplier;
+            $(children[2]).text(transaction.toLocaleString(avgBuyPrice/data.storeHouse/base));//购买价
         },
 
         refresh: function (data) {
@@ -257,7 +259,8 @@ var transaction = {
             }
             if (tdCommon.notEmpty(data.avgBuyPrice)) {
                 var avgBuyPrice = data.avgBuyPrice.includes('--')? '--' : Math.abs(data.avgBuyPrice);
-                $(children[2]).text(transaction.toLocaleString(avgBuyPrice));//购买价
+                var base = stockMap[transaction.priceMove.stockName].UnitMultiplier;
+                $(children[2]).text(transaction.toLocaleString(avgBuyPrice/data.storeHouse/base));//购买价
             }
 
         }

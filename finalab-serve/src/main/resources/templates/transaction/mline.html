@@ -427,52 +427,43 @@
         layer = layui.layer;
         var timer = 0;
         onTimer()
-        function offset (text){
+        function offset (data){
+            var text = `${data.createTime}<br></br>${data.information}`;
             layer.open({
-                type: 1, offset: 'rt',
-                title: '信息提示',
-                id: 'layerDemo' + 'rt', //防止重复弹出
+                type: 1, 
+                offset: 'rt',
+                title: '消息广播',
+                area: ['390px', '260px'],
                 content: '<div style="padding: 20px 100px;">' + text + '</div>',
-                btn: ['确定', '取消'],
-                btnAlign: 'c',
+                btn: ['确定'],
+                offset: [ //为了演示，随机坐标
+                    Math.random()*($(window).height()-300)
+                    ,Math.random()*($(window).width()-390)
+                ],
                 shade: 0,
-                yes: function (index) {
-                    var url = '/serve/courseMessage/edit';
-                    var data = {courseId:courseId,studentId:userId,information: text};
-                    $.ajax({
-                        type: 'post',
-                        url: url,
-                        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-                        data: data,
-                        dataType: "json",
-                        success: function (res) {
-                            if (res.code == 0) {
-                                onTimer()
-                                layer.close(index)
-                            }
-                        },
-                    });
-                    layer.closeAll();
+                zIndex: layer.zIndex //重点1
+                ,success: function(layero){
+                    layer.setTop(layero); //重点2
                 },
-                end: function () {
-                    var url = '/serve/courseMessage/edit';
-                    var data = {courseId:courseId,studentId:userId,information: text};
-                    $.ajax({
-                        type: 'post',
-                        url: url,
-                        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-                        data: data,
-                        dataType: "json",
-                        success: function (res) {
-                            if (res.code == 0) {
-                                onTimer()
-                                layer.close(index)
-                            }
-                        },
-                    });
-                }
+                yes: function (index) {
+                    layer.close(index);
+                },
             });
-           
+            var url = '/serve/courseMessage/edit';
+            var datas = {courseId:courseId,studentId:userId, information: data.information};
+            $.ajax({
+                type: 'post',
+                url: url,
+                contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                data: datas,
+                dataType: "json",
+                success: function (res) {
+                    if (res.code == 0) {
+                        onTimer()
+                    }
+                },
+            });
+
         }
         var url = '/serve/courseMessage/list',
         data={
@@ -488,8 +479,11 @@
                 dataType: "json",
                 success: function (res) {
                     if (res.code == 0) {
-                        if(res.rows.length>0) clearInterval(timer)
-                        offset(res.rows[res.rows.length-1].information)
+                        if(res.rows.length>0) {
+                            clearInterval(timer)
+                            offset(res.rows[res.rows.length-1])  
+                        }
+                       
                     } else {
                         layer.msg('服务器蹦了', { anim: 5, icon: 5 });
                     }
@@ -497,6 +491,7 @@
             });
         };
         function onTimer (){
+            clearInterval(timer);
             timer = setInterval(() => {
                 message()
             }, 1000);
