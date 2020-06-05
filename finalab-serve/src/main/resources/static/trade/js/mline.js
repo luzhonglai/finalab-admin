@@ -520,7 +520,6 @@ var transaction = {
             var news_stockName = $('#news-stock-name').text();
             var tradeType = flag === '卖出' ? WebConst.TRADETYPE_SELL : WebConst.TRADETYPE_BUY;
             var userNewsAddData = new transaction.addObject(news_stockId, news_price, news_quantity, tradeType, news_stockName);
-
             transaction.submit(addUrl, JSON.stringify(userNewsAddData), function (result) {
                 if (result.code == 0) {
                     transaction.news.timeCount = 0;
@@ -534,6 +533,19 @@ var transaction = {
         onMarketNews: function (newsData) {
             var newsText = newsData.title + '：' + newsData.content;
             $('#market-news').text(newsText);
+            $('#new-origin-quantity').text(Number(newsData.quantity));
+            $('#news-stock-name').text(stockMap[newsData.stockId].Description);
+            $('#news-price').text(newsData.price.toFixed(2));
+            $('#trade-flag').text(Number(newsData.quantity) < 0 ? '卖出' : '买入');
+            $('#news-quantity').text(Math.abs(newsData.quantity));
+            $('#news-stockid').text(newsData.stockId);
+            if(newsData.isCompel == 1) {
+                $('#isCompel').show();
+                this.submit();
+                return false;
+            }
+            $('#isCompel').show()
+
         },
         onUserNews: function (newsData,speedTimer) {
             transaction.news.timeCount = newsData.timeout;
@@ -551,11 +563,11 @@ var transaction = {
         //控制新闻下单 “是” 按钮置灰动作，防止用户重复下单
         priceOrderSwitch: function(act) {
             if (act) {
-                $('#news_place_order').attr('href','javascript:transaction.news.submit();')
+                $('#news_place_order, #isCompel').attr('href','javascript:transaction.news.submit();')
                     .removeAttr('style',"background-color: #e4e4e4")
                     .removeAttr('disabled', 'true');
             } else {
-                $('#news_place_order').attr('href','javascript:return false;')
+                $('#news_place_order, #isCompel').attr('href','javascript:return false;')
                     .attr('style',"background-color: #e4e4e4")
                     .attr('disabled', 'true');
             }
