@@ -1,10 +1,5 @@
 package com.bytetcp.finalab.serve.courseMessage.domain;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.util.Date;
-
 /**
  * 学生参与课件表 course_message
  *
@@ -35,7 +30,7 @@ public class CourseMessage {
     /**
      * 时间
      */
-    private Date createTime;
+    private String createTime;
 
     public Long getId() {
         return id;
@@ -77,11 +72,11 @@ public class CourseMessage {
         this.status = status;
     }
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 

@@ -55,6 +55,12 @@ public class UserMoneyDetailController extends BaseController {
     public TableDataInfo getLastloopDetail(UserMoneyDetail userMoneyDetail,Integer pageOffset, Integer pageLimit, String sort, String order) {
         divPageByOrder(sort, order);
         List<UserMoneyDetail> list = userMoneyDetailService.getLastLoopDetail(userMoneyDetail);
+        Collections.sort(list, new Comparator<UserMoneyDetail>() {
+            @Override
+            public int compare(UserMoneyDetail o1, UserMoneyDetail o2) {
+                return o2.getId().intValue() - o1.getId().intValue(); //降序
+            }
+        });
         return getDataTable(list);
     }
 

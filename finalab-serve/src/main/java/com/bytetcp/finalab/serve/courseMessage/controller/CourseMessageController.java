@@ -5,16 +5,15 @@ import com.bytetcp.finalab.common.base.AjaxResult;
 import com.bytetcp.finalab.common.enums.BusinessType;
 import com.bytetcp.finalab.common.page.TableDataInfo;
 import com.bytetcp.finalab.framework.web.base.BaseController;
-import com.bytetcp.finalab.serve.course.service.ICourseService;
 import com.bytetcp.finalab.serve.courseMessage.domain.CourseMessage;
 import com.bytetcp.finalab.serve.courseMessage.service.ICourseMessageService;
 import com.bytetcp.finalab.serve.courseStudent.domain.CourseStudent;
 import com.bytetcp.finalab.serve.courseStudent.service.ICourseStudentService;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
