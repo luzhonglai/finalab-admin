@@ -115,8 +115,8 @@
             </div>
             <ul class="one">
                 <li>
-                    <a id="market-news" href="javascript:;">股票大宗交易：欢迎来到大宗交易模拟市场，案例开始</a>
-                    <a id="isCompel" class="btn" style="display:none" href="javascript:transaction.news.submit();">是</a>
+                    <a id="market-news"  href="javascript:;">股票大宗交易：欢迎来到大宗交易模拟市场，案例开始</a>
+                    <a id="isCompel" class="btn" style="display:none" href="javascript:transaction.news.submit(true);">是</a>
                 </li>
             </ul>
             <ul id="user-news" hidden="hidden">
@@ -862,7 +862,13 @@
     }
     // 新闻标示记号
     var isNews = -1;
+    var limitNum = 1;
     function refreshNews(msg) {
+        if(limitNum == 2) {
+            limitNum = 1;
+            return false; 
+        }
+        limitNum++;
         var url = '/serve/userNews/news';
         var priceMoves = msg.t[transaction.priceMove.stockId];
         var priceMove = priceMoves[priceMoves.length - 1];

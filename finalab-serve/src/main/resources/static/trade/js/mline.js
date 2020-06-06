@@ -510,8 +510,12 @@ var transaction = {
         timeLine: 0,
         totalTime: 0,
         isNewsTimer: true, // 新闻倒计时开关
-        submit: function () {
-            transaction.news.priceOrderSwitch(false);
+        submit: function (isCompel) {
+            if(isCompel){
+                $('#isCompel,#market-news').hide()
+            } else {
+                transaction.news.priceOrderSwitch(false);
+            }
             var news_price = $('#news-price').text();
             var flag = $('#trade-flag').text();
             var news_quantity = $('#news-quantity').text();
@@ -531,6 +535,7 @@ var transaction = {
         },
         onMarketNews: function (newsData) {
             var newsText = newsData.title + '：' + newsData.content;
+            $('#market-news').show();
             $('#market-news').text(newsText);
             // 强制市场新闻
             if(newsData.price !=='#'){
@@ -542,7 +547,9 @@ var transaction = {
                 $('#news-stockid').text(newsData.stockId);
             }
             if(newsData.price !=='#' && newsData.isCompel == 0){
-                $('#isCompel').show();
+                $('#isCompel').attr('href','javascript:transaction.news.submit(true);')
+                .removeAttr('style',"background-color: #e4e4e4")
+                .removeAttr('disabled', 'true');
             }
             if(newsData.isCompel == 1) {
                 this.submit();
@@ -564,11 +571,11 @@ var transaction = {
         //控制新闻下单 “是” 按钮置灰动作，防止用户重复下单
         priceOrderSwitch: function(act) {
             if (act) {
-                $('#news_place_order, #isCompel').attr('href','javascript:transaction.news.submit();')
+                $('#news_place_order').attr('href','javascript:transaction.news.submit();')
                     .removeAttr('style',"background-color: #e4e4e4")
                     .removeAttr('disabled', 'true');
             } else {
-                $('#news_place_order, isCompel').attr('href','javascript:return false;')
+                $('#news_place_order').attr('href','javascript:return false;')
                     .attr('style',"background-color: #e4e4e4")
                     .attr('disabled', 'true');
             }
