@@ -66,7 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM
         user_money_detail
         WHERE instance_id = #{instanceId}
-        ORDER BY id DESC
+        ORDER BY trader_id,id DESC
     </select>
 
     <select id="selectPositionsDetailListForFinancialType" parameterType="PositionsDetail" resultMap="PositionsDetailResult">
