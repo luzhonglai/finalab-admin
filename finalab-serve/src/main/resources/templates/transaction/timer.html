@@ -44,7 +44,8 @@
                 count = '--';
             }
         });
-        $('#z-profit').text('（总盈亏：' + transaction.toLocaleString(count.toFixed(2)) + '）');
+
+        $('#z-profit').text('（总盈亏：' + transaction.toLocaleString(isNaN(count.toFixed(2)) ? 0.0 : count.toFixed(2) ) + '）');
     }
 
     function task3() {

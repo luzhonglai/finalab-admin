@@ -258,8 +258,8 @@ var transaction = {
             }
             if (tdCommon.notEmpty(data.avgBuyPrice)) {
                 var base = stockMap[transaction.priceMove.stockName].UnitMultiplier;
-                var avgBuyPrice = data.avgBuyPrice.includes('--')? '--' : Math.abs(data.avgBuyPrice) * Math.abs(data.storeHouse) / Math.abs(data.storeHouse)/ base;
-                $(children[2]).text(transaction.toLocaleString(avgBuyPrice.toFixed(2)));//购买价
+                var avgBuyPrice = data.avgBuyPrice.includes('--') ? '--' : Math.abs(data.avgBuyPrice) * Math.abs(data.storeHouse) / Math.abs(data.storeHouse)/ base;
+                $(children[2]).text(transaction.toLocaleString(isNaN(avgBuyPrice.toFixed(2))? '--':avgBuyPrice.toFixed(2)));//购买价
             }
 
         }
