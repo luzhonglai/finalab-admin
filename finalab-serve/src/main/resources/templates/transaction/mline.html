@@ -122,7 +122,7 @@
             <ul id="user-news" hidden="hidden">
                 <li><a class="" href="javascript:;">
                     <p hidden="hidden" id="new-origin-quantity"></p>
-                    <span id="news-stock-name"></span>准备以¥
+                    <!--<span id="news-stock-name"></span>-->你公司的某位客户准备以¥
                     <span id="news-price"></span>
                     <span id="trade-flag"></span>
                     <span id="news-quantity"></span>支
@@ -434,7 +434,7 @@
         function offset (data){
             var text = `${data.createTime}<br></br>${data.information}`;
             layer.open({
-                type: 1, 
+                type: 1,
                 offset: 'rt',
                 title: '消息广播',
                 area: ['390px', '260px'],
@@ -485,9 +485,9 @@
                     if (res.code == 0) {
                         if(res.rows.length>0) {
                             clearInterval(timer)
-                            offset(res.rows[res.rows.length-1])  
+                            offset(res.rows[res.rows.length-1])
                         }
-                       
+
                     } else {
                         layer.msg('服务器繁忙', { anim: 5, icon: 5 });
                     }
@@ -621,7 +621,7 @@
             var varEle = updateVars[i];
             if (thePeriod == varEle.period && currentSec >= varEle.tick) {
                 switch (varEle.variable) {
-                    case 'IsTradeable': 
+                    case 'IsTradeable':
                         stockMap[varEle.subType].IsTradeable = varEle.value;
                         // if (varEle.value == '1') { //1：允许交易 0：不允许交易
                         //     $('.tradeSell').each(function(i){
@@ -721,7 +721,7 @@
                     }
                 });
                 return holding;
-            } 
+            }
             return {
                 stockName: options.stockName,
                 type: options.type,
@@ -867,7 +867,7 @@
     function refreshNews(msg) {
         if(limitNum == 2) {
             limitNum = 1;
-            return false; 
+            return false;
         }
         limitNum++;
         var url = '/serve/userNews/news';

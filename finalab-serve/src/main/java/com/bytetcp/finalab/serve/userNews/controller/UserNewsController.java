@@ -151,7 +151,7 @@ public class UserNewsController extends BaseController {
             if (Objects.nonNull(userNews)) {
                 String type = userNews.getNumber() > 0 ? "买入" : "卖出";
                 userNewsDetail.setCaseId(userNews.getCaseId());
-                String usernew = userNews.getTargetName() + "准备以￥" + ParamsUtil.priceExact(userNews.getPrice(), 2)
+                String usernew = /*userNews.getTargetName()*/"你公司的某位客户" + "准备以￥" + ParamsUtil.priceExact(userNews.getPrice(), 2)
                         + type + Math.abs(userNews.getNumber()) + "支" + userNews.getTargetName();
                 userNewsDetail.setUserNews(usernew);
             }
