@@ -534,7 +534,7 @@ var transaction = {
             });
         },
         onMarketNews: function (newsData) {
-            var newsText = '：' + newsData.content;
+            var newsText = `${newsData.title ? newsData.title+':':''}${newsData.content}`
             $('#market-news').show();
             $('#market-news').text(newsText);
             // 强制市场新闻
@@ -623,7 +623,9 @@ var transaction = {
                 return item.stockId == stockId;
             })[0];
             if(stockArr) var nowQuantity = stockArr.nowQuantity;
-            var totalNum = (nowQuantity || 0) + Number(quantity);
+            var num = tradeType=='BID' ? quantity: ~quantity;
+            var totalNum = (nowQuantity || 0) + Number(num);
+
             if (totalNum > maxTradeSize) {
                 $.modal.msgWarning('交易数量过多');
                 var quantity = $('.tradeQuantity').eq(index).val('');
