@@ -622,11 +622,7 @@ var transaction = {
             var stockArr = copyStock.filter(function(item,i) {
                 return item.stockId == stockId;
             })[0];
-            if(stockArr) var nowQuantity = stockArr.nowQuantity;
-            var num = tradeType=='BID' ? quantity: ~quantity;
-            var totalNum = (nowQuantity || 0) + Number(num);
-
-            if (totalNum > maxTradeSize) {
+            if (Number(quantity) > maxTradeSize) {
                 $.modal.msgWarning('交易数量过多');
                 var quantity = $('.tradeQuantity').eq(index).val('');
                 return; 
