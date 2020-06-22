@@ -632,7 +632,8 @@ var transaction = {
                     traderId: userId,
                     courseId: courseId,
                     loopNum: loopNum,
-                    stockId: stockId
+                    stockId: stockId,
+                    quantity: quantity,
                     // thePeriod: thePeriod,
             }
             transaction.submit(constraintUrl, JSON.stringify(params),function(result) {
