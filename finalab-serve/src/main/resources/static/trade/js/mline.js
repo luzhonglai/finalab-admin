@@ -633,7 +633,7 @@ var transaction = {
                     courseId: courseId,
                     loopNum: loopNum,
                     stockId: stockId,
-                    quantity: quantity,
+                    quantity: tradeType == 'BID' ? quantity: ~quantity,
                     // thePeriod: thePeriod,
             }
             transaction.submit(constraintUrl, JSON.stringify(params),function(result) {
