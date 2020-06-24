@@ -92,15 +92,25 @@
         '     * 1、getStockPrice(String stockId)                                 获取股票价格\n' +
         '     * 2、buyStockForLimit(String stockId, int quantity, double price)  委托单-买单\n' +
         '     * 3、sellStockForLimit(String stockId, int quantity, double price) 委托单-卖单\n' +
-        '     * 4、buyStockForMarket(String stockId, int quantity)               市场单-买单\n' +
-        '     * 5、sellStockForMarket(String stockId, int quantity)              市场单-卖单\n' +
+        '     * 4、buyStockForMarket(String stockId, int quantity,double price)               市场单-买单\n' +
+        '     * 5、sellStockForMarket(String stockId, int quantity,double price)              市场单-卖单\n' +
+        '     * 6、getCompare(double newprice, double price)              股票最新价格大于输入价格返回1，小于返回-1，等于返回0\n' +
         '     */\n' +
         '    void execute() {\n' +
         '        for (int i = 0; i < 100; i++) {\n' +
-        '            getStockPrice("CW1");\n' +
+        '            double newprice = getStockPrice("迅腾_HK");\n'+
+        '            double price = 10.12;\n'+
+        '            int quantity = 10;\n'+
+        '            int r = getCompare(newprice,price);\n' +
+        '            //buyStockForMarket用<=,sellStockForMarket用>=\n' +
+        '            if(r<=0)\n' +
+        '            {\n' +
+        '               buyStockForMarket("迅腾_HK", quantity,price);\n' +
+        '            }\n' +
         '            Thread.sleep(1000L);\n' +
         '        }\n' +
         '    }\n' +
         '}';
     $("#auto_deal_code").append(defaultVal);
 </script>
+

@@ -78,6 +78,16 @@ public class PositionsTotal implements Serializable {
 
     private Long courseId;
 
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    private  Integer quantity;
+
     public void setId(Long id) {
         this.id = id;
     }

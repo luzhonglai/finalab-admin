@@ -320,12 +320,12 @@ var transaction = {
                 window.clearInterval(transaction.news.timer);
             }
             $('#user-news').show();
-            
+
             $('#news-price').text(Math.abs(newsData.price));
-            $('#trade-flag').text(Number(newsData.price) < 0 ? '卖出' : '买入');
+            $('#trade-flag').text(Number(newsData.price) < 0 ? '买入' : '卖出');
             $('#news-quantity').text(newsData.quantity);
             $('#news-stockid').text(newsData.stockId);
-            
+
             transaction.news.timeCount = newsData.timeout;
             transaction.news.timer = window.setInterval(function () {
                 transaction.news.timeCount--;

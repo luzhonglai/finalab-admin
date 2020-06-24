@@ -72,7 +72,7 @@ var transaction = {
         quantityArr: [],
         init: function (datas) {
             transaction.target.targetData = datas;
-            var quantityArr = []; 
+            var quantityArr = [];
             for (var i = 0; i < datas.length; i++) {
                 var li = transaction.target.createLi(datas[i]);
                 // 股票菜单选择添加
@@ -174,7 +174,7 @@ var transaction = {
         markPosition: function(id, location) {
             transaction.target.tooltipLocation = location;
             if(location == '') {
-                 console.log("鼠标移开：" + location);
+                console.log("鼠标移开：" + location);
                 id = '#' + id + 'li';
                 $(id).tooltip('destroy');
                 $("#id").focus();
@@ -542,7 +542,7 @@ var transaction = {
                 $('#new-origin-quantity').text(Number(newsData.quantity));
                 $('#news-stock-name').text(stockMap[newsData.stockId].Description);
                 $('#news-price').text(Number(newsData.price).toFixed(2));
-                $('#trade-flag').text(Number(newsData.quantity) < 0 ? '卖出' : '买入');
+                $('#trade-flag').text(Number(newsData.quantity) < 0 ? '买入' : '卖出');
                 $('#news-quantity').text(Math.abs(newsData.quantity));
                 $('#news-stockid').text(newsData.stockId);
             }
@@ -560,7 +560,7 @@ var transaction = {
             $('#new-origin-quantity').text(Number(newsData.quantity));
             $('#news-stock-name').text(stockMap[newsData.stockId].Description);
             $('#news-price').text(newsData.price.toFixed(2));
-            $('#trade-flag').text(Number(newsData.quantity) < 0 ? '卖出' : '买入');
+            $('#trade-flag').text(Number(newsData.quantity) < 0 ? '买入' : '卖出');
             $('#news-quantity').text(Math.abs(newsData.quantity));
             $('#news-stockid').text(newsData.stockId);
             $('#news-timer').text('('+transaction.news.timeCount+'S)');
@@ -572,12 +572,12 @@ var transaction = {
         priceOrderSwitch: function(act) {
             if (act) {
                 $('#news_place_order').attr('href','javascript:transaction.news.submit();')
-                    .removeAttr('style',"background-color: #e4e4e4")
-                    .removeAttr('disabled', 'true');
+                .removeAttr('style',"background-color: #e4e4e4")
+                .removeAttr('disabled', 'true');
             } else {
                 $('#news_place_order').attr('href','javascript:return false;')
-                    .attr('style',"background-color: #e4e4e4")
-                    .attr('disabled', 'true');
+                .attr('style',"background-color: #e4e4e4")
+                .attr('disabled', 'true');
             }
         },
         onTimer: function(speedTimer){
@@ -625,16 +625,16 @@ var transaction = {
             if (Number(quantity) > maxTradeSize) {
                 $.modal.msgWarning('交易数量过多');
                 var quantity = $('.tradeQuantity').eq(index).val('');
-                return; 
+                return;
             }
             var params = {
-                    instanceId: instanceId,
-                    traderId: userId,
-                    courseId: courseId,
-                    loopNum: loopNum,
-                    stockId: stockId,
-                    quantity: tradeType == 'BID' ? quantity: -quantity,
-                    // thePeriod: thePeriod,
+                instanceId: instanceId,
+                traderId: userId,
+                courseId: courseId,
+                loopNum: loopNum,
+                stockId: stockId,
+                quantity: tradeType == 'BID' ? quantity: -quantity,
+                // thePeriod: thePeriod,
             }
             transaction.submit(constraintUrl, JSON.stringify(params),function(result) {
                 if(result.code==0) {
@@ -656,7 +656,7 @@ var transaction = {
                             return;
                         }
                     }
-        
+
                     var param = {
                         stockId: stockId,
                         stockName: stockMap[stockId].Description,

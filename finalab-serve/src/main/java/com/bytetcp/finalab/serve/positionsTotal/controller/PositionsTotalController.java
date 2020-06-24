@@ -289,12 +289,35 @@ public class PositionsTotalController extends BaseController {
         }
         int totalQuantity = positionTotal.getTotalQuantity();
         int nowQuantity = positionTotal.getNowQuantity();
-        if (totalQuantity >= grossQuantity && grossUnitFines == 0) {
+        /*if (totalQuantity >= grossQuantity && grossUnitFines == 0) {
             flag = false;
+        }*/
+        int quantity = positionsTotal.getQuantity();//本次交易数量
+        /*if(quantity>0)
+        {
+            quantity = quantity-1;
+
+        }else {
+            quantity = quantity+1;
+        }*/
+/*
+        nowQuantity = Math.abs(nowQuantity+quantity);
+*/
+        int nowQuantity1 = Math.abs(nowQuantity+quantity);
+        if(nowQuantity1 > netPosition && netUnitFines == 0)
+        {
+            if(nowQuantity>0 && quantity<0 && quantity<= Math.abs(nowQuantity)+Math.abs(netPosition))
+            {
+                flag = true;
+            }else if(nowQuantity<0 && quantity>0 && quantity<= Math.abs(nowQuantity)+Math.abs(netPosition))
+            {
+                flag = true;
+            } else{
+                flag = false;
+            }
+
         }
-        if (nowQuantity >= netPosition && netUnitFines == 0) {
-            flag = false;
-        }
+
         if (!flag) {
             return AjaxResult.error(ResultStatus.FAIL);
         }
