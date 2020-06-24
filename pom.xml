@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
     <groupId>com.bytetcp.finalab</groupId>
     <artifactId>finalab</artifactId>
     <version>3.2</version>
@@ -11,7 +11,7 @@
     <name>finalab</name>
 	<url>http://www.bytetcp.com/</url>
     <description>finalab管理系统</description>
-    
+
     <properties>
 	    <finalab.version>3.2</finalab.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -27,7 +27,7 @@
 		<pagehelper.boot.version>1.2.5</pagehelper.boot.version>
 		<oshi.version>3.9.1</oshi.version>
 	</properties>
-	
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -59,7 +59,7 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
 		</dependency>
-		
+
 		<!-- SpringWeb模块 -->
 		<dependency>
             <groupId>org.springframework</groupId>
@@ -83,7 +83,7 @@
 		    <groupId>javax.servlet</groupId>
 		    <artifactId>javax.servlet-api</artifactId>
 		</dependency>
-		
+
 		<!-- 日志工具类 -->
 		<dependency>
             <groupId>org.slf4j</groupId>
@@ -109,7 +109,7 @@
 		<repository>
 			<id>public</id>
 			<name>163 nexus</name>
-			<url>http://mirrors.163.com/maven/repository/maven-public/</url>
+			<url>https://maven.aliyun.com/repository/public</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -120,7 +120,7 @@
 		<pluginRepository>
 			<id>public</id>
 			<name>163 nexus</name>
-			<url>http://mirrors.163.com/maven/repository/maven-public/</url>
+			<url>https://maven.aliyun.com/repository/public</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
