@@ -320,9 +320,9 @@ var transaction = {
             var price = null;
             if(tradeType=='ASK')
             {
-                price=(Math.round(($(children[2]).text())*100)/100 - Math.round(($('#qk-order-O').val())*100)/100).toFixed(2);
+                price=(Math.round(($(children[2]).text().replace(/,/g,''))*100)/100 - Math.round(($('#qk-order-O').val())*100)/100).toFixed(2);
             }else{
-                price=(Math.round(($(children[2]).text())*100)/100 + Math.round(($('#qk-order-O').val())*100)/100).toFixed(2);
+                price=(Math.round(($(children[2]).text().replace(/,/g,''))*100)/100 + Math.round(($('#qk-order-O').val())*100)/100).toFixed(2);
             }
             var orderAction = data.textContent.indexOf(WebConst.SELL) != -1 ? WebConst.ORDERACTION_ASK_BOLT : WebConst.ORDERACTION_BID_BOLT;
             var maxTradeSize = stockMap[transaction.priceMove.stockId].MaxTradeSize;
